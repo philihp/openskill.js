@@ -27,8 +27,9 @@
     "@babel/cli": "7.8.4",
     "@babel/core": "7.9.0",
     "@babel/preset-env": "7.9.5",
+    "@babel/register": "^7.9.0",
     "ava": "3.7.1",
-    "babel-loader": "8.1.0",
+    "babel-eslint": "^10.1.0",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.11.0",
@@ -59,6 +60,7 @@
       "airbnb-base",
       "plugin:prettier/recommended"
     ],
+    "parser": "babel-eslint",
     "rules": {
       "no-unused-vars": [
         "error",
@@ -81,6 +83,9 @@
     ]
   },
   "ava": {
-    "babel": true
+    "babel": true,
+    "require": [
+      "./test/_register.js"
+    ]
   }
 }
