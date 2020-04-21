@@ -2,6 +2,9 @@ name: tests
 
 on: push
 
+env:
+  CI: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,5 +19,4 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
       - run: npm test
-        env:
-          CI: true
+      - run: npm run lint
