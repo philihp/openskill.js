@@ -1,1 +1,8 @@
-node_modules
+# Build output
+dist/
+
+# Modules installed
+node_modules/
+
+# vi swap files
+*.swp
