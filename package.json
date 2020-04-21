@@ -58,7 +58,15 @@
     "extends": [
       "airbnb-base",
       "plugin:prettier/recommended"
-    ]
+    ],
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
+    }
   },
   "nycConfig": {
     "all": true,
