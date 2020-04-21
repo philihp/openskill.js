@@ -4,7 +4,7 @@
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "babel src -d dist",
     "lint": "eslint .",
     "release": "np",
     "test": "nyc ava"
@@ -36,9 +36,7 @@
     "husky": "4.2.5",
     "lint-staged": "10.1.7",
     "nyc": "15.0.1",
-    "prettier": "2.0.5",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "prettier": "2.0.5"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
