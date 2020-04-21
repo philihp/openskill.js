@@ -2,8 +2,9 @@
   "name": "openskill",
   "version": "0.1.0",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
-  "main": "src/index.js",
+  "private": true,
   "scripts": {
+    "build": "webpack --mode production",
     "lint": "eslint .",
     "release": "np",
     "test": "nyc ava"
@@ -22,7 +23,11 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "ava": "3.7.1",
+    "babel-loader": "^8.1.0",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.11.0",
@@ -31,7 +36,9 @@
     "husky": "4.2.5",
     "lint-staged": "10.1.7",
     "nyc": "15.0.1",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
@@ -57,7 +64,7 @@
   "nycConfig": {
     "all": true,
     "exclude": [
-      "{coverage,media,test-d,test-tap}/**",
+      "{dist,coverage,media,test-d,test-tap}/**",
       "*.config.js"
     ],
     "reporter": [
@@ -65,5 +72,8 @@
       "lcov",
       "text"
     ]
+  },
+  "ava": {
+    "babel": true
   }
 }
