@@ -1,8 +1,7 @@
 {
   "name": "openskill",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
-  "private": true,
   "scripts": {
     "build": "babel src -d dist",
     "lint": "eslint .",
