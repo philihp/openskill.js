@@ -1,6 +1,7 @@
 # Build output
 dist/
 .nyc_output/
+coverage/
 
 # Modules installed
 node_modules/
