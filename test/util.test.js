@@ -1,5 +1,12 @@
 import test from 'ava'
-import { teamRating, utilC, utilA, utilSumQ, score } from '../src/util'
+import {
+  teamRating,
+  utilC,
+  utilA,
+  utilSumQ,
+  score,
+  ladderPairs,
+} from '../src/util'
 import { rating } from '../src'
 
 const r = rating()
@@ -49,4 +56,24 @@ test('score returns 0.0 on losses', (t) => {
 
 test('score returns 0.5 on ties', (t) => {
   t.is(score(1, 1), 0.5)
+})
+
+test('ladderpairs with 0 elements', (t) => {
+  t.deepEqual(ladderPairs([]), [[]])
+})
+
+test('ladderpairs with 1 elements', (t) => {
+  t.deepEqual(ladderPairs([1]), [[]])
+})
+
+test('ladderpairs with 2 elements', (t) => {
+  t.deepEqual(ladderPairs([1, 2]), [[2], [1]])
+})
+
+test('ladderpairs with 3 elements', (t) => {
+  t.deepEqual(ladderPairs([1, 2, 3]), [[2], [1, 3], [2]])
+})
+
+test('ladderpairs with 4 elements', (t) => {
+  t.deepEqual(ladderPairs([1, 2, 3, 4]), [[2], [1, 3], [2, 4], [3]])
 })

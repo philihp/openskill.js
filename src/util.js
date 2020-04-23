@@ -1,3 +1,4 @@
+import zip from 'array-zip'
 import { BETASQ } from './constants'
 
 export const sum = (a, b) => a + b
@@ -27,6 +28,18 @@ export const teamRating = (game) =>
     team,
     i + 1,
   ])
+
+export const ladderPairs = (ranks) => {
+  const size = ranks.length
+  const left = [null, ...ranks.slice(0, size - 1)]
+  const right = [...ranks.slice(1), null]
+  return zip(left, right).map(([l, r]) => {
+    if (l !== null && r !== null) return [l, r]
+    if (l !== null && r === null) return [l]
+    if (l === null && r !== null) return [r]
+    return [] // this should really only happen when size === 1
+  })
+}
 
 export const utilC = (teamRatings) =>
   Math.sqrt(
