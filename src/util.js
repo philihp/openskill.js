@@ -9,6 +9,17 @@ const intoRankHash = (accum, value, index) => {
   }
 }
 
+export const score = (q, i) => {
+  if (q < i) {
+    return 0.0
+  }
+  if (q > i) {
+    return 1.0
+  }
+  // q === i
+  return 0.5
+}
+
 export const teamRating = (game) =>
   game.map((team, i) => [
     team.map(({ mu }) => mu).reduce(sum, 0),
