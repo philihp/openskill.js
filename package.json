@@ -13,7 +13,9 @@
     "url": "git+https://github.com/philihp/openskill.js.git"
   },
   "keywords": [
-    "ranking"
+    "ranking",
+    "trueskill",
+    "bayesian"
   ],
   "author": "Philihp Busby <philihp@gmail.com>",
   "license": "MIT",
