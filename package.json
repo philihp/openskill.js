@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "array-zip": "1.0.0",
+    "gaussian": "1.1.0",
     "transpose": "0.0.2"
   }
 }
