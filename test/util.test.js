@@ -1,5 +1,5 @@
 import test from 'ava'
-import { teamRating, utilC, utilA, utilSumQ } from '../src/util'
+import { teamRating, utilC, utilA, utilSumQ, score } from '../src/util'
 import { rating } from '../src'
 
 const r = rating()
@@ -37,4 +37,16 @@ test('utilA computes as expected', (t) => {
     1: 1,
     2: 1,
   })
+})
+
+test('score returns 1.0 on wins', (t) => {
+  t.is(score(2, 1), 1.0)
+})
+
+test('score returns 0.0 on losses', (t) => {
+  t.is(score(1, 2), 0.0)
+})
+
+test('score returns 0.5 on ties', (t) => {
+  t.is(score(1, 1), 0.5)
 })
