@@ -1,5 +1,5 @@
 module.exports = {
   all: true,
-  exclude: ['{dist,coverage,media,test-d,test-tap}/**', '*.config.js'],
+  exclude: ['{dist,coverage,test}/**', '*.config.js'],
   reporter: ['html', 'lcov', 'text'],
 }
