@@ -6,9 +6,7 @@ const team1 = [r]
 const team2 = [r, r]
 const team3 = [r, r, r]
 
-const rate = (game, options = {}) => {
-  return rateStub(game, { ...options, model: 'bradleyTerryPart' })
-}
+const rate = (game) => rateStub(game, { model: 'bradleyTerryPart' })
 
 test('solo game does not change rating', (t) => {
   t.deepEqual(rate([team1]), [team1])
