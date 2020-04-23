@@ -75,6 +75,9 @@
     "babel": true,
     "require": [
       "./test/_register.js"
+    ],
+    "files": [
+      "test/**/*.test.js"
     ]
   },
   "dependencies": {
