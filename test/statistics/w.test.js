@@ -12,3 +12,7 @@ test('w(0,2)', (t) => {
 test('w(0,-1)', (t) => {
   t.is(w(0, -1), 0.3703137182425503)
 })
+
+test('denominator less than threshold', (t) => {
+  t.is(w(0, 10), 0)
+})

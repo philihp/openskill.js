@@ -12,3 +12,7 @@ test('v(0,2)', (t) => {
 test('v(0,-1)', (t) => {
   t.is(v(0, -1), 0.2875999734906994)
 })
+
+test('denominator less than threshold', (t) => {
+  t.is(v(0, 10), 10)
+})

@@ -1,14 +1,18 @@
 import test from 'ava'
 import { vt } from '../../src/statistics'
 
-test('vt(1,2)', (t) => {
-  t.is(vt(1, 2), -0.2827861132540126)
+test('with small b, small x', (t) => {
+  t.is(vt(-1000, -100), 1100)
 })
 
-test('vt(0,2)', (t) => {
-  t.is(vt(0, 2), 0)
+test('with small b, big x', (t) => {
+  t.is(vt(1000, -100), -1100)
 })
 
-test('vt(0,-1)', (t) => {
-  t.is(vt(0, -1), -1)
+test('with big b, small x', (t) => {
+  t.is(vt(-1000, 1000), 0.7978845368663289)
+})
+
+test('with big b, big x', (t) => {
+  t.truthy(vt(0, 1000) < 0.000000001)
 })

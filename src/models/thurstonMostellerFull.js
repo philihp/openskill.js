@@ -17,21 +17,18 @@ export default (game, _options) => {
           const sigSqToCiq = iSigmaSq / ciq
           const gamma = Math.sqrt(iSigmaSq) / ciq
 
-          if (qRank > iRank) {
+          /* istanbul ignore next */
+          if (qRank === iRank) {
             return [
-              omega + sigSqToCiq * v(tmp, EPSILON / ciq),
-              delta + ((gamma * sigSqToCiq) / ciq) * w(tmp, EPSILON / ciq),
+              omega + sigSqToCiq * vt(tmp, EPSILON / ciq),
+              delta + ((gamma * sigSqToCiq) / ciq) * wt(tmp, EPSILON / ciq),
             ]
           }
-          if (qRank < iRank) {
-            return [
-              omega + -sigSqToCiq * v(-tmp, EPSILON / ciq),
-              delta + ((gamma * sigSqToCiq) / ciq) * w(-tmp, EPSILON / ciq),
-            ]
-          }
+
+          const sign = qRank > iRank ? 1 : -1
           return [
-            omega + sigSqToCiq * vt(tmp, EPSILON / ciq),
-            delta + ((gamma * sigSqToCiq) / ciq) * wt(tmp, EPSILON / ciq),
+            omega + sign * sigSqToCiq * v(sign * tmp, EPSILON / ciq),
+            delta + ((gamma * sigSqToCiq) / ciq) * w(sign * tmp, EPSILON / ciq),
           ]
         },
         [0, 0]
