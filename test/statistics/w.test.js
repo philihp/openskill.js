@@ -16,3 +16,7 @@ test('w(0,-1)', (t) => {
 test('denominator less than threshold', (t) => {
   t.is(w(0, 10), 0)
 })
+
+test('tiny denom, negative x', (t) => {
+  t.is(w(-1, 10), 1)
+})
