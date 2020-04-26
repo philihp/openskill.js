@@ -1,21 +1,9 @@
+![](https://philihp.com/openskill.js/logo.png)
+
 [![Version](https://img.shields.io/npm/v/openskill)](https://www.npmjs.com/package/openskill)
 ![Tests](https://github.com/philihp/openskill.js/workflows/tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/philihp/openskill.js/badge.svg?branch=master&force=reload)](https://coveralls.io/github/philihp/openskill.js?branch=master)
 ![License](https://img.shields.io/npm/l/openskill)
-
-```ascii
-
- ▒█████   ██▓███  ▓█████  ███▄    █   ██████  ██ ▄█▀ ██▓ ██▓     ██▓
-▒██▒  ██▒▓██░  ██▒▓█   ▀  ██ ▀█   █ ▒██    ▒  ██▄█▒ ▓██▒▓██▒    ▓██▒
-▒██░  ██▒▓██░ ██▓▒▒███   ▓██  ▀█ ██▒░ ▓██▄   ▓███▄░ ▒██▒▒██░    ▒██░
-▒██   ██░▒██▄█▓▒ ▒▒▓█  ▄ ▓██▒  ▐▌██▒  ▒   ██▒▓██ █▄ ░██░▒██░    ▒██░
-░ ████▓▒░▒██▒ ░  ░░▒████▒▒██░   ▓██░▒██████▒▒▒██▒ █▄░██░░██████▒░██████▒
-░ ▒░▒░▒░ ▒▓▒░ ░  ░░░ ▒░ ░░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░▒ ▒▒ ▓▒░▓  ░ ▒░▓  ░░ ▒░▓  ░
-  ░ ▒ ▒░ ░▒ ░      ░ ░  ░░ ░░   ░ ▒░░ ░▒  ░ ░░ ░▒ ▒░ ▒ ░░ ░ ▒  ░░ ░ ▒  ░
-░ ░ ░ ▒  ░░          ░      ░   ░ ░ ░  ░  ░  ░ ░░ ░  ▒ ░  ░ ░     ░ ░
-    ░ ░              ░  ░         ░       ░  ░  ░    ░      ░  ░    ░  ░
-
-```
 
 Javascript implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
 
