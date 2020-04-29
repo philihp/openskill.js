@@ -1,3 +1,4 @@
+import { cond, lt, gt, T } from 'ramda'
 import { teamRating } from '../util'
 import { w, v, vt, wt } from '../statistics'
 import { BETASQ, EPSILON } from '../constants'
@@ -17,19 +18,30 @@ export default (game, _options) => {
           const sigSqToCiq = iSigmaSq / ciq
           const gamma = Math.sqrt(iSigmaSq) / ciq
 
-          /* istanbul ignore next */
-          if (qRank === iRank) {
-            return [
-              omega + sigSqToCiq * vt(tmp, EPSILON / ciq),
-              delta + ((gamma * sigSqToCiq) / ciq) * wt(tmp, EPSILON / ciq),
-            ]
-          }
-
-          const sign = qRank > iRank ? 1 : -1
-          return [
-            omega + sign * sigSqToCiq * v(sign * tmp, EPSILON / ciq),
-            delta + ((gamma * sigSqToCiq) / ciq) * w(sign * tmp, EPSILON / ciq),
-          ]
+          return cond([
+            [
+              lt(iRank),
+              () => [
+                omega + sigSqToCiq * v(tmp, EPSILON / ciq),
+                delta + ((gamma * sigSqToCiq) / ciq) * w(tmp, EPSILON / ciq),
+              ],
+            ],
+            [
+              gt(iRank),
+              () => [
+                omega + -sigSqToCiq * v(-tmp, EPSILON / ciq),
+                delta + ((gamma * sigSqToCiq) / ciq) * w(-tmp, EPSILON / ciq),
+              ],
+            ],
+            [
+              T,
+              /* istanbul ignore next */
+              () => [
+                omega + sigSqToCiq * vt(tmp, EPSILON / ciq),
+                delta + ((gamma * sigSqToCiq) / ciq) * wt(tmp, EPSILON / ciq),
+              ],
+            ],
+          ])(qRank)
         },
         [0, 0]
       )

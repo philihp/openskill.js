@@ -17,7 +17,7 @@ export default (game, _options) => {
           const gamma = Math.sqrt(iSigmaSq) / ciq
 
           return [
-            omega + sigSqToCiq * (score(qRank, iRank) - piq),
+            omega + sigSqToCiq * (score(qRank)(iRank) - piq),
             delta + ((gamma * sigSqToCiq) / ciq) * piq * (1 - piq),
           ]
         },

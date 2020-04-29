@@ -1,4 +1,4 @@
-import { zip, sum } from 'ramda'
+import { zip, sum, cond, lt, gt, T, always } from 'ramda'
 import { BETASQ } from './constants'
 
 const intoRankHash = (accum, value, index) => {
@@ -8,16 +8,12 @@ const intoRankHash = (accum, value, index) => {
   }
 }
 
-export const score = (q, i) => {
-  if (q < i) {
-    return 0.0
-  }
-  if (q > i) {
-    return 1.0
-  }
-  // q === i
-  return 0.5
-}
+export const score = (i) =>
+  cond([
+    [lt(i), always(0.0)],
+    [gt(i), always(1.0)],
+    [T, always(0.5)],
+  ])
 
 export const teamRating = (game) =>
   game.map((team, i) => [
