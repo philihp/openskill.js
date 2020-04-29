@@ -1,5 +1,5 @@
-import { transpose } from 'ramda'
-import { teamRating, utilSumQ, utilC, utilA, sum } from '../util'
+import { transpose, sum } from 'ramda'
+import { teamRating, utilSumQ, utilC, utilA } from '../util'
 import { EPSILON } from '../constants'
 
 export default (game, { _log }) => {
@@ -21,8 +21,8 @@ export default (game, { _log }) => {
         })
     )
     const gamma = Math.sqrt(iSigmaSq) / c
-    const iOmega = (omegaSet.reduce(sum, 0) * iSigmaSq) / c
-    const iDelta = (gamma * deltaSet.reduce(sum, 0) * iSigmaSq) / c / c
+    const iOmega = (sum(omegaSet) * iSigmaSq) / c
+    const iDelta = (gamma * sum(deltaSet) * iSigmaSq) / c / c
 
     return iTeam.map(({ mu, sigma }) => {
       const sigmaSq = sigma * sigma

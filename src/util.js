@@ -1,7 +1,5 @@
-import { zip } from 'ramda'
+import { zip, sum } from 'ramda'
 import { BETASQ } from './constants'
-
-export const sum = (a, b) => a + b
 
 const intoRankHash = (accum, value, index) => {
   return {
@@ -23,8 +21,8 @@ export const score = (q, i) => {
 
 export const teamRating = (game) =>
   game.map((team, i) => [
-    team.map(({ mu }) => mu).reduce(sum, 0),
-    team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
+    sum(team.map(({ mu }) => mu)),
+    sum(team.map(({ sigma }) => sigma * sigma)),
     team,
     i + 1,
   ])
@@ -43,18 +41,21 @@ export const ladderPairs = (ranks) => {
 
 export const utilC = (teamRatings) =>
   Math.sqrt(
-    teamRatings
-      .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
-      .reduce(sum, 0)
+    sum(
+      teamRatings.map(
+        ([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ
+      )
+    )
   )
 
 export const utilSumQ = (teamRatings, c) =>
   teamRatings
     .map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
-      teamRatings
-        .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
-        .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
-        .reduce(sum, 0)
+      sum(
+        teamRatings
+          .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
+          .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
+      )
     )
     .reduce(intoRankHash, {})
 
