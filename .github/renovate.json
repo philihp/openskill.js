@@ -1,13 +1,3 @@
 {
-  "extends": ["config:base"],
-  "packageRules": [
-    {
-      "updateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
-      "depTypeList": ["devDependencies"],
-      "automerge": true
-    }
-  ]
+  "extends": ["@philihp"]
 }
