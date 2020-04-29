@@ -1,5 +1,6 @@
 import {
-  zip,
+  transpose,
+  juxt,
   sum,
   cond,
   lt,
@@ -48,14 +49,13 @@ const coalesceLeftRight = cond([
 ])
 
 export const ladderPairs = (ranks) =>
-  map(coalesceLeftRight)(zip(left(ranks), right(ranks)))
+  map(coalesceLeftRight, transpose(juxt([left, right])(ranks)))
 
-export const utilC = (teamRatings) =>
-  compose(
-    Math.sqrt,
-    sum,
-    map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
-  )(teamRatings)
+export const utilC = compose(
+  Math.sqrt,
+  sum,
+  map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
+)
 
 const higherRank = (qRank) => ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
   iRank >= qRank
