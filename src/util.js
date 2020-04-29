@@ -1,4 +1,4 @@
-import zip from 'array-zip'
+import { zip } from 'ramda'
 import { BETASQ } from './constants'
 
 export const sum = (a, b) => a + b
