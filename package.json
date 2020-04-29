@@ -82,6 +82,6 @@
   },
   "dependencies": {
     "gaussian": "1.1.0",
-    "ramda": "^0.27.0"
+    "ramda": "0.27.0"
   }
 }
