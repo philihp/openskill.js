@@ -1,4 +1,4 @@
-import zip from 'array-zip'
+import { zip } from 'ramda'
 import { teamRating, score, ladderPairs } from '../util'
 import { BETASQ, EPSILON } from '../constants'
 

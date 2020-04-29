@@ -1,4 +1,4 @@
-import transpose from 'transpose'
+import { transpose } from 'ramda'
 import { teamRating, utilSumQ, utilC, utilA, sum } from '../util'
 import { EPSILON } from '../constants'
 
