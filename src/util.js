@@ -1,29 +1,35 @@
 import {
+  pipe,
+  nth,
   transpose,
   juxt,
   sum,
   cond,
   lt,
   gt,
+  add,
   T,
   always,
   map,
-  compose,
   identity,
   isNil,
   filter,
-  length,
   addIndex,
   slice,
+  reduce,
+  fromPairs,
+  toPairs,
+  invert,
 } from 'ramda'
 import { BETASQ } from './constants'
 
-const intoRankHash = (accum, value, index) => {
-  return {
+const toRankedMap = addIndex(reduce)(
+  (accum, value, index) => ({
     ...accum,
     [index + 1]: value,
-  }
-}
+  }),
+  {}
+)
 
 export const score = (i) =>
   cond([
@@ -51,32 +57,29 @@ const coalesceLeftRight = cond([
 export const ladderPairs = (ranks) =>
   map(coalesceLeftRight, transpose(juxt([left, right])(ranks)))
 
-export const utilC = compose(
-  Math.sqrt,
-  sum,
-  map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
-)
+export const utilC = pipe(map(pipe(nth(1), add(BETASQ))), sum, Math.sqrt)
 
 const higherRank = (qRank) => ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
   iRank >= qRank
 
 export const utilSumQ = (teamRatings, c) =>
-  map(
-    ([_qMu, _qSigmaSq, _qTeam, qRank]) =>
-      compose(
-        sum,
-        map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c)),
-        filter(higherRank(qRank))
-      )(teamRatings),
-    teamRatings
-  ).reduce(intoRankHash, {})
+  toRankedMap(
+    // TODO: could this be point-free with xprod or lift?
+    map(
+      ([_qMu, _qSigmaSq, _qTeam, qRank]) =>
+        pipe(
+          filter(higherRank(qRank)),
+          map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c)),
+          sum
+        )(teamRatings),
+      teamRatings
+    )
+  )
 
-export const utilA = (teamRatings) =>
-  map(
-    ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
-      compose(
-        length,
-        filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank)
-      )(teamRatings),
-    teamRatings
-  ).reduce(intoRankHash, {})
+export const utilA = pipe(
+  map(nth(3)),
+  invert,
+  toPairs,
+  map(([k, v]) => [k, v.length]),
+  fromPairs
+)
