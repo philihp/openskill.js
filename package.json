@@ -4,10 +4,12 @@
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "scripts": {
     "build": "babel src -d dist",
+    "prepublish": "npm run build",
     "lint": "eslint .",
     "release": "np",
     "test": "nyc ava"
   },
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/philihp/openskill.js.git"
@@ -26,18 +28,18 @@
   "devDependencies": {
     "@ava/babel": "1.0.1",
     "@babel/cli": "7.8.4",
-    "@babel/core": "7.9.0",
-    "@babel/preset-env": "7.9.5",
+    "@babel/core": "7.9.6",
+    "@babel/preset-env": "7.9.6",
     "@babel/register": "7.9.0",
-    "ava": "3.8.1",
+    "ava": "3.8.2",
     "babel-eslint": "10.1.0",
-    "eslint": "6.8.0",
+    "eslint": "7.0.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.20.2",
     "eslint-plugin-prettier": "3.1.3",
     "husky": "4.2.5",
-    "lint-staged": "10.2.0",
+    "lint-staged": "10.2.2",
     "nyc": "15.0.1",
     "prettier": "2.0.5"
   },
