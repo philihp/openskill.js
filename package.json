@@ -9,6 +9,7 @@
     "release": "np",
     "test": "nyc ava"
   },
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/philihp/openskill.js.git"
