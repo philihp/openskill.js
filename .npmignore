@@ -1,0 +1,13 @@
+.github/
+.nyc_output/
+coverage/
+node_modules/
+src/
+test/
+.babelrc
+.coveralls.yml
+.gitattributes
+.tool-versions
+.eslintignore
+README.md
+nyc.config.js
