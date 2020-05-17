@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "benchmark": "2.1.4",
+    "compute-cosine-similarity": "1.0.0",
+    "csv-parser": "2.3.2",
+    "microtime": "3.0.0",
+    "openskill": "1.0.0",
+    "ramda": "0.27.0",
+    "ts-trueskill": "3.0.1"
+  }
+}
