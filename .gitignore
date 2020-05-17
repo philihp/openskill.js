@@ -8,3 +8,5 @@ node_modules/
 
 # vi swap files
 *.swp
+
+.DS_Store
