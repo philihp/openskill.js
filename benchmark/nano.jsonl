@@ -1,0 +1,9 @@
+{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "cccc"], "red": ["xxxx", "yyyy", "zzzz"]}}
+{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "zzzz"], "red": ["xxxx", "yyyy", "cccc"]}}
+{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "yyyy"], "red": ["xxxx", "zzzz", "cccc"]}}
+{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "xxxx"]}}
+{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "yyyy"]}}
+{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "zzzz"]}}
+{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["yyyy", "xxxx"]}}
+{"result": "WIN", "teams": {"blue": ["bbbb", "cccc"], "red": ["zzzz", "xxxx"]}}
+{"result": "WIN", "teams": {"blue": ["bbbb", "cccc"], "red": ["yyyy", "xxxx"]}}
