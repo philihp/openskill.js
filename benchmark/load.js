@@ -81,8 +81,30 @@ const predictFrom = (results, ratings) => {
   return undefined
 }
 
-function openskill() {
-  ratings = reduce(
+const trueskill = () => {
+  reduce(
+    (ratings, { results }) => {
+      const getRating = (player) => ratings[player] || newRating()
+      const oldRatings = map((team) => map(getRating, team), results)
+      const predictedResults = predictFrom(results, oldRatings)
+
+      if (predictedResults !== undefined) {
+        if (results[0] == predictedResults[0]) {
+          prediction.correct += 1
+        }
+        prediction.total += 1
+      }
+
+      const newRatings = runRate(oldRatings)
+      return saveRatings(ratings, results, newRatings)
+    },
+    {},
+    dataset
+  )
+}
+
+const openskill = () => {
+  reduce(
     (ratings, { results }) => {
       const getRating = (player) => ratings[player] || newRating()
       const oldRatings = map((team) => map(getRating, team), results)
@@ -119,8 +141,8 @@ fs.createReadStream(`${__dirname}/tiny.jsonl`)
     console.log(
       `${dataset.length} records loaded in ${(start - loadStart) / 1000} ms`
     )
-    openskill()
     new benchmark.Suite()
+      .add('trueskill', trueskill)
       .add('openskill', openskill)
       .on('complete', (e) => {
         console.log(e.stats)
