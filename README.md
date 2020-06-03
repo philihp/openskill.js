@@ -7,6 +7,21 @@
 
 Javascript implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
 
+## Speed
+
+Openskill is crazy-stupid-fast.
+
+| Model                           | Speed (higher is better) | Variance |         Samples |
+| ------------------------------- | -----------------------: | -------: | --------------: |
+| TrueSkill                       |            2,962 ops/sec |   ±3.23% | 82 runs sampled |
+| Openskill/bradleyTerryFull      |           62,643 ops/sec |   ±1.09% | 91 runs sampled |
+| Openskill/bradleyTerryPart      |           40,152 ops/sec |   ±0.73% | 91 runs sampled |
+| Openskill/thurstonMostellerFull |           59,336 ops/sec |   ±0.74% | 93 runs sampled |
+| Openskill/thurstonMostellerPart |           38,666 ops/sec |   ±1.21% | 92 runs sampled |
+| Openskill/plackettLuce          |           23,492 ops/sec |   ±0.26% | 91 runs sampled |
+
+See [this post](https://philihp.com/2020/openskill.html) for more.
+
 ## Installation
 
 Add `openskill` to your list of dependencies in `package.json`:
