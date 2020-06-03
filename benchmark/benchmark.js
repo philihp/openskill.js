@@ -1,101 +1,71 @@
-const { sortBy, reduce, split, transpose, map, head } = require('ramda')
-const csv = require('csv-parser')
+const { reduce, map } = require('ramda')
+const ndjson = require('ndjson')
 const benchmark = require('benchmark')
 const fs = require('fs')
 const microtime = require('microtime')
 const Trueskill = require('ts-trueskill')
 const Openskill = require('../dist')
-const similarity = require('./similarity').default
-
-// Configure library here --------------------
-const model = 'plackettLuce'
-const WHICHSKILL = false
-function newRating() {
-  if (WHICHSKILL) {
-    return new Trueskill.Rating()
-  }
-  return Openskill.rating()
-}
-function runRate(data) {
-  if (WHICHSKILL) {
-    return Trueskill.rate(data)
-  }
-  return Openskill.rate(data, { model })
-}
-console.log(`RUNNING WITH model: ${model}, trueskill: ${WHICHSKILL}`)
-// --------------------------------------------
 
 const dataset = []
-let ratings = {}
 
-let prediction = {
-  correctFirst: 0,
-  total: 0,
-  sumSimilar: 0,
+const saveRatings = (ratings, results, newRatings) => {
+  for (t in results) {
+    for (p in results[t]) {
+      ratings[results[t][p]] = newRatings[t][p]
+    }
+  }
+  return ratings
 }
 
-const delta = (a, b) => {
-  const am = map(([n]) => n.mu, a)
-  const bm = map(([n]) => n.mu, b)
-  const sim = similarity(am, bm)
-  return sim
+const trueskill = () => {
+  reduce(
+    (ratings, { results }) => {
+      const getRating = (player) => ratings[player] || new Trueskill.Rating()
+      const oldRatings = map((team) => map(getRating, team), results)
+      const newRatings = Trueskill.rate(oldRatings)
+      return saveRatings(ratings, results, newRatings)
+    },
+    {},
+    dataset
+  )
 }
 
-const openskill = () => {
-  dataset.map(({ results }) => {
-    const oldRatings = map((n) => [ratings[n] || newRating()], results)
-    const predictedOrder = sortBy(([r]) => r.mu, oldRatings)
-    const dlt = delta(oldRatings, predictedOrder)
-
-    const correctFirst =
-      prediction.correctFirst +
-      (predictedOrder[0][0] == oldRatings[0][0] ? 1 : 0)
-    const total = prediction.total + 1
-    const sumSimilar = prediction.sumSimilar + dlt
-
-    prediction = {
-      correctFirst,
-      total,
-      sumSimilar,
-    }
-
-    const newRatings = runRate(oldRatings)
-
-    const nr = reduce(
-      (accum, [name, [r]]) => ({
-        ...accum,
-        [name]: r,
-      }),
-      {},
-      transpose([results, newRatings])
-    )
-
-    ratings = {
-      ...ratings,
-      ...nr,
-    }
-    return ratings
-  })
+const openskill = (model) => () => {
+  reduce(
+    (ratings, { results }) => {
+      const getRating = (player) => ratings[player] || Openskill.rating()
+      const oldRatings = map((team) => map(getRating, team), results)
+      const newRatings = Openskill.rate(oldRatings, { model })
+      return saveRatings(ratings, results, newRatings)
+    },
+    {},
+    dataset
+  )
 }
 
 const loadStart = microtime.now()
-fs.createReadStream(`${__dirname}/rr18xx.csv`)
-  .pipe(csv())
+
+// fs.createReadStream(`${__dirname}/v2_jsonl_teams.jsonl`)
+fs.createReadStream(`${__dirname}/one.jsonl`)
+  .pipe(ndjson.parse())
   .on('data', (data) => {
-    dataset.push({
-      id: data.game_id,
-      title: data.title,
-      results: map((s) => head(split('~', s)), split('|', data.results)),
-    })
+    const winner = data.teams[data.result === 'WIN' ? 'blue' : 'red']
+    const loser = data.teams[data.result === 'WIN' ? 'red' : 'blue']
+    const results = [winner, loser]
+    dataset.push({ results: [['a'], ['b'], ['c'], ['d'], ['e']] })
   })
   .on('end', () => {
     const start = microtime.now()
     console.log(
       `${dataset.length} records loaded in ${(start - loadStart) / 1000} ms`
     )
-    // openskill()
     new benchmark.Suite()
-      .add('openskill', openskill)
+      .add('trueskill', trueskill)
+      .add('bradleyTerryFull', openskill('bradleyTerryFull'))
+      .add('bradleyTerryPart', openskill('bradleyTerryPart'))
+      .add('thurstonMostellerFull', openskill('thurstonMostellerFull'))
+      .add('thurstonMostellerPart', openskill('thurstonMostellerPart'))
+      .add('plackettLuce', openskill('plackettLuce'))
       .on('complete', (e) => {
         console.log(e.stats)
       })
@@ -103,9 +73,6 @@ fs.createReadStream(`${__dirname}/rr18xx.csv`)
         console.log(e.target.toString())
       })
       .run()
-    const avgsim = prediction.sumSimilar / prediction.total
-    console.log({ prediction, avgsim })
-
     const end = microtime.now()
     console.log(`${(end - start) / 1000} ms elapsed`)
   })

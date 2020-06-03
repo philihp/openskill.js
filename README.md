@@ -68,7 +68,6 @@ By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99
 
 ## TODO
 
-- Import other models
 - Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`.
 - Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
 - Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
