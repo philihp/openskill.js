@@ -1,9 +1,3 @@
-{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "cccc"], "red": ["xxxx", "yyyy", "zzzz"]}}
-{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "zzzz"], "red": ["xxxx", "yyyy", "cccc"]}}
-{"result": "WIN", "teams": {"blue": ["aaaa", "bbbb", "yyyy"], "red": ["xxxx", "zzzz", "cccc"]}}
-{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "xxxx"]}}
-{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "yyyy"]}}
-{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["bbbb", "zzzz"]}}
-{"result": "LOSS", "teams": {"blue": ["aaaa", "cccc"], "red": ["yyyy", "xxxx"]}}
-{"result": "WIN", "teams": {"blue": ["bbbb", "cccc"], "red": ["zzzz", "xxxx"]}}
-{"result": "WIN", "teams": {"blue": ["bbbb", "cccc"], "red": ["yyyy", "xxxx"]}}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bd7b33b879832f98c0353382327db93fbf74740ee2feb942f5da473b3bcd31e1
+size 772
