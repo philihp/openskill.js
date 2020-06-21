@@ -9,14 +9,15 @@ export default (game, { _log }) => {
   const a = utilA(teamRatings)
 
   return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank]) => {
-    const tmp1 = Math.exp(iMu / c)
+    const iMuOverCe = Math.exp(iMu / c)
     const [omegaSet, deltaSet] = transpose(
       teamRatings
         .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank <= iRank)
         .map(([_qMu, _qSigmaSq, _qTeam, qRank]) => {
-          const tmp = tmp1 / sumQ[qRank]
-          const mu = qRank === iRank ? 1 - tmp / a[qRank] : -tmp / a[qRank]
-          const sigma = (tmp * (1 - tmp)) / a[qRank]
+          const quotient = iMuOverCe / sumQ[qRank]
+          const mu =
+            qRank === iRank ? 1 - quotient / a[qRank] : -quotient / a[qRank]
+          const sigma = (quotient * (1 - quotient)) / a[qRank]
           return [mu, sigma]
         })
     )

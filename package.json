@@ -5,7 +5,7 @@
   "scripts": {
     "build": "babel src -d dist",
     "prepare": "npm run build",
-    "lint": "eslint .",
+    "lint": "eslint src",
     "release": "np",
     "test": "jest"
   },
@@ -30,7 +30,7 @@
     "@babel/core": "7.10.3",
     "@babel/preset-env": "7.10.3",
     "@babel/register": "7.10.3",
-    "@philihp/eslint-config": "2.2.0",
+    "@philihp/eslint-config": "2.2.1",
     "husky": "4.2.5",
     "lint-staged": "10.2.11",
     "prettier": "2.0.5"
@@ -50,6 +50,11 @@
       "pre-commit": "lint-staged"
     }
   },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "dist/"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "@philihp"
@@ -60,7 +65,9 @@
         {
           "argsIgnorePattern": "^_"
         }
-      ]
+      ],
+      "unicorn/no-fn-reference-in-iterator": "off",
+      "unicorn/no-zero-fractions": "off"
     }
   },
   "dependencies": {
