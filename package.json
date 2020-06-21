@@ -4,10 +4,11 @@
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "scripts": {
     "build": "babel src -d dist",
-    "prepublish": "npm run build",
-    "lint": "eslint .",
+    "lint": "eslint src",
+    "prepare": "npm run build",
     "release": "np",
-    "test": "nyc ava"
+    "test": "jest",
+    "test:coverage": "npm run test -- --coverage"
   },
   "main": "./dist/index.js",
   "repository": {
@@ -26,21 +27,13 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
-    "@ava/babel": "1.0.1",
     "@babel/cli": "7.10.3",
     "@babel/core": "7.10.3",
     "@babel/preset-env": "7.10.3",
     "@babel/register": "7.10.3",
-    "ava": "3.9.0",
-    "babel-eslint": "10.1.0",
-    "eslint": "7.2.0",
-    "eslint-config-airbnb-base": "14.2.0",
-    "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-import": "2.21.2",
-    "eslint-plugin-prettier": "3.1.4",
+    "@philihp/eslint-config": "2.2.2",
     "husky": "4.2.5",
     "lint-staged": "10.2.11",
-    "nyc": "15.1.0",
     "prettier": "2.0.5"
   },
   "lint-staged": {
@@ -58,28 +51,14 @@
       "pre-commit": "lint-staged"
     }
   },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "dist/"
+    ]
+  },
   "eslintConfig": {
     "extends": [
-      "airbnb-base",
-      "plugin:prettier/recommended"
-    ],
-    "parser": "babel-eslint",
-    "rules": {
-      "no-unused-vars": [
-        "error",
-        {
-          "argsIgnorePattern": "^_"
-        }
-      ]
-    }
-  },
-  "ava": {
-    "babel": true,
-    "require": [
-      "./test/_register.js"
-    ],
-    "files": [
-      "test/**/*.test.js"
+      "@philihp"
     ]
   },
   "dependencies": {

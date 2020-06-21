@@ -31,12 +31,12 @@ export const teamRating = (game) =>
 
 export const ladderPairs = (ranks) => {
   const size = ranks.length
-  const left = [null, ...ranks.slice(0, size - 1)]
-  const right = [...ranks.slice(1), null]
+  const left = [undefined, ...ranks.slice(0, size - 1)]
+  const right = [...ranks.slice(1), undefined]
   return zip(left, right).map(([l, r]) => {
-    if (l !== null && r !== null) return [l, r]
-    if (l !== null && r === null) return [l]
-    if (l === null && r !== null) return [r]
+    if (l !== undefined && r !== undefined) return [l, r]
+    if (l !== undefined && r === undefined) return [l]
+    if (l === undefined && r !== undefined) return [r]
     return [] // this should really only happen when size === 1
   })
 }
