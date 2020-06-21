@@ -31,7 +31,7 @@
     "@babel/core": "7.10.3",
     "@babel/preset-env": "7.10.3",
     "@babel/register": "7.10.3",
-    "@philihp/eslint-config": "2.2.1",
+    "@philihp/eslint-config": "2.2.2",
     "husky": "4.2.5",
     "lint-staged": "10.2.11",
     "prettier": "2.0.5"
