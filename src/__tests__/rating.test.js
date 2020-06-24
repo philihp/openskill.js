@@ -10,7 +10,7 @@ describe('rating', () => {
   it('defaults sigma to 8.333', () => {
     expect.assertions(1)
     const { sigma } = rating()
-    expect(sigma).toBe(8.333333333333334)
+    expect(sigma).toBeCloseTo(8.333)
   })
 
   it('accepts a new mu', () => {
