@@ -9,18 +9,21 @@ describe('thurstonMostellerPart', () => {
   const rate = (game) => rateStub(game, { model: 'thurstonMostellerPart' })
 
   it('solo game does not change rating', () => {
-    expect(rate([team1])).toEqual([team1])
+    expect.assertions(1)
+    expect(rate([team1])).toStrictEqual([team1])
   })
 
   it('2p FFA', () => {
-    expect(rate([team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1])).toStrictEqual([
       [{ mu: 29.20524620886059, sigma: 7.632833464033909 }],
       [{ mu: 20.79475379113941, sigma: 7.632833464033909 }],
     ])
   })
 
   it('3p FFA', () => {
-    expect(rate([team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1])).toStrictEqual([
       [{ mu: 29.20524620886059, sigma: 7.632833464033909 }],
       [{ mu: 25, sigma: 6.861184222487201 }],
       [{ mu: 20.79475379113941, sigma: 7.632833464033909 }],
@@ -28,7 +31,8 @@ describe('thurstonMostellerPart', () => {
   })
 
   it('4p FFA', () => {
-    expect(rate([team1, team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 29.20524620886059, sigma: 7.632833464033909 }],
       [{ mu: 25, sigma: 6.861184222487201 }],
       [{ mu: 25, sigma: 6.861184222487201 }],
@@ -37,7 +41,8 @@ describe('thurstonMostellerPart', () => {
   })
 
   it('5p FFA', () => {
-    expect(rate([team1, team1, team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 29.20524620886059, sigma: 7.632833464033909 }],
       [{ mu: 25, sigma: 6.861184222487201 }],
       [{ mu: 25, sigma: 6.861184222487201 }],
@@ -47,7 +52,8 @@ describe('thurstonMostellerPart', () => {
   })
 
   it('3 teams different sized players', () => {
-    expect(rate([team3, team1, team2])).toEqual([
+    expect.assertions(1)
+    expect(rate([team3, team1, team2])).toStrictEqual([
       [
         { mu: 25.028771900446664, sigma: 8.317616549882494 },
         { mu: 25.028771900446664, sigma: 8.317616549882494 },

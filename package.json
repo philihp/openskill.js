@@ -58,7 +58,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "@philihp"
+      "@philihp",
+      "plugin:jest/all"
     ]
   },
   "dependencies": {
