@@ -9,6 +9,6 @@ describe('util#utilC', () => {
   it('utilC computes as expected', () => {
     const teamRatings = teamRating([team2, team1])
     const c = utilC(teamRatings)
-    expect(c).toBe(15.590239111558091)
+    expect(c).toBeCloseTo(15.590239)
   })
 })

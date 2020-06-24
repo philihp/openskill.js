@@ -18,6 +18,6 @@ describe('statistics#wt', () => {
   })
 
   it('wt(0,10)', () => {
-    expect(wt(0, 10) < 0.000000000001).toBe(true)
+    expect(wt(0, 10)).toBeCloseTo(0)
   })
 })
