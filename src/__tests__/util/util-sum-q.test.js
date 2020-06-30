@@ -7,10 +7,11 @@ describe('util#utilSumQ', () => {
   const team2 = [r, r]
 
   it('utilSumQ computes as expected', () => {
+    expect.assertions(1)
     const teamRatings = teamRating([team1, team2])
     const c = utilC(teamRatings)
     const sumQ = utilSumQ(teamRatings, c)
-    expect(sumQ).toEqual({
+    expect(sumQ).toStrictEqual({
       1: 29.67892702634643,
       2: 24.70819334370875,
     })

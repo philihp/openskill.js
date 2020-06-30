@@ -9,18 +9,21 @@ describe('bradleyTerryPart', () => {
   const rate = (game) => rateStub(game, { model: 'bradleyTerryPart' })
 
   it('solo game does not change rating', () => {
-    expect(rate([team1])).toEqual([team1])
+    expect.assertions(1)
+    expect(rate([team1])).toStrictEqual([team1])
   })
 
   it('2p FFA', () => {
-    expect(rate([team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
       [{ mu: 22.36476861652635, sigma: 8.065506316323548 }],
     ])
   })
 
   it('3p FFA', () => {
-    expect(rate([team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
       [{ mu: 25.0, sigma: 7.788474807872566 }],
       [{ mu: 22.36476861652635, sigma: 8.065506316323548 }],
@@ -28,7 +31,8 @@ describe('bradleyTerryPart', () => {
   })
 
   it('4p FFA', () => {
-    expect(rate([team1, team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
       [{ mu: 25.0, sigma: 7.788474807872566 }],
       [{ mu: 25.0, sigma: 7.788474807872566 }],
@@ -37,7 +41,8 @@ describe('bradleyTerryPart', () => {
   })
 
   it('5p FFA', () => {
-    expect(rate([team1, team1, team1, team1, team1])).toEqual([
+    expect.assertions(1)
+    expect(rate([team1, team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
       [{ mu: 25.0, sigma: 7.788474807872566 }],
       [{ mu: 25.0, sigma: 7.788474807872566 }],
@@ -47,7 +52,8 @@ describe('bradleyTerryPart', () => {
   })
 
   it('3 teams different sized players', () => {
-    expect(rate([team3, team1, team2])).toEqual([
+    expect.assertions(1)
+    expect(rate([team3, team1, team2])).toStrictEqual([
       [
         { mu: 25.219231461891965, sigma: 8.293401112661954 },
         { mu: 25.219231461891965, sigma: 8.293401112661954 },
