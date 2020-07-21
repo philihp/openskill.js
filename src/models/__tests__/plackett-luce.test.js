@@ -1,13 +1,12 @@
 import { rate as rateStub, rating } from '../..'
 
+const rate = (game) => rateStub(game, { model: 'plackettLuce' })
+
 describe('plackettLuce', () => {
   const r = rating()
   const team1 = [r]
   const team2 = [r, r]
   const team3 = [r, r, r]
-
-  const rate = (game) => rateStub(game, { model: 'plackettLuce' })
-
   it('solo game does not change rating', () => {
     expect.assertions(1)
     expect(rate([team1])).toStrictEqual([team1])
