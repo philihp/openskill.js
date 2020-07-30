@@ -6,7 +6,7 @@
     "microtime": "3.0.0",
     "ndjson": "1.5.0",
     "openskill": "1.0.1",
-    "ramda": "0.27.0",
+    "ramda": "0.27.1",
     "ts-trueskill": "3.0.2"
   }
 }
