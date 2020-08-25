@@ -33,7 +33,7 @@
     "@babel/register": "7.10.5",
     "@philihp/eslint-config": "3.0.2",
     "husky": "4.2.5",
-    "lint-staged": "10.2.11",
+    "lint-staged": "10.2.12",
     "prettier": "2.1.0"
   },
   "lint-staged": {
