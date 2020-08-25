@@ -61,14 +61,14 @@ const openskill = () => {
     }
     return ratings
   }, {})
-  console.log(ratings)
+  Object.entries(ratings)
+    .map(([race, rating]) => `${race}, ${rating.mu}, ${rating.sigma}`)
+    .forEach((r) => console.log(r))
 }
 
 const pushTeam = (results, race, exp) => {
   if (race === '') return
-  if (exp === '') return
-  if (exp === undefined) return
-  results.push(`${race}:${exp}`)
+  results.push(`${race}`)
 }
 
 const loadStart = microtime.now()
@@ -76,13 +76,13 @@ fs.createReadStream(`${__dirname}/ti4.csv`)
   .pipe(csv())
   .on('data', (data) => {
     let results = []
-    pushTeam(results, data['Winning Race'], data['Winning Exp Level'])
+    pushTeam(results, data['Winning Race'], data['Winner Exp Level'])
     pushTeam(results, data['2nd Race'], data['2nd Exp Level'])
     pushTeam(results, data['3rd Race'], data['3rd Exp Level'])
     pushTeam(results, data['4th Race'], data['4th Exp Level'])
     pushTeam(results, data['5th Race'], data['5th Exp Level'])
     pushTeam(results, data['6th Race'], data['6th Exp Level'])
-    dataset.push({ results })
+    if (results.length === 6) dataset.push({ results })
   })
   .on('end', () => {
     const start = microtime.now()
@@ -90,17 +90,6 @@ fs.createReadStream(`${__dirname}/ti4.csv`)
       `${dataset.length} records loaded in ${(start - loadStart) / 1000} ms`
     )
     openskill()
-    // new benchmark.Suite()
-    //   .add('openskill', openskill)
-    //   .on('complete', (e) => {
-    //     console.log(e.stats)
-    //   })
-    //   .on('cycle', (e) => {
-    //     console.log(e.target.toString())
-    //   })
-    //   .run()
-    // const avgsim = prediction.sumSimilar / prediction.total
-    // console.log({ prediction, avgsim })
     const end = microtime.now()
     console.log(`${(end - start) / 1000} ms elapsed`)
   })
