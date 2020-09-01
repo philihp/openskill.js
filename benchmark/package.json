@@ -4,7 +4,7 @@
     "compute-cosine-similarity": "1.0.0",
     "csv-parser": "2.3.3",
     "microtime": "3.0.0",
-    "ndjson": "1.5.0",
+    "ndjson": "2.0.0",
     "openskill": "1.0.1",
     "ramda": "0.27.1",
     "ts-trueskill": "3.0.4"
