@@ -32,7 +32,7 @@
     "@babel/preset-env": "7.11.5",
     "@babel/register": "7.11.5",
     "@philihp/eslint-config": "3.0.2",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "lint-staged": "10.3.0",
     "prettier": "2.1.1"
   },
