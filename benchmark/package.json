@@ -2,7 +2,7 @@
   "dependencies": {
     "benchmark": "2.1.4",
     "compute-cosine-similarity": "1.0.0",
-    "csv-parser": "2.3.3",
+    "csv-parser": "2.3.5",
     "microtime": "3.0.0",
     "ndjson": "2.0.0",
     "openskill": "1.0.1",
