@@ -1,4 +1,4 @@
-import { zip } from 'ramda'
+import { zip, sort, map, pipe } from 'ramda'
 import { BETASQ } from './constants'
 
 export const sum = (a, b) => a + b
@@ -67,3 +67,12 @@ export const utilA = (teamRatings) =>
         ).length
     )
     .reduce(intoRankHash, {})
+
+export const reorder = (rank) => (teams) => {
+  if (rank === undefined) return teams
+  return pipe(
+    zip,
+    sort(([a], [b]) => a - b),
+    map(([_, team]) => team)
+  )(rank, teams)
+}
