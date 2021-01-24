@@ -4,7 +4,7 @@ import { BETASQ, EPSILON } from '../constants'
 
 const TWOBETASQ = 2 * BETASQ
 
-export default (game, _options) => {
+export default (game) => {
   const teamRatings = teamRating(game)
 
   return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank]) => {

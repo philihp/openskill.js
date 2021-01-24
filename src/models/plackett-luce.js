@@ -2,7 +2,7 @@ import { transpose } from 'ramda'
 import { teamRating, utilSumQ, utilC, utilA, sum } from '../util'
 import { EPSILON } from '../constants'
 
-export default (game, { _log }) => {
+export default (game) => {
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
   const sumQ = utilSumQ(teamRatings, c)
