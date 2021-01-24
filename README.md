@@ -97,7 +97,7 @@ If your teams are listed in one order but your ranking is in a different order, 
 ]
 ```
 
-## TODO
+## Implementations
 
-- Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
-- Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
+* Kotlin https://github.com/brezinajn/openskill
+* Elixir https://github.com/philihp/openskill.ex
