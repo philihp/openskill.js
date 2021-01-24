@@ -20,8 +20,8 @@ describe('rate', () => {
   })
 
   it('accepts a rate ordering', () => {
-    expect(assertions(1))
-    const [[a2], [b2], [c2], [d2]] = rank([[d1], [b1], [c1], [a1]], {
+    expect.assertions(1)
+    const [[a2], [b2], [c2], [d2]] = rate([[d1], [b1], [c1], [a1]], {
       rank: [4, 2, 3, 1],
     })
     expect([[a2], [b2], [c2], [d2]]).toStrictEqual([
@@ -33,8 +33,8 @@ describe('rate', () => {
   })
 
   it('accepts teams in rating order', () => {
-    expect(assertions(6))
-    const [[a2, d2], [b2, e2], [c2, f2]] = rank(
+    expect.assertions(1)
+    const [[a2, d2], [b2, e2], [c2, f2]] = rate(
       [
         [a1, d1],
         [b1, e1],
@@ -44,11 +44,13 @@ describe('rate', () => {
         rank: [3, 1, 2],
       }
     )
-    expect(a2).toStrictEqual({ mu: 0, sigma: 1 })
-    expect(b2).toStrictEqual({ mu: 0, sigma: 1 })
-    expect(c2).toStrictEqual({ mu: 0, sigma: 1 })
-    expect(d2).toStrictEqual({ mu: 0, sigma: 1 })
-    expect(e2).toStrictEqual({ mu: 0, sigma: 1 })
-    expect(f2).toStrictEqual({ mu: 0, sigma: 1 })
+    expect([a2, b2, c2, d2, e2, f2]).toStrictEqual([
+      { mu: 27.99071775460834, sigma: 4.901007097140011 },
+      { mu: 17.60695098907354, sigma: 6.140737155130899 },
+      { mu: 27.857928218465247, sigma: 4.743791738484319 },
+      { mu: 27.341134074194173, sigma: 8.231039243636156 },
+      { mu: 26.679827236407125, sigma: 8.148750467726549 },
+      { mu: 20.979038689398703, sigma: 8.129445198549202 },
+    ])
   })
 })
