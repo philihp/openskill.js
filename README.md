@@ -82,8 +82,22 @@ When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
 By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99.5% likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.
 
+### Artificial Ranking
+
+If your teams are listed in one order but your ranking is in a different order, for convenience you can specify a `ranks` option, such as
+
+```js
+> const a1 = b1 = c1 = d1 = rating()
+> const [a2, b2, c2, d2] = rate([a1, b1, c1, d1], rank: [4, 1, 3, 2])
+[
+  [{ mu: 20.96..., sigma: 8.08... }],
+  [{ mu: 27.79..., sigma: 8.26... }],
+  [{ mu: 24.68..., sigma: 8.08... }],
+  [{ mu: 26.55..., sigma: 8.17... }],
+]
+```
+
 ## TODO
 
-- Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`.
 - Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
 - Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
