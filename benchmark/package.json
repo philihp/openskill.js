@@ -5,7 +5,7 @@
     "csv-parser": "3.0.0",
     "microtime": "3.0.0",
     "ndjson": "2.0.0",
-    "openskill": "1.1.0",
+    "openskill": "1.1.1",
     "ramda": "0.27.1",
     "ts-trueskill": "3.2.0"
   }
