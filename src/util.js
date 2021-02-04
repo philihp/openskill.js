@@ -21,13 +21,34 @@ export const score = (q, i) => {
   return 0.5
 }
 
-export const teamRating = (game) =>
-  game.map((team, i) => [
+export const rankings = (teams, rank = []) => {
+  const teamScores = teams.map((_, i) => rank[i] || i)
+  const outRank = new Array(teams.length)
+
+  let s = 0
+  for (let j = 0; j < teamScores.length; j += 1) {
+    if (j > 0 && teamScores[j - 1] < teamScores[j]) {
+      s = j
+    }
+    outRank[j] = s + 1
+  }
+  return outRank
+}
+
+// this is basically shared code, precomputed for every model
+export const teamRating = (game, options = {}) => {
+  const rank = rankings(game, options.rank)
+  return game.map((team, i) => [
+    // mu[i]
     team.map(({ mu }) => mu).reduce(sum, 0),
+    // sigma^2[i]
     team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
+    // (original team data)
     team,
-    i + 1,
+    // rank[i]
+    rank[i],
   ])
+}
 
 export const ladderPairs = (ranks) => {
   const size = ranks.length
