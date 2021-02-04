@@ -14,37 +14,53 @@ describe('util#reorder', () => {
 
   it('accepts 1 item', () => {
     expect.assertions(1)
-    expect(reorder([1])([a])).toStrictEqual([a])
+    expect(reorder([1])([a])).toStrictEqual([[a], [1]])
   })
 
   it('accepts 2 items', () => {
     expect.assertions(1)
-    expect(reorder([2, 1])([a, b])).toStrictEqual([b, a])
+    expect(reorder([2, 1])([a, b])).toStrictEqual([
+      [b, a],
+      [1, 2],
+    ])
   })
 
   it('accepts 3 items', () => {
     expect.assertions(1)
-    expect(reorder([2, 3, 1])([a, b, c])).toStrictEqual([c, a, b])
+    expect(reorder([2, 3, 1])([a, b, c])).toStrictEqual([
+      [c, a, b],
+      [1, 2, 3],
+    ])
   })
 
   it('accepts 4 items', () => {
     expect.assertions(1)
-    expect(reorder([2, 4, 3, 1])(source)).toStrictEqual([d, a, c, b])
+    expect(reorder([2, 4, 3, 1])(source)).toStrictEqual([
+      [d, a, c, b],
+      [1, 2, 3, 4],
+    ])
   })
 
   it('works with numbers of float, sparse rankings', () => {
     expect.assertions(1)
-    expect(reorder([2.45, 0, 7.12])([a, b, c])).toStrictEqual([b, a, c])
+    expect(reorder([2.45, 0, 7.12])([a, b, c])).toStrictEqual([
+      [b, a, c],
+      [0, 2.45, 7.12],
+    ])
   })
 
   it('does not reorder if rank is missing', () => {
-    expect.assertions(1)
-    expect(reorder(undefined)(source)).toBe(source)
+    expect.assertions(2)
+    expect(reorder(undefined)(source)[0]).toBe(source)
+    expect(reorder(undefined)(source)[1]).toBeUndefined()
   })
 
   it('can be curried', () => {
     expect.assertions(1)
     const curriedReorder = reorder([4, 3, 2, 1])
-    expect(curriedReorder(source)).toStrictEqual([d, c, b, a])
+    expect(curriedReorder(source)).toStrictEqual([
+      [d, c, b, a],
+      [1, 2, 3, 4],
+    ])
   })
 })
