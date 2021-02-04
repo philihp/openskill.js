@@ -8,6 +8,11 @@ describe('rate', () => {
   const e1 = rating()
   const f1 = rating()
 
+  const w1 = rating({ mu: 25 })
+  const x1 = rating({ mu: 50 })
+  const y1 = rating({ mu: 75 })
+  const z1 = rating({ mu: 100 })
+
   it('rate accepts and runs a placket-luce model by default', () => {
     expect.assertions(1)
     const [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]])
@@ -21,14 +26,14 @@ describe('rate', () => {
 
   it('accepts a rate ordering', () => {
     expect.assertions(1)
-    const [[a2], [b2], [c2], [d2]] = rate([[d1], [b1], [c1], [a1]], {
-      rank: [4, 2, 3, 1],
+    const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
+      rank: [1, 3, 4, 2],
     })
-    expect([[a2], [b2], [c2], [d2]]).toStrictEqual([
-      [{ mu: 30.209971908310553, sigma: 4.764898977359521 }],
-      [{ mu: 27.64460833689499, sigma: 4.882789305097372 }],
-      [{ mu: 17.403586731283518, sigma: 6.100723440599442 }],
-      [{ mu: 19.214790707434826, sigma: 7.8542613981643985 }],
+    expect([w2, x2, y2, z2]).toStrictEqual([
+      { mu: 28.67737565442646, sigma: 8.328456968941984 },
+      { mu: 52.57392768912515, sigma: 8.235421539444559 },
+      { mu: 70.58997703962795, sigma: 8.153023344882628 },
+      { mu: 98.15871961682043, sigma: 8.191288071064596 },
     ])
   })
 
@@ -45,12 +50,12 @@ describe('rate', () => {
       }
     )
     expect([a2, b2, c2, d2, e2, f2]).toStrictEqual([
+      { mu: 27.857928218465247, sigma: 4.743791738484319 },
       { mu: 27.99071775460834, sigma: 4.901007097140011 },
       { mu: 17.60695098907354, sigma: 6.140737155130899 },
-      { mu: 27.857928218465247, sigma: 4.743791738484319 },
+      { mu: 20.979038689398703, sigma: 8.129445198549202 },
       { mu: 27.341134074194173, sigma: 8.231039243636156 },
       { mu: 26.679827236407125, sigma: 8.148750467726549 },
-      { mu: 20.979038689398703, sigma: 8.129445198549202 },
     ])
   })
 })
