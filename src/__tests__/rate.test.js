@@ -1,4 +1,24 @@
+import { transition } from '../rate'
 import { rate, rating } from '..'
+
+describe('rate#transition', () => {
+  const a = 'a'
+  const b = 'b'
+  const c = 'c'
+  const d = 'd'
+  const natural = [a, c, d, b]
+  const ordered = [a, b, c, d]
+  it('inverts a normal array', () => {
+    expect.assertions(1)
+    const result = transition(natural, ordered)
+    expect(result).toStrictEqual([0, 3, 1, 2])
+  })
+  it('reverses the array', () => {
+    expect.assertions(1)
+    const result = transition(ordered, natural)
+    expect(result).toStrictEqual([0, 2, 3, 1])
+  })
+})
 
 describe('rate', () => {
   const a1 = rating({ mu: 29.182, sigma: 4.782 })
@@ -7,12 +27,10 @@ describe('rate', () => {
   const d1 = rating()
   const e1 = rating()
   const f1 = rating()
-
   const w1 = rating({ mu: 25 })
   const x1 = rating({ mu: 50 })
   const y1 = rating({ mu: 75 })
   const z1 = rating({ mu: 100 })
-
   it('rate accepts and runs a placket-luce model by default', () => {
     expect.assertions(1)
     const [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]])
@@ -56,6 +74,32 @@ describe('rate', () => {
       { mu: 20.979038689398703, sigma: 8.129445198549202 },
       { mu: 27.341134074194173, sigma: 8.231039243636156 },
       { mu: 26.679827236407125, sigma: 8.148750467726549 },
+    ])
+  })
+
+  it('fixes orders of ties', () => {
+    expect.assertions(1)
+    const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
+      rank: [2, 4, 2, 1],
+    })
+    expect([w2, x2, y2, z2]).toStrictEqual([
+      { mu: 32.212629604515094, sigma: 8.31025813361969 },
+      { mu: 49.0783656590492, sigma: 8.25617415661398 },
+      { mu: 78.92801836297117, sigma: 8.204569273806177 },
+      { mu: 100.96132626096349, sigma: 8.261690241098727 },
+    ])
+  })
+
+  it('accepts a score instead of rank', () => {
+    expect.assertions(1)
+    const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
+      score: [50, 40, 50, 100],
+    })
+    expect([w2, x2, y2, z2]).toStrictEqual([
+      { mu: 32.212629604515094, sigma: 8.31025813361969 },
+      { mu: 49.0783656590492, sigma: 8.25617415661398 },
+      { mu: 78.92801836297117, sigma: 8.204569273806177 },
+      { mu: 100.96132626096349, sigma: 8.261690241098727 },
     ])
   })
 })

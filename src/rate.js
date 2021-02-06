@@ -1,13 +1,11 @@
 import models from './models'
 import { reorder } from './util'
 
-// finds the indexes used to unshuffle, O(n^2)
-// [ 1, 3, 4, 2 ] --> [ 1, 4, 2, 3 ]
-const reversedOrder = (rank) => {
-  return rank.map((n, i) => {
-    const j = rank.indexOf(i + 1) + 1
-    return j
+export const transition = (postTeams, preTeams) => {
+  const out = preTeams.map((t, i) => {
+    return postTeams.indexOf(t)
   })
+  return out
 }
 
 const rate = (teams, options = {}) => {
@@ -18,7 +16,7 @@ const rate = (teams, options = {}) => {
     return model(teams, options)
   }
 
-  // if rank provided, use it, otherwise invert scores and use that
+  // if rank provided, use it, otherwise transition scores and use that
   const rank = options.rank ?? options.score.map((points) => -points)
   const [orderedTeams, orderedRanks] = reorder(rank)(teams)
 
@@ -27,7 +25,7 @@ const rate = (teams, options = {}) => {
     rank: orderedRanks,
   })
 
-  const derank = reversedOrder(rank)
+  const derank = transition(teams, orderedTeams)
   const [reorderedTeams] = reorder(derank)(newRatings)
   return reorderedTeams
 }
