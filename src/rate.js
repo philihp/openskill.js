@@ -1,12 +1,8 @@
 import models from './models'
 import { reorder } from './util'
 
-export const transition = (postTeams, preTeams) => {
-  const out = preTeams.map((t, i) => {
-    return postTeams.indexOf(t)
-  })
-  return out
-}
+export const transition = (postTeams, preTeams) =>
+  preTeams.map((t) => postTeams.indexOf(t))
 
 const rate = (teams, options = {}) => {
   const model = models[options.model || 'plackettLuce']
