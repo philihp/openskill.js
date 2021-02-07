@@ -8,17 +8,17 @@ export default (game, options = {}) => {
   const sumQ = utilSumQ(teamRatings, c)
   const a = utilA(teamRatings)
 
-  return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank]) => {
+  return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank], i) => {
     const iMuOverCe = Math.exp(iMu / c)
     const [omegaSet, deltaSet] = transpose(
       teamRatings
         .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank <= iRank)
-        .map(([_qMu, _qSigmaSq, _qTeam, qRank]) => {
-          const quotient = iMuOverCe / sumQ[qRank]
-          const mu =
-            qRank === iRank ? 1 - quotient / a[qRank] : -quotient / a[qRank]
-          const sigma = (quotient * (1 - quotient)) / a[qRank]
-          return [mu, sigma]
+        .map(([_], q) => {
+          const quotient = iMuOverCe / sumQ[q]
+          return [
+            (i === q ? 1 - quotient : -quotient) / a[q],
+            (quotient * (1 - quotient)) / a[q],
+          ]
         })
     )
     const gamma = Math.sqrt(iSigmaSq) / c
