@@ -10,9 +10,6 @@ describe('util#utilA', () => {
     expect.assertions(1)
     const teamRatings = teamRating([team1, team2])
     const a = utilA(teamRatings)
-    expect(a).toStrictEqual({
-      0: 1,
-      1: 1,
-    })
+    expect(a).toStrictEqual([1, 1])
   })
 })

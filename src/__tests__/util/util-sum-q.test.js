@@ -11,9 +11,6 @@ describe('util#utilSumQ', () => {
     const teamRatings = teamRating([team1, team2])
     const c = utilC(teamRatings)
     const sumQ = utilSumQ(teamRatings, c)
-    expect(sumQ).toStrictEqual({
-      0: 29.67892702634643,
-      1: 24.70819334370875,
-    })
+    expect(sumQ).toStrictEqual([29.67892702634643, 24.70819334370875])
   })
 })
