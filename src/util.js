@@ -1,4 +1,4 @@
-import { zip, sort, map, pipe } from 'ramda'
+import { zip, sort, pipe, transpose, reverse } from 'ramda'
 import { BETASQ } from './constants'
 
 export const sum = (a, b) => a + b
@@ -6,7 +6,7 @@ export const sum = (a, b) => a + b
 const intoRankHash = (accum, value, index) => {
   return {
     ...accum,
-    [index + 1]: value,
+    [index]: value,
   }
 }
 
@@ -21,13 +21,34 @@ export const score = (q, i) => {
   return 0.5
 }
 
-export const teamRating = (game) =>
-  game.map((team, i) => [
+export const rankings = (teams, rank = []) => {
+  const teamScores = teams.map((_, i) => rank[i] || i)
+  const outRank = new Array(teams.length)
+
+  let s = 0
+  for (let j = 0; j < teamScores.length; j += 1) {
+    if (j > 0 && teamScores[j - 1] < teamScores[j]) {
+      s = j
+    }
+    outRank[j] = s + 1
+  }
+  return outRank
+}
+
+// this is basically shared code, precomputed for every model
+export const teamRating = (game, options = {}) => {
+  const rank = rankings(game, options.rank)
+  return game.map((team, i) => [
+    // mu[i]
     team.map(({ mu }) => mu).reduce(sum, 0),
+    // sigma^2[i]
     team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
+    // (original team data)
     team,
-    i + 1,
+    // rank[i]
+    rank[i],
   ])
+}
 
 export const ladderPairs = (ranks) => {
   const size = ranks.length
@@ -69,10 +90,11 @@ export const utilA = (teamRatings) =>
     .reduce(intoRankHash, {})
 
 export const reorder = (rank) => (teams) => {
-  if (rank === undefined) return teams
+  if (rank === undefined) return [teams]
   return pipe(
     zip,
     sort(([a], [b]) => a - b),
-    map(([_, team]) => team)
-  )(rank, teams)
+    transpose,
+    reverse
+  )(rank, teams) // -> [orderedTeams, orderedRanks]
 }

@@ -60,12 +60,12 @@ If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send t
 > const [[x1, x2], [y1, y2]] = rate([[a1, a2], [b1, b2]])
 [
   [
-    { mu: 28.669648436582808, sigma: 8.071520788025197 },
-    { mu: 33.83086971107981, sigma: 5.062772998705765 }
+    { mu: 28.67..., sigma: 8.07...},
+    { mu: 33.83..., sigma: 5.06...}
   ],
   [
-    { mu: 43.071274808241974, sigma: 2.4166900452721256 },
-    { mu: 23.149503312339064, sigma: 6.1378606973362135 }
+    { mu: 43.07..., sigma: 2.42...},
+    { mu: 23.15..., sigma: 6.14...}
   ]
 ]
 ```
@@ -76,8 +76,8 @@ When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
 ```js
 > const { ordinal } = require('openskill')
-> ordinal({ mu: 43.071274808241974, sigma: 2.4166900452721256})
-35.821204672425594
+> ordinal({ mu: 43.07, sigma: 2.42})
+35.81
 ```
 
 By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99.5% likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.
@@ -88,12 +88,34 @@ If your teams are listed in one order but your ranking is in a different order, 
 
 ```js
 > const a1 = b1 = c1 = d1 = rating()
-> const [a2, b2, c2, d2] = rate([a1, b1, c1, d1], rank: [4, 1, 3, 2])
+> const [a2, b2, c2, d2] = rate([[a1], [b1], [c1], [d1]], {
+    { rank: [4, 1, 3, 2]
+  })
 [
-  [{ mu: 20.96..., sigma: 8.08... }],
-  [{ mu: 27.79..., sigma: 8.26... }],
+  [{ mu: 20.96..., sigma: 8.08... }], // came in last, so 25.00 -> 20.96
+  [{ mu: 27.79..., sigma: 8.26... }], // came in first, so 25.00 -> 27.69
   [{ mu: 24.68..., sigma: 8.08... }],
   [{ mu: 26.55..., sigma: 8.17... }],
+]
+```
+
+It's assumed that the lower ranks are better (wins), while higher ranks are worse (losses). You can provide a `score` instead, where lower is worse and higher is better. These can just be raw scores from the game, if you want.
+
+Ties should have either equivalent rank or score.
+
+```js
+> const a1 = rating()
+> const b1 = rating()
+> const c1 = rating()
+> const d1 = rating()
+> const [a2, b2, c2, d2] = rate([a1], [b1], [c1], [d1]], {
+    rank: [2, 4, 2, 1]
+  })
+[
+  { mu: 26.62...,  sigma: 8.31... }, // second
+  { mu: 49.07...,  sigma: 8.26... }, // last
+  { mu: 73.33...,  sigma: 8.20... }, // second
+  { mu: 100.96..., sigma: 8.26... }, // first
 ]
 ```
 
@@ -101,3 +123,7 @@ If your teams are listed in one order but your ranking is in a different order, 
 
 * Kotlin https://github.com/brezinajn/openskill
 * Elixir https://github.com/philihp/openskill.ex
+
+## TODO
+
+- Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
