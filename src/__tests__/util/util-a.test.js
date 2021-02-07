@@ -11,8 +11,8 @@ describe('util#utilA', () => {
     const teamRatings = teamRating([team1, team2])
     const a = utilA(teamRatings)
     expect(a).toStrictEqual({
+      0: 1,
       1: 1,
-      2: 1,
     })
   })
 })

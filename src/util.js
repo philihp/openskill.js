@@ -6,7 +6,7 @@ export const sum = (a, b) => a + b
 const intoRankHash = (accum, value, index) => {
   return {
     ...accum,
-    [index + 1]: value,
+    [index]: value,
   }
 }
 
