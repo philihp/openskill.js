@@ -24,4 +24,16 @@ describe('rating', () => {
     const { sigma } = rating({ sigma: 6.283185 })
     expect(sigma).toBe(6.283185)
   })
+
+  it('can initialize a mu of zero', () => {
+    expect.assertions(1)
+    const { mu } = rating({ mu: 0 })
+    expect(mu).toBe(0)
+  })
+
+  it('can initialize a sigma of zero', () => {
+    expect.assertions(1)
+    const { sigma } = rating({ sigma: 0 })
+    expect(sigma).toBe(0)
+  })
 })

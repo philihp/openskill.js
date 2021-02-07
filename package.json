@@ -1,6 +1,6 @@
 {
   "name": "openskill",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "scripts": {
     "build": "babel src -d dist",
@@ -27,13 +27,13 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
-    "@babel/cli": "7.12.10",
-    "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.11",
-    "@babel/register": "7.12.10",
+    "@babel/cli": "7.12.13",
+    "@babel/core": "7.12.13",
+    "@babel/preset-env": "7.12.13",
+    "@babel/register": "7.12.13",
     "@philihp/eslint-config": "4.2.0",
-    "husky": "5.0.6",
-    "lint-staged": "10.5.3",
+    "husky": "5.0.8",
+    "lint-staged": "10.5.4",
     "prettier": "2.2.1"
   },
   "lint-staged": {
