@@ -7,6 +7,22 @@ const d = 'd'
 const e = 'e'
 
 describe('util#rankings', () => {
+  it('ranks a 0 element array without reordering', () => {
+    expect.assertions(1)
+    expect(rankings([], undefined)).toStrictEqual([])
+  })
+  it('ranks a 0 element array with reordering', () => {
+    expect.assertions(1)
+    expect(rankings([], [])).toStrictEqual([])
+  })
+  it('ranks a 1 element array without reordering', () => {
+    expect.assertions(1)
+    expect(rankings([a], undefined)).toStrictEqual([1])
+  })
+  it('ranks a 1 element array with reordering', () => {
+    expect.assertions(1)
+    expect(rankings([a], [a])).toStrictEqual([1])
+  })
   it('ranks given undefined', () => {
     expect.assertions(1)
     expect(rankings([a, b, c, d], undefined)).toStrictEqual([1, 2, 3, 4])
