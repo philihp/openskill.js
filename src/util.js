@@ -86,3 +86,6 @@ export const reorder = (rank) => (teams) => {
     reverse
   )(rank, teams) // -> [orderedTeams, orderedRanks]
 }
+
+export const transition = (postTeams, preTeams) =>
+  preTeams.map((t) => postTeams.indexOf(t))

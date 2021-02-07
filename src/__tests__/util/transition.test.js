@@ -1,4 +1,4 @@
-import { transition } from '../../rate'
+import { transition } from '../../util'
 
 describe('rate#transition', () => {
   const a = 'a'
