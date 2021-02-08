@@ -1,7 +1,7 @@
 import gaussian from 'gaussian'
-import { epsilon } from './constants'
+import constants from './constants'
 
-const minValue = (options) => epsilon(options) / 10
+const minValue = (options) => constants(options).EPSILON / 10
 
 // use a standard normal distribution - mean of zero, stddev/variance of one
 const normal = gaussian(0, 1)
@@ -25,7 +25,7 @@ export const w = (x, t) => {
   return v(x, t) * (v(x, t) + xt)
 }
 
-export const VT = (options) => {
+const VT = (options) => {
   const MIN_VALUE = minValue(options)
   return (x, t) => {
     const xx = Math.abs(x)
@@ -39,7 +39,7 @@ export const VT = (options) => {
   }
 }
 
-export const WT = (options) => {
+const WT = (options) => {
   const vt = VT(options)
   const MIN_VALUE = minValue(options)
   return (x, t) => {
@@ -51,3 +51,8 @@ export const WT = (options) => {
           vt(x, t) * vt(x, t)
   }
 }
+
+export default (options) => ({
+  vt: VT(options),
+  wt: WT(options),
+})

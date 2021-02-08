@@ -1,7 +1,7 @@
-import { WT } from '../../statistics'
+import statistics from '../../statistics'
 
 describe('statistics#wt', () => {
-  const wt = WT({})
+  const { wt } = statistics({})
 
   it('wt(1,2)', () => {
     expect.assertions(1)

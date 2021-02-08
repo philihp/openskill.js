@@ -1,7 +1,7 @@
-import { VT } from '../../statistics'
+import statistics from '../../statistics'
 
 describe('statistics#vt', () => {
-  const vt = VT({})
+  const { vt } = statistics({})
 
   it('with small b, small x', () => {
     expect.assertions(1)
