@@ -123,7 +123,3 @@ Ties should have either equivalent rank or score.
 
 * Kotlin https://github.com/brezinajn/openskill
 * Elixir https://github.com/philihp/openskill.ex
-
-## TODO
-
-- Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
