@@ -1,6 +1,8 @@
-import { vt } from '../../statistics'
+import { VT } from '../../statistics'
 
 describe('statistics#vt', () => {
+  const vt = VT({})
+
   it('with small b, small x', () => {
     expect.assertions(1)
     expect(vt(-1000, -100)).toBe(1100)

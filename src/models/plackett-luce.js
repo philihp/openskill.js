@@ -1,10 +1,11 @@
 import { transpose } from 'ramda'
-import { teamRating, utilSumQ, utilC, utilA, sum } from '../util'
-import { EPSILON } from '../constants'
+import { teamRating, utilSumQ, UTIL_C, utilA, sum } from '../util'
+import { epsilon } from '../constants'
 
 export default (game, options = {}) => {
+  const EPSILON = epsilon(options)
   const teamRatings = teamRating(game, options)
-  const c = utilC(teamRatings)
+  const c = UTIL_C(options)(teamRatings)
   const sumQ = utilSumQ(teamRatings, c)
   const a = utilA(teamRatings)
 
@@ -21,17 +22,16 @@ export default (game, options = {}) => {
           ]
         })
     )
-    const gamma = Math.sqrt(iSigmaSq) / c
     const iOmega = (omegaSet.reduce(sum, 0) * iSigmaSq) / c
-    const iDelta = (gamma * deltaSet.reduce(sum, 0) * iSigmaSq) / c / c
+    const iDelta =
+      (Math.sqrt(iSigmaSq) * deltaSet.reduce(sum, 0) * iSigmaSq) / c ** 3
 
     return iTeam.map(({ mu, sigma }) => {
-      const sigmaSq = sigma * sigma
       return {
-        mu: mu + (sigmaSq / iSigmaSq) * iOmega,
+        mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
         sigma:
           sigma *
-          Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
+          Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
       }
     })
   })

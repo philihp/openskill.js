@@ -11,6 +11,7 @@ const rate = (teams, options = {}) => {
 
   // if rank provided, use it, otherwise transition scores and use that
   const rank = options.rank ?? options.score.map((points) => -points)
+
   const [orderedTeams, orderedRanks] = reorder(rank)(teams)
 
   const newRatings = model(orderedTeams, {
@@ -20,6 +21,7 @@ const rate = (teams, options = {}) => {
 
   const derank = transition(teams, orderedTeams)
   const [reorderedTeams] = reorder(derank)(newRatings)
+
   return reorderedTeams
 }
 

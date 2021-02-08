@@ -1,7 +1,7 @@
 import gaussian from 'gaussian'
-import { EPSILON } from './constants'
+import { epsilon } from './constants'
 
-const MIN_VALUE = EPSILON / 10
+const minValue = (options) => epsilon(options) / 10
 
 // use a standard normal distribution - mean of zero, stddev/variance of one
 const normal = gaussian(0, 1)
@@ -25,22 +25,29 @@ export const w = (x, t) => {
   return v(x, t) * (v(x, t) + xt)
 }
 
-export const vt = (x, t) => {
-  const xx = Math.abs(x)
-  const b = phiMajor(t - xx) - phiMajor(-t - xx)
-  if (b < MIN_VALUE) {
-    if (x < 0) return -x - t
-    return -x + t
+export const VT = (options) => {
+  const MIN_VALUE = minValue(options)
+  return (x, t) => {
+    const xx = Math.abs(x)
+    const b = phiMajor(t - xx) - phiMajor(-t - xx)
+    if (b < MIN_VALUE) {
+      if (x < 0) return -x - t
+      return -x + t
+    }
+    const a = phiMinor(-t - xx) - phiMinor(t - xx)
+    return (x < 0 ? -a : a) / b
   }
-  const a = phiMinor(-t - xx) - phiMinor(t - xx)
-  return (x < 0 ? -a : a) / b
 }
 
-export const wt = (x, t) => {
-  const xx = Math.abs(x)
-  const b = phiMajor(t - xx) - phiMajor(-t - xx)
-  return b < MIN_VALUE
-    ? 1.0
-    : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
-        vt(x, t) * vt(x, t)
+export const WT = (options) => {
+  const vt = VT(options)
+  const MIN_VALUE = minValue(options)
+  return (x, t) => {
+    const xx = Math.abs(x)
+    const b = phiMajor(t - xx) - phiMajor(-t - xx)
+    return b < MIN_VALUE
+      ? 1.0
+      : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
+          vt(x, t) * vt(x, t)
+  }
 }

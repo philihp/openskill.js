@@ -1,7 +1,8 @@
-import { teamRating, utilC } from '../../util'
+import { teamRating, UTIL_C } from '../../util'
 import { rating } from '../..'
 
 describe('util#utilC', () => {
+  const utilC = UTIL_C({})
   const r = rating()
   const team1 = [r]
   const team2 = [r, r]

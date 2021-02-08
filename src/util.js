@@ -1,5 +1,5 @@
 import { zip, sort, pipe, transpose, reverse } from 'ramda'
-import { BETASQ } from './constants'
+import { betaSq } from './constants'
 
 export const sum = (a, b) => a + b
 
@@ -55,10 +55,12 @@ export const ladderPairs = (ranks) => {
   })
 }
 
-export const utilC = (teamRatings) =>
+export const UTIL_C = (options) => (teamRatings) =>
   Math.sqrt(
     teamRatings
-      .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
+      .map(
+        ([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + betaSq(options)
+      )
       .reduce(sum, 0)
   )
 

@@ -1,6 +1,8 @@
-import { wt } from '../../statistics'
+import { WT } from '../../statistics'
 
 describe('statistics#wt', () => {
+  const wt = WT({})
+
   it('wt(1,2)', () => {
     expect.assertions(1)
     expect(wt(1, 2)).toBe(0.38385826878672835)
