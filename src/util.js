@@ -1,14 +1,7 @@
 import { zip, sort, pipe, transpose, reverse } from 'ramda'
-import { BETASQ } from './constants'
+import { betaSq } from './constants'
 
 export const sum = (a, b) => a + b
-
-const intoRankHash = (accum, value, index) => {
-  return {
-    ...accum,
-    [index]: value,
-  }
-}
 
 export const score = (q, i) => {
   if (q < i) {
@@ -62,32 +55,29 @@ export const ladderPairs = (ranks) => {
   })
 }
 
-export const utilC = (teamRatings) =>
+export const UTIL_C = (options) => (teamRatings) =>
   Math.sqrt(
     teamRatings
-      .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
+      .map(
+        ([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + betaSq(options)
+      )
       .reduce(sum, 0)
   )
 
 export const utilSumQ = (teamRatings, c) =>
-  teamRatings
-    .map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
-      teamRatings
-        .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
-        .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
-        .reduce(sum, 0)
-    )
-    .reduce(intoRankHash, {})
+  teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
+    teamRatings
+      .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
+      .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
+      .reduce(sum, 0)
+  )
 
 export const utilA = (teamRatings) =>
-  teamRatings
-    .map(
-      ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
-        teamRatings.filter(
-          ([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank
-        ).length
-    )
-    .reduce(intoRankHash, {})
+  teamRatings.map(
+    ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
+      teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank)
+        .length
+  )
 
 export const reorder = (rank) => (teams) => {
   if (rank === undefined) return [teams]
@@ -98,3 +88,6 @@ export const reorder = (rank) => (teams) => {
     reverse
   )(rank, teams) // -> [orderedTeams, orderedRanks]
 }
+
+export const transition = (postTeams, preTeams) =>
+  preTeams.map((t) => postTeams.indexOf(t))

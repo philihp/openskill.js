@@ -7,10 +7,10 @@ describe('rate', () => {
   const d1 = rating()
   const e1 = rating()
   const f1 = rating()
-  const w1 = rating({ mu: 25 })
-  const x1 = rating({ mu: 50 })
-  const y1 = rating({ mu: 75 })
-  const z1 = rating({ mu: 100 })
+  const w1 = rating({ mu: 15, sigma: 25 / 3.0 })
+  const x1 = rating({ mu: 20, sigma: 25 / 3.0 })
+  const y1 = rating({ mu: 25, sigma: 25 / 3.0 })
+  const z1 = rating({ mu: 30, sigma: 25 / 3.0 })
 
   it('rate accepts and runs a placket-luce model by default', () => {
     expect.assertions(1)
@@ -23,16 +23,51 @@ describe('rate', () => {
     ])
   })
 
+  it('reverses rank', () => {
+    expect.assertions(1)
+    const [[loser], [winner]] = rate([[rating()], [rating()]], {
+      rank: [2, 1],
+    })
+    expect([winner, loser]).toStrictEqual([
+      { mu: 27.63523138347365, sigma: 8.065506316323548 },
+      { mu: 22.36476861652635, sigma: 8.065506316323548 },
+    ])
+  })
+
+  it('keeps rank', () => {
+    expect.assertions(1)
+    const [[loser], [winner]] = rate([[rating()], [rating()]], {
+      rank: [1, 2],
+    })
+    expect([winner, loser]).toStrictEqual([
+      { mu: 22.36476861652635, sigma: 8.065506316323548 },
+      { mu: 27.63523138347365, sigma: 8.065506316323548 },
+    ])
+  })
+
+  it('accepts a misordered rank ordering', () => {
+    expect.assertions(1)
+    const [[a], [b], [c], [d]] = rate([[d1], [d1], [d1], [d1]], {
+      rank: [2, 1, 4, 3],
+    })
+    expect([a, b, c, d]).toStrictEqual([
+      { mu: 26.552824984374855, sigma: 8.179213704945203 },
+      { mu: 27.795084971874736, sigma: 8.263160757613477 },
+      { mu: 20.96265504062538, sigma: 8.083731307186588 },
+      { mu: 24.68943500312503, sigma: 8.083731307186588 },
+    ])
+  })
+
   it('accepts a rate ordering', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
       rank: [1, 3, 4, 2],
     })
     expect([w2, x2, y2, z2]).toStrictEqual([
-      { mu: 28.67737565442646, sigma: 8.328456968941984 },
-      { mu: 52.57392768912515, sigma: 8.235421539444559 },
-      { mu: 70.58997703962795, sigma: 8.153023344882628 },
-      { mu: 98.15871961682043, sigma: 8.191288071064596 },
+      { mu: 18.13094482387197, sigma: 8.283124738447958 },
+      { mu: 20.40517319790051, sigma: 8.107463101775272 },
+      { mu: 20.65608164139383, sigma: 8.082178279446465 },
+      { mu: 30.80780033683369, sigma: 8.154697408620104 },
     ])
   })
 
@@ -58,20 +93,65 @@ describe('rate', () => {
     ])
   })
 
+  it('allows ties', () => {
+    expect.assertions(1)
+    const a = rating({ mu: 10, sigma: 8 })
+    const b = rating({ mu: 5, sigma: 10 })
+    const c = rating({ mu: 0, sigma: 12 })
+    const [[x], [y], [z]] = rate([[a], [b], [c]], {
+      rank: [1, 2, 2],
+    })
+    expect([x, y, z]).toStrictEqual([
+      { mu: 11.942833056030613, sigma: 7.926463661123746 },
+      { mu: 2.938193791485662, sigma: 9.65347573412201 },
+      { mu: -1.4023734358082325, sigma: 11.323360667700934 },
+    ])
+  })
+
+  it('allows ties with reorder', () => {
+    expect.assertions(1)
+    const a = rating({ mu: 10, sigma: 8 })
+    const b = rating({ mu: 5, sigma: 10 })
+    const c = rating({ mu: 0, sigma: 12 })
+    const [[y3], [z3], [x3]] = rate([[b], [c], [a]], {
+      rank: [2, 2, 1],
+    })
+    const [[x2], [y2], [z2]] = rate([[a], [b], [c]], {
+      rank: [1, 2, 2],
+    })
+    expect([x2, y2, z2]).toStrictEqual([x3, y3, z3])
+  })
+
+  it('four-way-tie with newbies', () => {
+    expect.assertions(1)
+    const [[a], [b], [c], [d]] = rate(
+      [[rating()], [rating()], [rating()], [rating()]],
+      {
+        rank: [1, 1, 1, 1],
+      }
+    )
+    expect([a, b, c, d]).toStrictEqual([
+      { mu: 25, sigma: 8.263160757613477 },
+      { mu: 25, sigma: 8.263160757613477 },
+      { mu: 25, sigma: 8.263160757613477 },
+      { mu: 25, sigma: 8.263160757613477 },
+    ])
+  })
+
   it('fixes orders of ties', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
       rank: [2, 4, 2, 1],
     })
     expect([w2, x2, y2, z2]).toStrictEqual([
-      { mu: 26.62245966076562, sigma: 8.31025813361969 },
-      { mu: 49.0783656590492, sigma: 8.25617415661398 },
-      { mu: 73.3378484192217, sigma: 8.204569273806177 },
-      { mu: 100.96132626096349, sigma: 8.261690241098727 },
+      { mu: 15.340046366255285, sigma: 8.21273604193863 },
+      { mu: 18.007807436399276, sigma: 8.188629384105589 },
+      { mu: 24.25804790911316, sigma: 8.166514496319483 },
+      { mu: 32.39409828823228, sigma: 8.247276990243211 },
     ])
   })
 
-  it('runs a model when tied for first', () => {
+  it('runs a model whith ties for first', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[e1], [e1], [e1], [e1]], {
       model: 'thurstonMostellerFull',
