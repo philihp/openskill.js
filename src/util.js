@@ -93,7 +93,13 @@ export const reorder = (rank) => (teams) => {
 export const transition = (postTeams, preTeams) =>
   preTeams.map((t) => postTeams.indexOf(t))
 
+export const gamma = (options) =>
+  options.gamma ??
+  // default to iSigma / ciq
+  ((ciq, _k, _mu, sigmaSq, _team, _qRank) => Math.sqrt(sigmaSq) / ciq)
+
 export default (options) => ({
   utilC: utilC(options),
   teamRating: teamRating(options),
+  gamma: gamma(options),
 })

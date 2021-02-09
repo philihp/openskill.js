@@ -65,4 +65,25 @@ describe('thurstonMostellerPart', () => {
       ],
     ])
   })
+
+  it('can use a custom gamma with k=2', () => {
+    expect.assertions(1)
+    expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
+      [{ mu: 29.20524620886059, sigma: 7.784759515283723 }],
+      [{ mu: 20.79475379113941, sigma: 7.784759515283723 }],
+    ])
+  })
+
+  it('can use a custom gamma with k=5', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
+    ).toStrictEqual([
+      [{ mu: 29.20524620886059, sigma: 8.118353216692832 }],
+      [{ mu: 25, sigma: 7.897523248305714 }],
+      [{ mu: 25, sigma: 7.897523248305714 }],
+      [{ mu: 25, sigma: 7.897523248305714 }],
+      [{ mu: 20.79475379113941, sigma: 8.118353216692832 }],
+    ])
+  })
 })

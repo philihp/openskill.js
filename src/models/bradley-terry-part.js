@@ -4,7 +4,7 @@ import constants from '../constants'
 
 export default (game, options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
-  const { teamRating } = util(options)
+  const { teamRating, gamma } = util(options)
 
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
@@ -17,11 +17,11 @@ export default (game, options = {}) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
           const sigSqToCiq = iSigmaSq / ciq
-          const gamma = Math.sqrt(iSigmaSq) / ciq
+          const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
           return [
             omega + sigSqToCiq * (score(qRank, iRank) - piq),
-            delta + ((gamma * sigSqToCiq) / ciq) * piq * (1 - piq),
+            delta + ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq),
           ]
         },
         [0, 0]

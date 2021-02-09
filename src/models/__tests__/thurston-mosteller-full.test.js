@@ -65,4 +65,31 @@ describe('thurstonMostellerFull', () => {
       ],
     ])
   })
+
+  it('can use a custom gamma with k=2', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1], {
+        gamma: (_, k) => 1 / k,
+      })
+    ).toStrictEqual([
+      [{ mu: 29.20524620886059, sigma: 7.784759515283723 }],
+      [{ mu: 20.79475379113941, sigma: 7.784759515283723 }],
+    ])
+  })
+
+  it('can use a custom gamma with k=5', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1, team1, team1, team1], {
+        gamma: (_, k) => 1 / k,
+      })
+    ).toStrictEqual([
+      [{ mu: 41.82098483544236, sigma: 7.436215601407348 }],
+      [{ mu: 33.41049241772118, sigma: 7.436215601407348 }],
+      [{ mu: 25, sigma: 7.436215601407348 }],
+      [{ mu: 16.58950758227882, sigma: 7.436215601407348 }],
+      [{ mu: 8.17901516455764, sigma: 7.436215601407348 }],
+    ])
+  })
 })
