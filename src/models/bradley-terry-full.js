@@ -1,9 +1,10 @@
-import { teamRating, score } from '../util'
+import util, { score } from '../util'
 import constants from '../constants'
 
 export default (game, options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
-  const teamRatings = teamRating(game, options)
+  const { teamRating } = util(options)
+  const teamRatings = teamRating(game)
 
   return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank]) => {
     const [iOmega, iDelta] = teamRatings

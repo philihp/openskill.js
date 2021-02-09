@@ -8,5 +8,5 @@
 
 - `src/constants` - these might be configurable constants, some day.
 - `src/statistics` - generalized statistics-related functions used by models.
-- `src/util` - other generalized methods used by models.
+- `src/util` - other generalized methods.
 - `src/models/*` - different models, enumerated in `index`.
