@@ -17,7 +17,7 @@ describe('rating', () => {
     expect.assertions(2)
     const { mu, sigma } = rating({ mu: 42 })
     expect(mu).toBe(42)
-    expect(sigma).toBe(42 / 3)
+    expect(sigma).toBeCloseTo(42 / 3)
   })
 
   it('accepts a new sigma', () => {
@@ -43,21 +43,21 @@ describe('rating', () => {
 
   it('can initialize with a different Z', () => {
     expect.assertions(2)
-    const { mu, sigma } = rating({ z: 5 })
+    const { mu, sigma } = rating({}, { z: 5 })
     expect(mu).toBe(25)
     expect(sigma).toBe(5)
   })
 
   it('can initialize with a different Z and mu', () => {
     expect.assertions(2)
-    const { mu, sigma } = rating({ mu: 15, z: 3 })
+    const { mu, sigma } = rating({ mu: 15 }, { z: 3 })
     expect(mu).toBe(15)
     expect(sigma).toBe(5)
   })
 
   it('can initialize with a different Z and sigma', () => {
     expect.assertions(2)
-    const { mu, sigma } = rating({ sigma: 5, z: 3 })
+    const { mu, sigma } = rating({ sigma: 5 }, { z: 3 })
     expect(mu).toBe(25)
     expect(sigma).toBe(5)
   })

@@ -1,11 +1,12 @@
 import { zip } from 'ramda'
-import { teamRating, score, ladderPairs } from '../util'
+import util, { score, ladderPairs } from '../util'
 import constants from '../constants'
 
 export default (game, options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
+  const { teamRating } = util(options)
 
-  const teamRatings = teamRating(game, options)
+  const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
   return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacent]) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating

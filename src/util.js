@@ -1,5 +1,5 @@
 import { zip, sort, pipe, transpose, reverse } from 'ramda'
-import { betaSq } from './constants'
+import constants from './constants'
 
 export const sum = (a, b) => a + b
 
@@ -29,7 +29,7 @@ export const rankings = (teams, rank = []) => {
 }
 
 // this is basically shared code, precomputed for every model
-export const teamRating = (game, options = {}) => {
+const teamRating = (options) => (game) => {
   const rank = rankings(game, options.rank)
   return game.map((team, i) => [
     // mu[i]
@@ -55,14 +55,15 @@ export const ladderPairs = (ranks) => {
   })
 }
 
-export const UTIL_C = (options) => (teamRatings) =>
-  Math.sqrt(
-    teamRatings
-      .map(
-        ([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + betaSq(options)
-      )
-      .reduce(sum, 0)
-  )
+const utilC = (options) => {
+  const { BETASQ } = constants(options)
+  return (teamRatings) =>
+    Math.sqrt(
+      teamRatings
+        .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
+        .reduce(sum, 0)
+    )
+}
 
 export const utilSumQ = (teamRatings, c) =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
@@ -91,3 +92,8 @@ export const reorder = (rank) => (teams) => {
 
 export const transition = (postTeams, preTeams) =>
   preTeams.map((t) => postTeams.indexOf(t))
+
+export default (options) => ({
+  utilC: utilC(options),
+  teamRating: teamRating(options),
+})
