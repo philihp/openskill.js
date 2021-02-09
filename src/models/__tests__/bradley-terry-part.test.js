@@ -1,8 +1,6 @@
 import { rating } from '../..'
 import rate from '../bradley-terry-part'
 
-const gamma = (_ciq, k, _mu, _sigmaSq, _team, _qRank) => 1 / k
-
 describe('bradleyTerryPart', () => {
   const r = rating()
   const team1 = [r]
@@ -70,7 +68,7 @@ describe('bradleyTerryPart', () => {
 
   it('can use a custom gamma with k=2', () => {
     expect.assertions(1)
-    expect(rate([team1, team1], { gamma })).toStrictEqual([
+    expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.122328620674137 }],
       [{ mu: 22.36476861652635, sigma: 8.122328620674137 }],
     ])
@@ -78,7 +76,9 @@ describe('bradleyTerryPart', () => {
 
   it('can use a custom gamma with k=5', () => {
     expect.assertions(1)
-    expect(rate([team1, team1, team1, team1, team1], { gamma })).toStrictEqual([
+    expect(
+      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
+    ).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.249579113843055 }],
       [{ mu: 25, sigma: 8.16496580927726 }],
       [{ mu: 25, sigma: 8.16496580927726 }],
