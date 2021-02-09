@@ -1,6 +1,5 @@
-import { rate as rateStub, rating } from '../..'
-
-const rate = (game) => rateStub(game, { model: 'bradleyTerryFull' })
+import { rating } from '../..'
+import rate from '../bradley-terry-full'
 
 describe('bradleyTerryFull', () => {
   const r = rating()
