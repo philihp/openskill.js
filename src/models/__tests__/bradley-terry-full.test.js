@@ -65,4 +65,25 @@ describe('bradleyTerryFull', () => {
       ],
     ])
   })
+
+  it('can use a custom gamma with k=2', () => {
+    expect.assertions(1)
+    expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
+      [{ mu: 27.63523138347365, sigma: 8.122328620674137 }],
+      [{ mu: 22.36476861652635, sigma: 8.122328620674137 }],
+    ])
+  })
+
+  it('can use a custom gamma with k=5', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
+    ).toStrictEqual([
+      [{ mu: 35.5409255338946, sigma: 7.993052538854532 }],
+      [{ mu: 30.2704627669473, sigma: 7.993052538854532 }],
+      [{ mu: 25, sigma: 7.993052538854532 }],
+      [{ mu: 19.729537233052703, sigma: 7.993052538854532 }],
+      [{ mu: 14.4590744661054, sigma: 7.993052538854532 }],
+    ])
+  })
 })

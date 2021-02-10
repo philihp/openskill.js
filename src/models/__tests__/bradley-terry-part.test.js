@@ -65,4 +65,25 @@ describe('bradleyTerryPart', () => {
       ],
     ])
   })
+
+  it('can use a custom gamma with k=2', () => {
+    expect.assertions(1)
+    expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
+      [{ mu: 27.63523138347365, sigma: 8.122328620674137 }],
+      [{ mu: 22.36476861652635, sigma: 8.122328620674137 }],
+    ])
+  })
+
+  it('can use a custom gamma with k=5', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
+    ).toStrictEqual([
+      [{ mu: 27.63523138347365, sigma: 8.249579113843055 }],
+      [{ mu: 25, sigma: 8.16496580927726 }],
+      [{ mu: 25, sigma: 8.16496580927726 }],
+      [{ mu: 25, sigma: 8.16496580927726 }],
+      [{ mu: 22.36476861652635, sigma: 8.249579113843055 }],
+    ])
+  })
 })
