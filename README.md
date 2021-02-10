@@ -89,13 +89,13 @@ If your teams are listed in one order but your ranking is in a different order, 
 ```js
 > const a1 = b1 = c1 = d1 = rating()
 > const [a2, b2, c2, d2] = rate([[a1], [b1], [c1], [d1]], {
-    { rank: [4, 1, 3, 2]
+    rank: [4, 1, 3, 2]
   })
 [
-  [{ mu: 20.96..., sigma: 8.08... }], // came in last, so 25.00 -> 20.96
-  [{ mu: 27.79..., sigma: 8.26... }], // came in first, so 25.00 -> 27.69
-  [{ mu: 24.68..., sigma: 8.08... }],
-  [{ mu: 26.55..., sigma: 8.17... }],
+  { mu: 20.963, sigma: 8.084 }, // 🐌
+  { mu: 27.795, sigma: 8.263 }, // 🥇
+  { mu: 24.689, sigma: 8.084 }, // 🥉
+  { mu: 26.553, sigma: 8.179 }, // 🥈
 ]
 ```
 
@@ -104,22 +104,26 @@ It's assumed that the lower ranks are better (wins), while higher ranks are wors
 Ties should have either equivalent rank or score.
 
 ```js
-> const a1 = rating()
-> const b1 = rating()
-> const c1 = rating()
-> const d1 = rating()
+> const a1 = b1 = c1 = d1 = rating()
 > const [a2, b2, c2, d2] = rate([a1], [b1], [c1], [d1]], {
     rank: [2, 4, 2, 1]
   })
 [
-  { mu: 26.62...,  sigma: 8.31... }, // second
-  { mu: 49.07...,  sigma: 8.26... }, // last
-  { mu: 73.33...,  sigma: 8.20... }, // second
-  { mu: 100.96..., sigma: 8.26... }, // first
+  { mu: 24.689, sigma: 8.179 }, // 🥈
+  { mu: 22.826, sigma: 8.179 }, // 🐌
+  { mu: 24.689, sigma: 8.179 }, // 🥈
+  { mu: 27.795, sigma: 8.263 }, // 🥇
 ]
 ```
 
-## Implementations
+### Which Model do I want?
 
-* Kotlin https://github.com/brezinajn/openskill
-* Elixir https://github.com/philihp/openskill.ex
+- Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.
+- Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Like TrueSkill, you'll need a way to calculate the cumulative distribution function, which can differ by implementation and can cause innacuracies. Experimentally, this model is not as accurate, but tuning it with a custom gamma may yield better results. It could be better, but it is not recommended. An alternative gamma function can improve the accuracy in some cases.
+- Full pairing should have a better prediction rate over partial pairing, however in Bradley-Terry and Thurston-Mosteller models in _k_-team matches where _k_ is high (e.g. 1000+ person marathon races), the calculation of joint probability involves an expensive _k_-1 dimensional integration.
+- Plackett-Luce is a generalized Bradley-Terry model for _k_ >= 3 teams.
+
+## Implementations in other languages
+
+- Kotlin https://github.com/brezinajn/openskill
+- Elixir https://github.com/philihp/openskill.ex
