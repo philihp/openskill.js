@@ -10,7 +10,7 @@ Javascript implementation of Weng-Lin Rating, as described at https://www.csie.n
 
 ## Speed
 
-Openskill is crazy-stupid-fast.
+Up to 20x faster than TrueSkill!
 
 | Model                           | Speed (higher is better) | Variance |         Samples |
 | ------------------------------- | -----------------------: | -------: | --------------: |
@@ -70,7 +70,9 @@ If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send t
 ]
 ```
 
-In more simplified matches with one team against another, the losing team's players' `mu` components should always go down, and up for the winning team's players. `sigma` components should always go down.
+Teams can be asymmetric, too! For example, a game like [Axis and Allies](https://en.wikipedia.org/wiki/Axis_%26_Allies) can be 3 vs 2, and this can be modeled here.
+
+### Ranking
 
 When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
@@ -80,7 +82,7 @@ When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 35.81
 ```
 
-By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99.5% likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.
+By default, this returns `mu - 3*sigma`, showing a rating for which there's a [99.7%](https://en.wikipedia.org/wiki/68–95–99.7_rule) likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.
 
 ### Artificial Ranking
 
@@ -88,14 +90,14 @@ If your teams are listed in one order but your ranking is in a different order, 
 
 ```js
 > const a1 = b1 = c1 = d1 = rating()
-> const [a2, b2, c2, d2] = rate([[a1], [b1], [c1], [d1]], {
-    rank: [4, 1, 3, 2]
+> const [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]], {
+    rank: [4, 1, 3, 2] // 🐌 🥇 🥉 🥈
   })
 [
-  { mu: 20.963, sigma: 8.084 }, // 🐌
-  { mu: 27.795, sigma: 8.263 }, // 🥇
-  { mu: 24.689, sigma: 8.084 }, // 🥉
-  { mu: 26.553, sigma: 8.179 }, // 🥈
+  [{ mu: 20.963, sigma: 8.084 }], // 🐌
+  [{ mu: 27.795, sigma: 8.263 }], // 🥇
+  [{ mu: 24.689, sigma: 8.084 }], // 🥉
+  [{ mu: 26.553, sigma: 8.179 }], // 🥈
 ]
 ```
 
@@ -105,23 +107,23 @@ Ties should have either equivalent rank or score.
 
 ```js
 > const a1 = b1 = c1 = d1 = rating()
-> const [a2, b2, c2, d2] = rate([a1], [b1], [c1], [d1]], {
-    rank: [2, 4, 2, 1]
+> const [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]], {
+    score: [37, 19, 37, 42] // 🥈 🐌 🥈 🥇
   })
 [
-  { mu: 24.689, sigma: 8.179 }, // 🥈
-  { mu: 22.826, sigma: 8.179 }, // 🐌
-  { mu: 24.689, sigma: 8.179 }, // 🥈
-  { mu: 27.795, sigma: 8.263 }, // 🥇
+  [{ mu: 24.689, sigma: 8.179 }], // 🥈
+  [{ mu: 22.826, sigma: 8.179 }], // 🐌
+  [{ mu: 24.689, sigma: 8.179 }], // 🥈
+  [{ mu: 27.795, sigma: 8.263 }], // 🥇
 ]
 ```
 
 ### Which Model do I want?
 
 - Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.
-- Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Like TrueSkill, you'll need a way to calculate the cumulative distribution function, which can differ by implementation and can cause innacuracies. Experimentally, this model is not as accurate, but tuning it with a custom gamma may yield better results. It could be better, but it is not recommended. An alternative gamma function can improve the accuracy in some cases.
-- Full pairing should have a better prediction rate over partial pairing, however in Bradley-Terry and Thurston-Mosteller models in _k_-team matches where _k_ is high (e.g. 1000+ person marathon races), the calculation of joint probability involves an expensive _k_-1 dimensional integration.
-- Plackett-Luce is a generalized Bradley-Terry model for _k_ >= 3 teams.
+- Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Gaussian CDF/PDF functions differ in implementation from system to system (they're all just chebyshev approximations anyway). The accuracy of this model isn't usually as great either, but tuning this with an alternative gamma function can improve the accuracy if you really want to get into it.
+- Full pairing should have more accurate ratings over partial pairing, however in high _k_ games (like a 100+ person marathon race), Bradley-Terry and Thurston-Mosteller models need to do a calculation of joint probability which involves is a _k_-1 dimensional integration, which is computationally expensive. Use partial pairing in this case, where players only change based on their neighbors.
+- Plackett-Luce (**default**) is a generalized Bradley-Terry model for _k_ &GreaterEqual; 3 teams. It scales best.
 
 ## Implementations in other languages
 
