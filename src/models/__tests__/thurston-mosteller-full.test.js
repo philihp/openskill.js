@@ -92,4 +92,19 @@ describe('thurstonMostellerFull', () => {
       [{ mu: 8.17901516455764, sigma: 7.436215601407348 }],
     ])
   })
+
+  it('works with ties in ranks', () => {
+    expect.assertions(1)
+    expect(
+      rate([team1, team1, team1, team1, team1], {
+        rank: [1, 2, 2, 4, 5],
+      })
+    ).toStrictEqual([
+      [{ mu: 41.82098483544236, sigma: 4.970639136506507 }],
+      [{ mu: 29.205286208860592, sigma: 4.270361249811069 }],
+      [{ mu: 29.205286208860592, sigma: 4.270361249811069 }],
+      [{ mu: 16.58950758227882, sigma: 4.970639136506507 }],
+      [{ mu: 8.17901516455764, sigma: 4.970639136506507 }],
+    ])
+  })
 })

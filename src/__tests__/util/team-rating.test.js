@@ -11,8 +11,8 @@ describe('util#teamRating', () => {
     expect.assertions(1)
     const result = teamRating([team1, team2])
     expect(result).toStrictEqual([
-      [25, 69.44444444444446, team1, 1],
-      [50, 138.8888888888889, team2, 2],
+      [25, 69.44444444444446, team1, 0],
+      [50, 138.8888888888889, team2, 1],
     ])
   })
 })

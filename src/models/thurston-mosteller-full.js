@@ -8,10 +8,10 @@ export default (game, options = {}) => {
   const { vt, wt } = statistics(options)
   const teamRatings = teamRating(game)
 
-  return teamRatings.map((iTeamRating) => {
+  return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const [iOmega, iDelta] = teamRatings
-      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank !== iRank)
+      .filter((_, q) => i !== q)
       .reduce(
         ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)

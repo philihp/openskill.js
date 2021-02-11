@@ -10,34 +10,31 @@ export default (game, options = {}) => {
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacent]) => {
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = iAdjacent
-      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank !== iRank)
-      .reduce(
-        ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
-          const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
-          const deltaMu = (iMu - qMu) / ciq
-          const sigSqToCiq = iSigmaSq / ciq
-          const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
+    const [iOmega, iDelta] = iAdjacents.reduce(
+      ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
+        const ciq = 2 * Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
+        const deltaMu = (iMu - qMu) / ciq
+        const sigSqToCiq = iSigmaSq / ciq
+        const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
-          if (qRank === iRank) {
-            return [
-              omega + sigSqToCiq * vt(deltaMu, EPSILON / ciq),
-              delta +
-                ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq),
-            ]
-          }
-
-          const sign = qRank > iRank ? 1 : -1
+        if (qRank === iRank) {
           return [
-            omega + sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq),
-            delta +
-              ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
+            omega + sigSqToCiq * vt(deltaMu, EPSILON / ciq),
+            delta + ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq),
           ]
-        },
-        [0, 0]
-      )
+        }
+
+        const sign = qRank > iRank ? 1 : -1
+        return [
+          omega + sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq),
+          delta +
+            ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
+        ]
+      },
+      [0, 0]
+    )
 
     return iTeam.map(({ mu, sigma }) => {
       const sigmaSq = sigma * sigma

@@ -1,7 +1,4 @@
 import gaussian from 'gaussian'
-import constants from './constants'
-
-const minValue = (options) => constants(options).EPSILON / 10
 
 // use a standard normal distribution - mean of zero, stddev/variance of one
 const normal = gaussian(0, 1)
@@ -25,12 +22,11 @@ export const w = (x, t) => {
   return v(x, t) * (v(x, t) + xt)
 }
 
-const VT = (options) => {
-  const MIN_VALUE = minValue(options)
+const VT = () => {
   return (x, t) => {
     const xx = Math.abs(x)
     const b = phiMajor(t - xx) - phiMajor(-t - xx)
-    if (b < MIN_VALUE) {
+    if (b < 1e-5) {
       if (x < 0) return -x - t
       return -x + t
     }
@@ -41,11 +37,10 @@ const VT = (options) => {
 
 const WT = (options) => {
   const vt = VT(options)
-  const MIN_VALUE = minValue(options)
   return (x, t) => {
     const xx = Math.abs(x)
     const b = phiMajor(t - xx) - phiMajor(-t - xx)
-    return b < MIN_VALUE
+    return b < Number.EPSILON
       ? 1.0
       : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
           vt(x, t) * vt(x, t)
