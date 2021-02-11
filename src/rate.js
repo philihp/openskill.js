@@ -10,7 +10,7 @@ const rate = (teams, options = {}) => {
   }
 
   // if rank provided, use it, otherwise transition scores and use that
-  const rank = options.rank ?? options.score.map((points) => -points)
+  const rank = options.rank ?? options.score?.map((points) => -points)
 
   const [orderedTeams, orderedRanks] = reorder(rank)(teams)
 
