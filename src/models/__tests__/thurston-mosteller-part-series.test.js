@@ -49,6 +49,10 @@ describe('thurstonMostellerPart#series', () => {
     //   score: [9, 9, 7, 7],
     // })
 
+    // these actually fail, because of
+    // the way the VT and WT functions are implemented
+    // which differs across environments
+
     // expect(p03.mu).toBeCloseTo(26.84674655)
     // expect(p03.sigma).toBeCloseTo(7.609798715)
     // expect(p13.mu).toBeCloseTo(25.148731893)
