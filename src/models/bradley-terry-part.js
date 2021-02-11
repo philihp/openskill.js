@@ -9,7 +9,7 @@ export default (game, options = {}) => {
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents], i) => {
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const [iOmega, iDelta] = iAdjacents.reduce(
       ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
