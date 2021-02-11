@@ -1,12 +1,11 @@
 import { zip } from 'ramda'
 import util, { ladderPairs } from '../util'
-import statistics, { w, v } from '../statistics'
+import { w, v, vt, wt } from '../statistics'
 import constants from '../constants'
 
 export default (game, options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
   const { teamRating, gamma } = util(options)
-  const { vt, wt } = statistics(options)
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 

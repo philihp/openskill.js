@@ -29,13 +29,11 @@ export default (game, options = {}) => {
     const iOmega = omegaSum * (iSigmaSq / c)
     const iDelta = iGamma * deltaSum * (iSigmaSq / c ** 2)
 
-    return iTeam.map(({ mu, sigma }) => {
-      return {
-        mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
-        sigma:
-          sigma *
-          Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
-      }
-    })
+    return iTeam.map(({ mu, sigma }) => ({
+      mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
+      sigma:
+        sigma *
+        Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
+    }))
   })
 }

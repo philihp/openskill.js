@@ -1,11 +1,10 @@
 import util from '../util'
-import statistics, { w, v } from '../statistics'
 import constants from '../constants'
+import { w, v, vt, wt } from '../statistics'
 
 export default (game, options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
   const { teamRating, gamma } = util(options)
-  const { vt, wt } = statistics(options)
   const teamRatings = teamRating(game)
 
   return teamRatings.map((iTeamRating, i) => {

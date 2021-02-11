@@ -22,32 +22,22 @@ export const w = (x, t) => {
   return v(x, t) * (v(x, t) + xt)
 }
 
-const VT = () => {
-  return (x, t) => {
-    const xx = Math.abs(x)
-    const b = phiMajor(t - xx) - phiMajor(-t - xx)
-    if (b < 1e-5) {
-      if (x < 0) return -x - t
-      return -x + t
-    }
-    const a = phiMinor(-t - xx) - phiMinor(t - xx)
-    return (x < 0 ? -a : a) / b
+export const vt = (x, t) => {
+  const xx = Math.abs(x)
+  const b = phiMajor(t - xx) - phiMajor(-t - xx)
+  if (b < 1e-5) {
+    if (x < 0) return -x - t
+    return -x + t
   }
+  const a = phiMinor(-t - xx) - phiMinor(t - xx)
+  return (x < 0 ? -a : a) / b
 }
 
-const WT = (options) => {
-  const vt = VT(options)
-  return (x, t) => {
-    const xx = Math.abs(x)
-    const b = phiMajor(t - xx) - phiMajor(-t - xx)
-    return b < Number.EPSILON
-      ? 1.0
-      : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
-          vt(x, t) * vt(x, t)
-  }
+export const wt = (x, t) => {
+  const xx = Math.abs(x)
+  const b = phiMajor(t - xx) - phiMajor(-t - xx)
+  return b < Number.EPSILON
+    ? 1.0
+    : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
+        vt(x, t) * vt(x, t)
 }
-
-export default (options) => ({
-  vt: VT(options),
-  wt: WT(options),
-})
