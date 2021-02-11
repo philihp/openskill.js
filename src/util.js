@@ -1,7 +1,7 @@
 import { zip, sort, pipe, transpose, reverse } from 'ramda'
 import constants from './constants'
 
-export const sum = (a, b) => a + b
+const sum = (a, b) => a + b
 
 export const score = (q, i) => {
   if (q < i) {
@@ -23,7 +23,7 @@ export const rankings = (teams, rank = []) => {
     if (j > 0 && teamScores[j - 1] < teamScores[j]) {
       s = j
     }
-    outRank[j] = s + 1
+    outRank[j] = s
   }
   return outRank
 }
@@ -95,8 +95,8 @@ export const transition = (postTeams, preTeams) =>
 
 export const gamma = (options) =>
   options.gamma ??
-  // default to iSigma / ciq
-  ((ciq, _k, _mu, sigmaSq, _team, _qRank) => Math.sqrt(sigmaSq) / ciq)
+  // default to iSigma / c
+  ((c, _k, _mu, sigmaSq, _team, _qRank) => Math.sqrt(sigmaSq) / c)
 
 export default (options) => ({
   utilC: utilC(options),

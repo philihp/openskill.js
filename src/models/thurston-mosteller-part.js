@@ -10,13 +10,14 @@ export default (game, options = {}) => {
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacent]) => {
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = iAdjacent
-      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank !== iRank)
+    const [iOmega, iDelta] = iAdjacents
+      // this doesn't happen
+      // .filter(([_qMu, _qSigmaSq, qTeam, _qRank]) => iTeam !== qTeam)
       .reduce(
         ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
-          const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
+          const ciq = 2 * Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const deltaMu = (iMu - qMu) / ciq
           const sigSqToCiq = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)

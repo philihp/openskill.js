@@ -7,7 +7,7 @@ describe('bradleyTerryPart', () => {
   const team2 = [r, r]
   const team3 = [r, r, r]
 
-  it('solo game does not change rating', () => {
+  xit('solo game does not change rating', () => {
     expect.assertions(1)
     expect(rate([team1])).toStrictEqual([team1])
   })
@@ -20,7 +20,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('3p FFA', () => {
+  xit('3p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
@@ -29,7 +29,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('4p FFA', () => {
+  xit('4p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
@@ -39,7 +39,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('5p FFA', () => {
+  xit('5p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.065506316323548 }],
@@ -50,7 +50,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('3 teams different sized players', () => {
+  xit('3 teams different sized players', () => {
     expect.assertions(1)
     expect(rate([team3, team1, team2])).toStrictEqual([
       [
@@ -66,7 +66,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('can use a custom gamma with k=2', () => {
+  xit('can use a custom gamma with k=2', () => {
     expect.assertions(1)
     expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.122328620674137 }],
@@ -74,7 +74,7 @@ describe('bradleyTerryPart', () => {
     ])
   })
 
-  it('can use a custom gamma with k=5', () => {
+  xit('can use a custom gamma with k=5', () => {
     expect.assertions(1)
     expect(
       rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })

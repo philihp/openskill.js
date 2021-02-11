@@ -1,31 +1,33 @@
-import { transpose } from 'ramda'
-import util, { utilSumQ, utilA, sum } from '../util'
+import util, { utilSumQ, utilA } from '../util'
 import constants from '../constants'
 
 export default (game, options = {}) => {
   const { EPSILON } = constants(options)
-  const { utilC, teamRating } = util(options)
+  const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
   const sumQ = utilSumQ(teamRatings, c)
   const a = utilA(teamRatings)
 
-  return teamRatings.map(([iMu, iSigmaSq, iTeam, iRank], i) => {
-    const iMuOverCe = Math.exp(iMu / c)
-    const [omegaSet, deltaSet] = transpose(
-      teamRatings
-        .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank <= iRank)
-        .map(([_], q) => {
+  return teamRatings.map((iTeamRating, i) => {
+    const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
+    const iMuOverCe = Math.exp(iMu / c) // tmp1
+    const [omegaSum, deltaSum] = teamRatings
+      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank <= iRank)
+      .reduce(
+        ([omega, delta], [_], q) => {
           const quotient = iMuOverCe / sumQ[q]
           return [
-            (i === q ? 1 - quotient : -quotient) / a[q],
-            (quotient * (1 - quotient)) / a[q],
+            omega + (i === q ? 1 - quotient : -quotient) / a[q],
+            delta + (quotient * (1 - quotient)) / a[q],
           ]
-        })
-    )
-    const iOmega = (omegaSet.reduce(sum, 0) * iSigmaSq) / c
-    const iDelta =
-      (Math.sqrt(iSigmaSq) * deltaSet.reduce(sum, 0) * iSigmaSq) / c ** 3
+        },
+        [0, 0]
+      )
+
+    const iGamma = gamma(c, teamRatings.length, ...iTeamRating)
+    const iOmega = omegaSum * (iSigmaSq / c)
+    const iDelta = iGamma * deltaSum * (iSigmaSq / c ** 2)
 
     return iTeam.map(({ mu, sigma }) => {
       return {

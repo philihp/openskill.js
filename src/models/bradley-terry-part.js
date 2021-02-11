@@ -8,24 +8,24 @@ export default (game, options = {}) => {
 
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacent]) => {
-    const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = iAdjacent
-      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank !== iRank)
-      .reduce(
-        ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
-          const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
-          const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
-          const sigSqToCiq = iSigmaSq / ciq
-          const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
-          return [
-            omega + sigSqToCiq * (score(qRank, iRank) - piq),
-            delta + ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq),
-          ]
-        },
-        [0, 0]
-      )
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents], i) => {
+    const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
+    const [iOmega, iDelta] = iAdjacents.reduce(
+      ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
+        const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
+        const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
+        const sigSqToCiq = iSigmaSq / ciq
+        const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
+
+        return [
+          omega + sigSqToCiq * (score(qRank, iRank) - piq),
+          delta + ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq),
+        ]
+      },
+      [0, 0]
+    )
+
     return iTeam.map(({ mu, sigma }) => {
       const sigmaSq = sigma * sigma
       return {
