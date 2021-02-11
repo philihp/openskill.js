@@ -5,7 +5,7 @@ import { rate, rating } from '../..'
 
 describe('models#index', () => {
   const r = rating()
-  xit('runs BT full', () => {
+  it('runs BT full', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
       model: 'bradleyTerryFull',
@@ -18,7 +18,7 @@ describe('models#index', () => {
     expect(b.sigma).toBeCloseTo(7.788474808)
     expect(c.sigma).toBeCloseTo(7.788474808)
   })
-  xit('runs BT partial', () => {
+  it('runs BT partial', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
       model: 'bradleyTerryPart',
@@ -31,7 +31,7 @@ describe('models#index', () => {
     expect(b.sigma).toBeCloseTo(7.788474808)
     expect(c.sigma).toBeCloseTo(8.065506316)
   })
-  xit('runs PL', () => {
+  it('runs PL', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
       model: 'plackettLuce',
@@ -57,7 +57,7 @@ describe('models#index', () => {
     expect(b.sigma).toBeCloseTo(6.856959)
     expect(c.sigma).toBeCloseTo(6.856959)
   })
-  xit('runs TM partial', () => {
+  it('runs TM partial', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
       model: 'thurstonMostellerPart',
