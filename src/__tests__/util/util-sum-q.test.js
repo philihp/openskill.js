@@ -16,7 +16,7 @@ describe('util#utilSumQ', () => {
   })
 
   it('utilSumQ computes 5v5', () => {
-    expect.assertions(1)
+    expect.assertions(2)
     const teamRatings = teamRating([
       [r, r, r, r, r],
       [r, r, r, r, r],
@@ -24,6 +24,6 @@ describe('util#utilSumQ', () => {
     const c = utilC(teamRatings)
     const sumQ = utilSumQ(teamRatings, c)
     expect(sumQ[0]).toBeCloseTo(204.84)
-    expect(sumQ[1]).toBeCloseTo(104.42)
+    expect(sumQ[1]).toBeCloseTo(102.42)
   })
 })
