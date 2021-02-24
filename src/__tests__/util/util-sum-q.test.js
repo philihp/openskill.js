@@ -14,4 +14,16 @@ describe('util#utilSumQ', () => {
     const sumQ = utilSumQ(teamRatings, c)
     expect(sumQ).toStrictEqual([29.67892702634643, 24.70819334370875])
   })
+
+  it('utilSumQ computes 5v5', () => {
+    expect.assertions(1)
+    const teamRatings = teamRating([
+      [r, r, r, r, r],
+      [r, r, r, r, r],
+    ])
+    const c = utilC(teamRatings)
+    const sumQ = utilSumQ(teamRatings, c)
+    expect(sumQ[0]).toBeCloseTo(204.84)
+    expect(sumQ[1]).toBeCloseTo(104.42)
+  })
 })

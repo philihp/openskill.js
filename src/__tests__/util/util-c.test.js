@@ -13,4 +13,14 @@ describe('util#utilC', () => {
     const c = utilC(teamRatings)
     expect(c).toBeCloseTo(15.590239)
   })
+
+  it('utilSumQ computes 5v5', () => {
+    expect.assertions(1)
+    const teamRatings = teamRating([
+      [r, r, r, r, r],
+      [r, r, r, r, r],
+    ])
+    const c = utilC(teamRatings)
+    expect(c).toBeCloseTo(27.003)
+  })
 })
