@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/npm/v/openskill)](https://www.npmjs.com/package/openskill)
 ![Tests](https://github.com/philihp/openskill.js/workflows/tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/philihp/openskill.js/badge.svg?branch=main&force=reload)](https://coveralls.io/github/philihp/openskill.js?branch=main)
-![Downloads](https://img.shields.io/npm/dt/fast-shuffle)
+![Downloads](https://img.shields.io/npm/dt/openskill)
 ![License](https://img.shields.io/npm/l/openskill)
 
 Javascript implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
