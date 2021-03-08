@@ -1,4 +1,4 @@
-import { zip, sort, pipe, transpose, reverse } from 'ramda'
+import { zip } from 'ramda'
 import constants from './constants'
 
 const sum = (a, b) => a + b
