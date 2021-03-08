@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "gaussian": "1.2.0",
-    "ramda": "0.27.1"
+    "ramda": "0.27.1",
+    "sort-unwind": "0.0.2"
   }
 }

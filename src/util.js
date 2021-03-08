@@ -1,4 +1,4 @@
-import { zip, sort, pipe, transpose, reverse } from 'ramda'
+import { zip } from 'ramda'
 import constants from './constants'
 
 const sum = (a, b) => a + b
@@ -79,19 +79,6 @@ export const utilA = (teamRatings) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank)
         .length
   )
-
-export const reorder = (rank) => (teams) => {
-  if (rank === undefined) return [teams]
-  return pipe(
-    zip,
-    sort(([a], [b]) => a - b),
-    transpose,
-    reverse
-  )(rank, teams) // -> [orderedTeams, orderedRanks]
-}
-
-export const transition = (postTeams, preTeams) =>
-  preTeams.map((t) => postTeams.indexOf(t))
 
 export const gamma = (options) =>
   options.gamma ??
