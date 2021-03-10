@@ -11,6 +11,7 @@
     "test:coverage": "npm run test -- --coverage"
   },
   "main": "./dist/index.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/philihp/openskill.js.git"
