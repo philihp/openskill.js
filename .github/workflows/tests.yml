@@ -11,8 +11,12 @@ jobs:
     strategy:
       matrix:
         node-version:
+          - 10.x # deprecated
+          - 11.x # deprecated
           - 12.x # maintainence ends 2022-04-30
+          - 13.x # deprecated
           - 14.x # maintainence ends 2023-04-30
+          - 15.x # deprecated
           - 16.x
     steps:
       - uses: actions/checkout@v2
