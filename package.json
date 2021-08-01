@@ -30,7 +30,7 @@
   "devDependencies": {
     "@babel/cli": "7.14.8",
     "@babel/core": "7.14.8",
-    "@babel/preset-env": "7.14.8",
+    "@babel/preset-env": "7.14.9",
     "@babel/register": "7.14.5",
     "@philihp/eslint-config": "4.3.0",
     "husky": "7.0.1",
