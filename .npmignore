@@ -14,3 +14,4 @@ nyc.config.js
 **/__tests__/
 .gitattributes
 benchmark/*
+.husky/
