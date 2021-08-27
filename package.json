@@ -47,11 +47,6 @@
     "semi": false,
     "trailingComma": "es5"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "jest": {
     "modulePathIgnorePatterns": [
       "dist/"
