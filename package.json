@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
-    "@babel/cli": "7.14.8",
-    "@babel/core": "7.15.0",
-    "@babel/preset-env": "7.15.0",
+    "@babel/cli": "7.15.4",
+    "@babel/core": "7.15.4",
+    "@babel/preset-env": "7.15.4",
     "@babel/register": "7.15.3",
     "@philihp/eslint-config": "5.0.1",
     "husky": "7.0.2",
