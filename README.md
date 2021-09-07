@@ -128,6 +128,7 @@ Ties should have either equivalent rank or score.
 
 ## Implementations in other languages
 
+- Python https://github.com/OpenDebates/openskill.py
 - Kotlin https://github.com/brezinajn/openskill
 - Elixir https://github.com/philihp/openskill.ex
 - Google Sheets https://docs.google.com/spreadsheets/d/12TA1ZG_qpBi4kDTclaOGB4sd5uJK8w-0My6puMd2-CY/edit?usp=sharing
