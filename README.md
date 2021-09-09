@@ -1,7 +1,7 @@
 ![](https://philihp.com/openskill.js/logo.png)
 
 [![Version](https://img.shields.io/npm/v/openskill)](https://www.npmjs.com/package/openskill)
-[![Dependencies](https://img.shields.io/librariesio/github/philihp/openskill.js)](https://libraries.io/github/philihp/openskill.js)
+[![Dependencies](https://status.david-dm.org/gh/philihp/openskill.js.svg)](https://david-dm.org/philihp/openskill.js)
 ![Tests](https://github.com/philihp/openskill.js/workflows/tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/philihp/openskill.js/badge.svg?branch=main&force=reload)](https://coveralls.io/github/philihp/openskill.js?branch=main)
 ![Downloads](https://img.shields.io/npm/dt/openskill)
