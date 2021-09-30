@@ -20,6 +20,8 @@ Any supported version of Node [listed here](https://nodejs.org/en/about/releases
 
 ## Submitting a PR
 
-Just open a PR. I'll see it :)
+Just open a PR. I'll see it :) While you're waiting, please make sure status checks are green.
 
-Once your PR is opened, status checks will run to make sure everything is cool. If those are green, you're gold.
+- Unit tests will run for all actively supported versions of Node
+- Test coverage will run and go red if it dips below 100%.
+- Prettier and ESLint will prevent ugly code. If those are green, I probably don't mind.
