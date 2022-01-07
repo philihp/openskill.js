@@ -131,4 +131,5 @@ Ties should have either equivalent rank or score.
 - Python https://github.com/OpenDebates/openskill.py
 - Kotlin https://github.com/brezinajn/openskill
 - Elixir https://github.com/philihp/openskill.ex
+- Lua https://github.com/Vaschex/openskill.lua
 - Google Sheets https://docs.google.com/spreadsheets/d/12TA1ZG_qpBi4kDTclaOGB4sd5uJK8w-0My6puMd2-CY/edit?usp=sharing
