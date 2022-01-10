@@ -1,7 +1,7 @@
 import { rating } from '../..'
-import rate from '../thurston-mosteller-full'
+import rate from '../thurstone-mosteller-full'
 
-describe('thurstonMostellerFull', () => {
+describe('thurstoneMostellerFull', () => {
   const r = rating()
   const team1 = [r]
   const team2 = [r, r]

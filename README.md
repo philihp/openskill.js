@@ -13,14 +13,14 @@ Javascript implementation of Weng-Lin Rating, as described at https://www.csie.n
 
 Up to 20x faster than TrueSkill!
 
-| Model                           | Speed (higher is better) | Variance |         Samples |
-| ------------------------------- | -----------------------: | -------: | --------------: |
-| Openskill/bradleyTerryFull      |           62,643 ops/sec |   ±1.09% | 91 runs sampled |
-| Openskill/bradleyTerryPart      |           40,152 ops/sec |   ±0.73% | 91 runs sampled |
-| Openskill/thurstonMostellerFull |           59,336 ops/sec |   ±0.74% | 93 runs sampled |
-| Openskill/thurstonMostellerPart |           38,666 ops/sec |   ±1.21% | 92 runs sampled |
-| Openskill/plackettLuce          |           23,492 ops/sec |   ±0.26% | 91 runs sampled |
-| TrueSkill                       |            2,962 ops/sec |   ±3.23% | 82 runs sampled |
+| Model                            | Speed (higher is better) | Variance |         Samples |
+| -------------------------------- | -----------------------: | -------: | --------------: |
+| Openskill/bradleyTerryFull       |           62,643 ops/sec |   ±1.09% | 91 runs sampled |
+| Openskill/bradleyTerryPart       |           40,152 ops/sec |   ±0.73% | 91 runs sampled |
+| Openskill/thurstoneMostellerFull |           59,336 ops/sec |   ±0.74% | 93 runs sampled |
+| Openskill/thurstoneMostellerPart |           38,666 ops/sec |   ±1.21% | 92 runs sampled |
+| Openskill/plackettLuce           |           23,492 ops/sec |   ±0.26% | 91 runs sampled |
+| TrueSkill                        |            2,962 ops/sec |   ±3.23% | 82 runs sampled |
 
 See [this post](https://philihp.com/2020/openskill.html) for more.
 
@@ -123,7 +123,7 @@ Ties should have either equivalent rank or score.
 
 - Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.
 - Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Gaussian CDF/PDF functions differ in implementation from system to system (they're all just chebyshev approximations anyway). The accuracy of this model isn't usually as great either, but tuning this with an alternative gamma function can improve the accuracy if you really want to get into it.
-- Full pairing should have more accurate ratings over partial pairing, however in high _k_ games (like a 100+ person marathon race), Bradley-Terry and Thurston-Mosteller models need to do a calculation of joint probability which involves is a _k_-1 dimensional integration, which is computationally expensive. Use partial pairing in this case, where players only change based on their neighbors.
+- Full pairing should have more accurate ratings over partial pairing, however in high _k_ games (like a 100+ person marathon race), Bradley-Terry and Thurstone-Mosteller models need to do a calculation of joint probability which involves is a _k_-1 dimensional integration, which is computationally expensive. Use partial pairing in this case, where players only change based on their neighbors.
 - Plackett-Luce (**default**) is a generalized Bradley-Terry model for _k_ &GreaterEqual; 3 teams. It scales best.
 
 ## Implementations in other languages
