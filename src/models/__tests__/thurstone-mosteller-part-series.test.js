@@ -5,10 +5,10 @@ import { rate, rating } from '../..'
 // 4, 2, 1 with a score of 9, 5, 5
 // 3, 1, 2, 0 with a score of 9, 9, 7, 7
 
-describe('thurstonMostellerPart#series', () => {
+describe('thurstoneMostellerPart#series', () => {
   it('runs as expected', () => {
     expect.assertions(10)
-    const model = 'thurstonMostellerPart'
+    const model = 'thurstoneMostellerPart'
     const p00 = rating()
     const p10 = rating()
     const p20 = rating()
