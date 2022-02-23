@@ -1,6 +1,6 @@
 import rating from './rating'
 import rate from './rate'
 import ordinal from './ordinal'
-import predict from './predict'
+import predictWin from './predict-win'
 
-export { rating, rate, ordinal, predict }
+export { rating, rate, ordinal, predictWin }
