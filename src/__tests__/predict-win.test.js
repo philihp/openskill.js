@@ -29,7 +29,6 @@ describe('predictWin', () => {
   it('predicts win outcome for multiple asymmetric teams', () => {
     expect.assertions(4)
     const [prob1, prob2, prob3, prob4] = predictWin([team1, team2, [a2], [b2]])
-    // should denom 6
     expect(prob1).toBeCloseTo(0.2613515941642222, precision)
     expect(prob2).toBeCloseTo(0.41117430943389155, precision)
     expect(prob3).toBeCloseTo(0.1750905983112395, precision)
@@ -39,7 +38,6 @@ describe('predictWin', () => {
   it('3 player newbie FFA', () => {
     expect.assertions(3)
     const [prob1, prob2, prob3] = predictWin([[a1], [a1], [a1]])
-    // denom 3
     expect(prob1).toBeCloseTo(0.333333333333, precision)
     expect(prob2).toBeCloseTo(0.333333333333, precision)
     expect(prob3).toBeCloseTo(0.333333333333, precision)
@@ -48,7 +46,6 @@ describe('predictWin', () => {
   it('4 player newbie FFA', () => {
     expect.assertions(4)
     const [p1, p2, p3, p4] = predictWin([[a1], [a1], [a1], [a1]])
-    // denom 6
     expect(p1).toBeCloseTo(0.25, precision)
     expect(p2).toBeCloseTo(0.25, precision)
     expect(p3).toBeCloseTo(0.25, precision)
@@ -70,7 +67,6 @@ describe('predictWin', () => {
 
   it('5 player newbie FFA', () => {
     expect.assertions(5)
-    // denom 10
     const [p1, p2, p3, p4, p5] = predictWin([[a1], [a1], [a1], [a1], [a1]])
     expect(p1).toBeCloseTo(0.2, precision)
     expect(p2).toBeCloseTo(0.2, precision)
