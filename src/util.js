@@ -1,7 +1,7 @@
 import { zip } from 'ramda'
 import constants from './constants'
 
-const sum = (a, b) => a + b
+export const sum = (a, b) => a + b
 
 export const score = (q, i) => {
   if (q < i) {

@@ -5,6 +5,8 @@ const normal = gaussian(0, 1)
 
 export const phiMajor = (x) => normal.cdf(x)
 
+export const phiMajorInverse = (x) => normal.ppf(x)
+
 export const phiMinor = (x) => normal.pdf(x)
 
 export const v = (x, t) => {
