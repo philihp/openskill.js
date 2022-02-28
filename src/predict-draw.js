@@ -18,8 +18,8 @@ const predictWin = (teams, options = {}) => {
 
   return (
     Math.abs(
-      flatten(
-        teamRatings.map(([muA, sigmaSqA], i) =>
+      teamRatings
+        .map(([muA, sigmaSqA], i) =>
           teamRatings
             .filter((_, q) => i !== q)
             .map(([muB, sigmaSqB]) => {
@@ -32,7 +32,8 @@ const predictWin = (teams, options = {}) => {
               )
             })
         )
-      ).reduce(sum, 0)
+        .flat()
+        .reduce(sum, 0)
     ) / denom
   )
 }

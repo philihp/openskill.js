@@ -154,7 +154,7 @@ describe('rate', () => {
   it('runs a model whith ties for first', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[e1], [e1], [e1], [e1]], {
-      model: 'thurstonMostellerFull',
+      model: 'thurstoneMostellerFull',
       score: [100, 84, 100, 72],
     })
     expect([w2, x2, y2, z2]).toStrictEqual([

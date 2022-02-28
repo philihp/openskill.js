@@ -47,7 +47,7 @@ describe('models#index', () => {
   it('runs TM full', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'thurstonMostellerFull',
+      model: 'thurstoneMostellerFull',
       epsilon: 0.1,
     })
     expect(a.mu).toBeCloseTo(33.461437)
@@ -60,7 +60,7 @@ describe('models#index', () => {
   it('runs TM partial', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'thurstonMostellerPart',
+      model: 'thurstoneMostellerPart',
       epsilon: 0.1,
       gamma: () => 1, // this is how it is in the source from Weng-Lin... mistake?
     })
