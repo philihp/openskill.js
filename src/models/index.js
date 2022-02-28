@@ -8,8 +8,6 @@ export default {
   plackettLuce,
   bradleyTerryFull,
   bradleyTerryPart,
-  thurstonMostellerFull: thurstoneMostellerFull, // for compatibility with typo in earlier implementation
-  thurstonMostellerPart: thurstoneMostellerPart, // for compatibility with typo in earlier implementation
   thurstoneMostellerFull,
   thurstoneMostellerPart,
 }
