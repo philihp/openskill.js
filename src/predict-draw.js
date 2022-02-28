@@ -1,3 +1,4 @@
+import { flatten } from 'ramda'
 import constants from './constants'
 import util, { sum } from './util'
 import { phiMajor, phiMajorInverse } from './statistics'
@@ -10,16 +11,15 @@ const predictWin = (teams, options = {}) => {
   if (n === 0) return undefined
   if (n === 1) return 1
 
+  const denom = (n * (n - 1)) / (n > 2 ? 1 : 2)
   const teamRatings = teamRating(teams)
   const drawMargin =
-    Math.sqrt(teams.flat().length) * BETA * phiMajorInverse((1 + 1 / n) / 2)
-
-  const denom = (n * (n - 1)) / (n > 2 ? 1 : 2)
+    Math.sqrt(flatten(teams).length) * BETA * phiMajorInverse((1 + 1 / n) / 2)
 
   return (
     Math.abs(
-      teamRatings
-        .map(([muA, sigmaSqA], i) =>
+      flatten(
+        teamRatings.map(([muA, sigmaSqA], i) =>
           teamRatings
             .filter((_, q) => i !== q)
             .map(([muB, sigmaSqB]) => {
@@ -32,8 +32,7 @@ const predictWin = (teams, options = {}) => {
               )
             })
         )
-        .flat()
-        .reduce(sum, 0)
+      ).reduce(sum, 0)
     ) / denom
   )
 }
