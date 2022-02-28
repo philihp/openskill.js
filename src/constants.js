@@ -9,6 +9,7 @@ export const betaSq = (options) => beta(options) ** 2
 export default (options) => ({
   EPSILON: epsilon(options),
   TWOBETASQ: 2 * betaSq(options),
+  BETA: beta(options),
   BETASQ: betaSq(options),
   Z: z(options),
 })

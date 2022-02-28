@@ -1,5 +1,5 @@
 import constants from './constants'
-import util from './util'
+import util, { sum } from './util'
 import { phiMajor } from './statistics'
 
 const predictWin = (teams, options = {}) => {
@@ -10,15 +10,16 @@ const predictWin = (teams, options = {}) => {
   const n = teams.length
   const denom = (n * (n - 1)) / 2
 
-  return teamRatings.map(([muA, sigmaSqA], i) =>
-    teamRatings
-      .filter((_, q) => i !== q)
-      .map(([muB, sigmaSqB]) =>
-        phiMajor(
-          (muA - muB) / Math.sqrt(n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2)
+  return teamRatings.map(
+    ([muA, sigmaSqA], i) =>
+      teamRatings
+        .filter((_, q) => i !== q)
+        .map(([muB, sigmaSqB]) =>
+          phiMajor(
+            (muA - muB) / Math.sqrt(n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2)
+          )
         )
-      )
-      .reduce((a, b) => a + b / denom, 0)
+        .reduce(sum, 0) / denom
   )
 }
 
