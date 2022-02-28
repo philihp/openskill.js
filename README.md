@@ -119,6 +119,34 @@ Ties should have either equivalent rank or score.
 ]
 ```
 
+### Predicting Winners
+
+For a given match of any number of teams, using `predictWin` you can find a relative
+odds that each of those teams will win.
+
+```js
+> const { predictWin } = require('openskill')
+> const a1 = rating()
+> const a2 = rating({mu:33.564, sigma:1.123})
+> const predictions = predictWin([[a1], [a2]])
+[ 0.45110899943132493, 0.5488910005686751 ]
+> predictions[0] + predictions[1]
+1
+```
+
+### Predicting Draws
+
+Also for a given match, using `predictDraw` you can get the relative chance that these
+teams will draw. The number returned here should be treated as relative to other matches, but in reality the odds of an actual legal draw will be impacted by some meta-function based on the rules of the game.
+
+```js
+> const { predictDraw } = require('openskill')
+> const prediction = predictDraw([[a1], [a2]])
+0.09025530533015186
+```
+
+This can be used in a similar way that you might use _quality_ in TrueSkill if you were optimizing a matchmaking system, or optimizing an tournament tree structure for exciting finals and semi-finals such as in the NCAA.
+
 ### Which Model do I want?
 
 - Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.
