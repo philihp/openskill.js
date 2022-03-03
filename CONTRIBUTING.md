@@ -1,3 +1,11 @@
+# Porting
+
+If you'd like to port this to your favorite language, you'll need:
+
+* Something like `Math.sqrt` (there do exist languages without this!)
+* Something like `Math.exp`, however different languages can have with different performance tradeoffs. There are de facto standards, but don't be alarmed by small variations. 
+* A gaussian normal distribution library.
+
 # Pull Requests are Open!
 
 If there's a feature or enhancement you'd like to add, please feel free to create an issue or comment on an existing one that you'd like to work on. If you'd like to message me directly, you can get my email address from git logs. I check email at around 0200Z every day.
