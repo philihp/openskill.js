@@ -176,4 +176,33 @@ describe('rate', () => {
       { mu: 25, sigma: 8.204837030780652 },
     ])
   })
+
+  it('accepts a tau term', () => {
+    expect.assertions(1)
+    const a = rating({ mu: 25, sigma: 3 })
+    const b = rating({ mu: 25, sigma: 3 })
+    const [[winner], [loser]] = rate([[a], [b]], {
+      tau: 0.3,
+    })
+
+    expect([winner, loser]).toStrictEqual([
+      { mu: 25.624880438870754, sigma: 2.9879993738476953 },
+      { mu: 24.375119561129246, sigma: 2.9879993738476953 },
+    ])
+  })
+
+  it('prevents sigma from rising', () => {
+    expect.assertions(1)
+    const a = rating({ mu: 40, sigma: 3 })
+    const b = rating({ mu: -20, sigma: 3 })
+    const [[winner], [loser]] = rate([[a], [b]], {
+      tau: 0.3,
+      preventSigmaIncrease: true,
+    })
+
+    expect([winner, loser]).toStrictEqual([
+      { mu: 40.00032667136128, sigma: 3 },
+      { mu: -20.000326671361275, sigma: 3 },
+    ])
+  })
 })
