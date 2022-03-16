@@ -35,13 +35,10 @@ const rate = (teams, options = {}) => {
   // this helps prevent ordinal from ever dropping after winning a game which can feel unfair
   if (options.tau && options.preventSigmaIncrease) {
     reorderedTeams = reorderedTeams.map((team, i) =>
-      team.map((p, j) => {
-        const pOrig = teams[i][j]
-        return {
-          ...p,
-          sigma: p.sigma <= pOrig.sigma ? p.sigma : pOrig.sigma,
-        }
-      })
+      team.map((p, j) => ({
+        ...p,
+        sigma: Math.min(p.sigma, teams[i][j].sigma),
+      }))
     )
   }
 
