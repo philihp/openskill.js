@@ -1,17 +1,27 @@
 name: tests
 
-on: [push]
+on:
+  - push
 
 env:
   CI: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 17.x
+      - run: npm install
+      - run: npm run lint
+
   tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version:
-          - 11.x # deprecated
           - 12.x # maintainence ends 2022-04-30
           - 13.x # deprecated
           - 14.x # maintainence ends 2023-04-30
@@ -26,7 +36,6 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
       - run: npm test
-      - run: npm run lint
 
   coverage:
     runs-on: ubuntu-latest
