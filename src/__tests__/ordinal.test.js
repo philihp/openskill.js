@@ -15,6 +15,6 @@ describe('ordinal', () => {
     const options = { z: 2 }
     const player = rating({ mu: 24.0, sigma: 6.0 }, options)
     const result = ordinal(player, options)
-    expect(result).toStrictEqual(12.0)
+    expect(result).toBe(12.0)
   })
 })
