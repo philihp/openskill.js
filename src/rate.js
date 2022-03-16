@@ -12,7 +12,7 @@ const rate = (teams, options = {}) => {
     const tauSquared = options.tau * options.tau
     processedTeams = teams.map((team) =>
       team.map((p) => ({
-        mu: p.mu,
+        ...p,
         sigma: Math.sqrt(p.sigma * p.sigma + tauSquared),
       }))
     )
@@ -38,7 +38,7 @@ const rate = (teams, options = {}) => {
       team.map((p, j) => {
         const pOrig = teams[i][j]
         return {
-          mu: p.mu,
+          ...p,
           sigma: p.sigma <= pOrig.sigma ? p.sigma : pOrig.sigma,
         }
       })
