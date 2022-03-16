@@ -37,7 +37,7 @@ const rate = (teams, options = {}) => {
     reorderedTeams = reorderedTeams.map((team, i) =>
       team.map((p, j) => ({
         ...p,
-        sigma: Math.min(p.sigma, teams[i][j]),
+        sigma: Math.min(p.sigma, teams[i][j].sigma),
       }))
     )
   }
