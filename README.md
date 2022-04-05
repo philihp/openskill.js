@@ -54,7 +54,7 @@ Ratings are kept as an object which represent a gaussian curve, with properties 
 { mu: 25.188, sigma: 6.211 }
 ```
 
-If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send this into `rank`
+If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send this into `rate`
 
 ```js
 > const { rate } = require('openskill')
