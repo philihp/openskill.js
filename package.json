@@ -35,6 +35,9 @@
     "@babel/register": "7.17.7",
     "@philihp/eslint-config": "5.1.2",
     "@types/jest": "27.4.1",
+    "@typescript-eslint/eslint-plugin": "5.18.0",
+    "@typescript-eslint/parser": "5.18.0",
+    "eslint": "8.13.0",
     "husky": "7.0.4",
     "typescript": "4.6.3"
   },
@@ -54,9 +57,14 @@
     ]
   },
   "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
     "extends": [
       "@philihp",
-      "plugin:jest/all"
+      "plugin:jest/all",
+      "plugin:@typescript-eslint/recommended"
     ]
   },
   "dependencies": {
