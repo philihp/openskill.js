@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
     "lint": "eslint src",
     "prepare": "husky install && npm run build",
     "release": "np",
@@ -31,9 +31,11 @@
     "@babel/cli": "7.17.10",
     "@babel/core": "7.17.10",
     "@babel/preset-env": "7.17.10",
+    "@babel/preset-typescript": "7.16.7",
     "@babel/register": "7.17.7",
     "@philihp/eslint-config": "5.1.2",
-    "husky": "8.0.1"
+    "husky": "7.0.4",
+    "typescript": "^4.6.3"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
