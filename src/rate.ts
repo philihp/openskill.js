@@ -1,8 +1,9 @@
 import { sortBy, identity, range } from 'ramda'
 import unwind from 'sort-unwind'
 import models from './models'
+import { Rating, Options } from './types'
 
-const rate = (teams, options = {}) => {
+const rate = (teams: Rating[][], options: Options = {}) => {
   const model = models[options.model || 'plackettLuce']
   let processedTeams = teams
 
@@ -34,7 +35,7 @@ const rate = (teams, options = {}) => {
   // preventSigmaIncrease prevents sigma from ever going up which can happen when using a tau value.
   // this helps prevent ordinal from ever dropping after winning a game which can feel unfair
   if (options.tau && options.preventSigmaIncrease) {
-    reorderedTeams = reorderedTeams.map((team, i) =>
+    reorderedTeams = reorderedTeams.map((team: Rating[], i: number) =>
       team.map((p, j) => ({
         ...p,
         sigma: Math.min(p.sigma, teams[i][j].sigma),

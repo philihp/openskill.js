@@ -1,7 +1,8 @@
 import util, { score } from '../util'
 import constants from '../constants'
+import { Rating, Options } from '../types'
 
-export default (game, options = {}) => {
+export default (game: Rating[][], options: Options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)

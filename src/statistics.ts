@@ -3,19 +3,19 @@ import gaussian from 'gaussian'
 // use a standard normal distribution - mean of zero, stddev/variance of one
 const normal = gaussian(0, 1)
 
-export const phiMajor = (x) => normal.cdf(x)
+export const phiMajor = (x: number) => normal.cdf(x)
 
-export const phiMajorInverse = (x) => normal.ppf(x)
+export const phiMajorInverse = (x: number) => normal.ppf(x)
 
-export const phiMinor = (x) => normal.pdf(x)
+export const phiMinor = (x: number) => normal.pdf(x)
 
-export const v = (x, t) => {
+export const v = (x: number, t: number) => {
   const xt = x - t
   const denom = phiMajor(xt)
   return denom < Number.EPSILON ? -xt : phiMinor(xt) / denom
 }
 
-export const w = (x, t) => {
+export const w = (x: number, t: number) => {
   const xt = x - t
   const denom = phiMajor(xt)
   if (denom < Number.EPSILON) {
@@ -24,7 +24,7 @@ export const w = (x, t) => {
   return v(x, t) * (v(x, t) + xt)
 }
 
-export const vt = (x, t) => {
+export const vt = (x: number, t: number) => {
   const xx = Math.abs(x)
   const b = phiMajor(t - xx) - phiMajor(-t - xx)
   if (b < 1e-5) {
@@ -35,7 +35,7 @@ export const vt = (x, t) => {
   return (x < 0 ? -a : a) / b
 }
 
-export const wt = (x, t) => {
+export const wt = (x: number, t: number) => {
   const xx = Math.abs(x)
   const b = phiMajor(t - xx) - phiMajor(-t - xx)
   return b < Number.EPSILON

@@ -1,9 +1,12 @@
 import { zip } from 'ramda'
 import constants from './constants'
+import { Rating, Options } from './types'
 
-export const sum = (a, b) => a + b
+type TeamRating = [number, number, Rating[], number]
 
-export const score = (q, i) => {
+export const sum = (a: number, b: number) => a + b
+
+export const score = (q: number, i: number) => {
   if (q < i) {
     return 0.0
   }
@@ -14,7 +17,7 @@ export const score = (q, i) => {
   return 0.5
 }
 
-export const rankings = (teams, rank = []) => {
+export const rankings = (teams: Rating[][], rank: number[] = []) => {
   const teamScores = teams.map((_, i) => rank[i] || i)
   const outRank = new Array(teams.length)
 
@@ -29,21 +32,23 @@ export const rankings = (teams, rank = []) => {
 }
 
 // this is basically shared code, precomputed for every model
-const teamRating = (options) => (game) => {
-  const rank = rankings(game, options.rank)
-  return game.map((team, i) => [
-    // mu[i]
-    team.map(({ mu }) => mu).reduce(sum, 0),
-    // sigma^2[i]
-    team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
-    // (original team data)
-    team,
-    // rank[i]
-    rank[i],
-  ])
-}
+const teamRating =
+  (options: Options) =>
+  (game: Rating[][]): TeamRating[] => {
+    const rank = rankings(game, options.rank)
+    return game.map((team, i) => [
+      // mu[i]
+      team.map(({ mu }) => mu).reduce(sum, 0),
+      // sigma^2[i]
+      team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
+      // (original team data)
+      team,
+      // rank[i]
+      rank[i],
+    ])
+  }
 
-export const ladderPairs = (ranks) => {
+export const ladderPairs = (ranks: TeamRating[]) => {
   const size = ranks.length
   const left = [undefined, ...ranks.slice(0, size - 1)]
   const right = [...ranks.slice(1), undefined]
@@ -55,9 +60,9 @@ export const ladderPairs = (ranks) => {
   })
 }
 
-const utilC = (options) => {
+const utilC = (options: Options) => {
   const { BETASQ } = constants(options)
-  return (teamRatings) =>
+  return (teamRatings: TeamRating[]) =>
     Math.sqrt(
       teamRatings
         .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
@@ -65,7 +70,7 @@ const utilC = (options) => {
     )
 }
 
-export const utilSumQ = (teamRatings, c) =>
+export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
     teamRatings
       .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
@@ -73,19 +78,26 @@ export const utilSumQ = (teamRatings, c) =>
       .reduce(sum, 0)
   )
 
-export const utilA = (teamRatings) =>
+export const utilA = (teamRatings: TeamRating[]) =>
   teamRatings.map(
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank)
         .length
   )
 
-export const gamma = (options) =>
+export const gamma = (options: Options) =>
   options.gamma ??
   // default to iSigma / c
-  ((c, _k, _mu, sigmaSq, _team, _qRank) => Math.sqrt(sigmaSq) / c)
+  ((
+    c: number,
+    _k: number,
+    _mu: number,
+    sigmaSq: number,
+    _team: Rating[],
+    _qRank: number
+  ) => Math.sqrt(sigmaSq) / c)
 
-export default (options) => ({
+export default (options: Options) => ({
   utilC: utilC(options),
   teamRating: teamRating(options),
   gamma: gamma(options),
