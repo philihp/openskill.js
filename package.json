@@ -38,6 +38,7 @@
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
     "eslint": "8.13.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
     "husky": "7.0.4",
     "typescript": "4.6.3"
   },
@@ -58,6 +59,9 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
     "plugins": [
       "@typescript-eslint"
     ],
@@ -65,7 +69,31 @@
       "@philihp",
       "plugin:jest/all",
       "plugin:@typescript-eslint/recommended"
-    ]
+    ],
+    "settings": {
+      "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"]
+      },
+      "import/resolver": {
+        "typescript": {},
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
+    },
+    "rules": {
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ]
+    }
   },
   "dependencies": {
     "gaussian": "1.2.0",
