@@ -71,14 +71,27 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "settings": {
-      "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+      "import/extensions": [
+        ".js",
+        ".jsx",
+        ".ts",
+        ".tsx"
+      ],
       "import/parsers": {
-        "@typescript-eslint/parser": [".ts", ".tsx"]
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
       },
       "import/resolver": {
         "typescript": {},
         "node": {
-          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
         }
       }
     },
@@ -91,6 +104,14 @@
           "jsx": "never",
           "ts": "never",
           "tsx": "never"
+        }
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_"
         }
       ]
     }
