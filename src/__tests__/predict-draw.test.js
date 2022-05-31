@@ -24,7 +24,7 @@ describe('predictDraw', () => {
 
   it('predicts 100% draw for self v self', () => {
     expect.assertions(1)
-    expect(predictDraw([b1], [b1])).toBeCloseTo(1, precision)
+    expect(predictDraw([[b1], [b1]])).toBeCloseTo(1, precision)
   })
 
   it('predicts draw for two teams', () => {
