@@ -161,3 +161,4 @@ This can be used in a similar way that you might use _quality_ in TrueSkill if y
 - Elixir https://github.com/philihp/openskill.ex
 - Lua https://github.com/Vaschex/openskill.lua
 - Google Sheets https://docs.google.com/spreadsheets/d/12TA1ZG_qpBi4kDTclaOGB4sd5uJK8w-0My6puMd2-CY/edit?usp=sharing
+- Google Apps Script https://github.com/haya14busa/gas-openskill
