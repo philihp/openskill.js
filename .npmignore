@@ -17,3 +17,4 @@ benchmark/*
 .husky/
 CONTRIBUTING.md
 .editorconfig
+tsconfig.json

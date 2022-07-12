@@ -38,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
     "eslint": "8.13.0",
-    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-typescript": "2.7.1",
     "husky": "7.0.4",
     "typescript": "4.6.3"
   },
@@ -73,14 +73,11 @@
     "settings": {
       "import/extensions": [
         ".js",
-        ".jsx",
-        ".ts",
-        ".tsx"
+        ".ts"
       ],
       "import/parsers": {
         "@typescript-eslint/parser": [
-          ".ts",
-          ".tsx"
+          ".ts"
         ]
       },
       "import/resolver": {
@@ -88,9 +85,7 @@
         "node": {
           "extensions": [
             ".js",
-            ".jsx",
-            ".ts",
-            ".tsx"
+            ".ts"
           ]
         }
       }
@@ -101,9 +96,7 @@
         "ignorePackages",
         {
           "js": "never",
-          "jsx": "never",
-          "ts": "never",
-          "tsx": "never"
+          "ts": "never"
         }
       ],
       "@typescript-eslint/no-unused-vars": [
