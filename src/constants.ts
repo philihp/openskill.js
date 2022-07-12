@@ -2,7 +2,8 @@ import { Options } from './types'
 
 export const z = (options: Options) => options?.z ?? 3
 export const mu = (options: Options) => options?.mu ?? 25
-export const sigma = (options: Options) => options?.sigma ?? mu(options) / z(options)
+export const sigma = (options: Options) =>
+  options?.sigma ?? mu(options) / z(options)
 
 export const epsilon = (options: Options) => options?.epsilon ?? 0.0001
 export const beta = (options: Options) => options?.beta ?? sigma(options) / 2
