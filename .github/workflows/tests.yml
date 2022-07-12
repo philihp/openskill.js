@@ -26,7 +26,6 @@ jobs:
           - 12.x # maintainence ends 2022-04-30
           - 13.x # deprecated
           - 14.x # maintainence ends 2023-04-30
-          - 15.x # deprecated
           - 16.x # maintainence ends 2024-04-30
           - 17.x # maintainence ends 2022-06-01
     steps:
