@@ -23,11 +23,13 @@ jobs:
       matrix:
         node-version:
           - 11.x # deprecated
-          - 12.x # maintainence ends 2022-04-30
+          - 12.x # deprecated
           - 13.x # deprecated
           - 14.x # maintainence ends 2023-04-30
+          - 15.x # deprecated
           - 16.x # maintainence ends 2024-04-30
-          - 17.x # maintainence ends 2022-06-01
+          - 17.x # deprecated
+          - 18.x # maintainence ends 2025-04-30
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
