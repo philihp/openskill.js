@@ -2,8 +2,9 @@ import { flatten } from 'ramda'
 import constants from './constants'
 import util, { sum } from './util'
 import { phiMajor, phiMajorInverse } from './statistics'
+import { Rating, Options } from './types'
 
-const predictWin = (teams, options = {}) => {
+const predictWin = (teams: Rating[][], options: Options = {}) => {
   const { teamRating } = util(options)
   const { BETASQ, BETA } = constants(options)
 
