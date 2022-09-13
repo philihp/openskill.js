@@ -149,7 +149,7 @@ This can be used in a similar way that you might use _quality_ in TrueSkill if y
 
 ### Alternative Models
 
-By default, we u se a Plackett-Luce model, which is probably good enough for most cases. When speed is an issue, the library runs faster with other models
+By default, we use a Plackett-Luce model, which is probably good enough for most cases. When speed is an issue, the library runs faster with other models
 
 ```js
 import { bradleyTerryFull } from './models'
