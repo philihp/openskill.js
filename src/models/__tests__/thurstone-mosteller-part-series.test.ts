@@ -1,4 +1,5 @@
 import { rate, rating } from '../..'
+import { thurstoneMostellerPart } from '..'
 
 // numbers in this test suite come from rank-1.02 based on 3 FFA games:
 // 0, 1, 2, 3, 4 with a score of 9, 7, 7, 5, 5
@@ -8,7 +9,7 @@ import { rate, rating } from '../..'
 describe('thurstoneMostellerPart#series', () => {
   it('runs as expected', () => {
     expect.assertions(10)
-    const model = 'thurstoneMostellerPart'
+    const model = thurstoneMostellerPart
     const p00 = rating()
     const p10 = rating()
     const p20 = rating()

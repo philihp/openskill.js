@@ -1,4 +1,11 @@
 import { rate, rating } from '../..'
+import {
+  bradleyTerryFull,
+  bradleyTerryPart,
+  plackettLuce,
+  thurstoneMostellerFull,
+  thurstoneMostellerPart,
+} from '..'
 
 // numbers in this test suite come from rank-1.02 on a 3-way
 // these differ in that it uses an epsilon of 0.1
@@ -8,7 +15,7 @@ describe('models#index', () => {
   it('runs BT full', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'bradleyTerryFull',
+      model: bradleyTerryFull,
       epsilon: 0.1,
     })
     expect(a.mu).toBeCloseTo(30.270462767)
@@ -21,7 +28,7 @@ describe('models#index', () => {
   it('runs BT partial', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'bradleyTerryPart',
+      model: bradleyTerryPart,
       epsilon: 0.1,
     })
     expect(a.mu).toBeCloseTo(27.635231383)
@@ -34,7 +41,7 @@ describe('models#index', () => {
   it('runs PL', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'plackettLuce',
+      model: plackettLuce,
       epsilon: 0.1,
     })
     expect(a.mu).toBeCloseTo(27.8689)
@@ -47,7 +54,7 @@ describe('models#index', () => {
   it('runs TM full', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'thurstoneMostellerFull',
+      model: thurstoneMostellerFull,
       epsilon: 0.1,
     })
     expect(a.mu).toBeCloseTo(33.461437)
@@ -60,7 +67,7 @@ describe('models#index', () => {
   it('runs TM partial', () => {
     expect.assertions(6)
     const [[a], [b], [c]] = rate([[r], [r], [r]], {
-      model: 'thurstoneMostellerPart',
+      model: thurstoneMostellerPart,
       epsilon: 0.1,
       gamma: () => 1, // this is how it is in the source from Weng-Lin... mistake?
     })

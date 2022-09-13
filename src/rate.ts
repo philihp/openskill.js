@@ -1,10 +1,10 @@
 import { sortBy, identity, range } from 'ramda'
 import unwind from 'sort-unwind'
-import models from './models'
+import { plackettLuce } from './models'
 import { Rating, Options } from './types'
 
-const rate = (teams: Rating[][], options: Options = {}) => {
-  const model = models[options.model || 'plackettLuce']
+const rate = (teams: Rating[][], options: Options = {}): Rating[][] => {
+  const model = options.model ?? plackettLuce
   let processedTeams = teams
 
   // if tau is provided, use additive dynamics factor to prevent sigma from dropping too low.

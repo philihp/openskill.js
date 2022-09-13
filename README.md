@@ -147,7 +147,16 @@ teams will draw. The number returned here should be treated as relative to other
 
 This can be used in a similar way that you might use _quality_ in TrueSkill if you were optimizing a matchmaking system, or optimizing an tournament tree structure for exciting finals and semi-finals such as in the NCAA.
 
-### Which Model do I want?
+### Alternative Models
+
+By default, we u se a Plackett-Luce model, which is probably good enough for most cases. When speed is an issue, the library runs faster with other models
+
+```js
+import { bradleyTerryFull } from './models'
+const [[a2],[b2]] = rate([[a1],[b1]], {
+  model: bradleyTerryFull,
+})
+```
 
 - Bradley-Terry rating models follow a logistic distribution over a player's skill, similar to Glicko.
 - Thurstone-Mosteller rating models follow a gaussian distribution, similar to TrueSkill. Gaussian CDF/PDF functions differ in implementation from system to system (they're all just chebyshev approximations anyway). The accuracy of this model isn't usually as great either, but tuning this with an alternative gamma function can improve the accuracy if you really want to get into it.
