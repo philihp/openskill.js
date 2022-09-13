@@ -17,7 +17,7 @@ export type Gamma = (
 ) => number
 
 // eslint-disable-next-line no-use-before-define
-export type Model = (teams: Team[], options: Options) => Team[]
+export type Model = (teams: Team[], options?: Options) => Team[]
 
 export type Options = {
   z?: number
