@@ -1,4 +1,5 @@
 import { rating } from '../..'
+import { Gamma } from '../../types'
 import rate from '../bradley-terry-part'
 
 describe('bradleyTerryPart', () => {
@@ -68,7 +69,8 @@ describe('bradleyTerryPart', () => {
 
   it('can use a custom gamma with k=2', () => {
     expect.assertions(1)
-    expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
+    const gamma: Gamma = (_, k) => 1 / k
+    expect(rate([team1, team1], { gamma })).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.122328620674137 }],
       [{ mu: 22.36476861652635, sigma: 8.122328620674137 }],
     ])
@@ -76,9 +78,8 @@ describe('bradleyTerryPart', () => {
 
   it('can use a custom gamma with k=5', () => {
     expect.assertions(1)
-    expect(
-      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
-    ).toStrictEqual([
+    const gamma: Gamma = (_, k) => 1 / k
+    expect(rate([team1, team1, team1, team1, team1], { gamma })).toStrictEqual([
       [{ mu: 27.63523138347365, sigma: 8.249579113843055 }],
       [{ mu: 25, sigma: 8.16496580927726 }],
       [{ mu: 25, sigma: 8.16496580927726 }],

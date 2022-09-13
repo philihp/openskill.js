@@ -20,7 +20,7 @@ export type Options = {
   mu?: number
   sigma?: number
   epsilon?: number
-  gamma?: () => number
+  gamma?: Gamma
   beta?: number
   model?: Model
   rank?: number[]

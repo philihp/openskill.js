@@ -1,10 +1,11 @@
+import rating from '../../rating'
 import { rankings } from '../../util'
 
-const a = 'a'
-const b = 'b'
-const c = 'c'
-const d = 'd'
-const e = 'e'
+const a = [rating({ mu: 1 })]
+const b = [rating({ mu: 2 })]
+const c = [rating({ mu: 3 })]
+const d = [rating({ mu: 4 })]
+const e = [rating({ mu: 5 })]
 
 describe('util#rankings', () => {
   it('ranks a 0 element array without reordering', () => {
@@ -21,7 +22,7 @@ describe('util#rankings', () => {
   })
   it('ranks a 1 element array with reordering', () => {
     expect.assertions(1)
-    expect(rankings([a], [a])).toStrictEqual([0])
+    expect(rankings([a], [1])).toStrictEqual([0])
   })
   it('ranks given undefined', () => {
     expect.assertions(1)

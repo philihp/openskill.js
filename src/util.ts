@@ -2,7 +2,7 @@ import { zip } from 'ramda'
 import constants from './constants'
 import { Rating, Options, Gamma } from './types'
 
-type TeamRating = [number, number, Rating[], number]
+export type TeamRating = [number, number, Rating[], number]
 
 export const sum = (a: number, b: number) => a + b
 
@@ -48,7 +48,7 @@ const teamRating =
     ])
   }
 
-export const ladderPairs = (ranks: TeamRating[]) => {
+export const ladderPairs = <T>(ranks: T[]): T[][] => {
   const size = ranks.length
   const left = [undefined, ...ranks.slice(0, size - 1)]
   const right = [...ranks.slice(1), undefined]
