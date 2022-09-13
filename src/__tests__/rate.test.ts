@@ -1,4 +1,5 @@
 import { rate, rating } from '..'
+import thurstoneMostellerFull from '../models/thurstone-mosteller-full'
 
 describe('rate', () => {
   const a1 = rating({ mu: 29.182, sigma: 4.782 })
@@ -151,10 +152,10 @@ describe('rate', () => {
     ])
   })
 
-  it('runs a model whith ties for first', () => {
+  it('runs a model with ties for first', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[e1], [e1], [e1], [e1]], {
-      model: 'thurstoneMostellerFull',
+      model: thurstoneMostellerFull,
       score: [100, 84, 100, 72],
     })
     expect([w2, x2, y2, z2]).toStrictEqual([
@@ -175,6 +176,27 @@ describe('rate', () => {
       { mu: 25, sigma: 8.204837030780652 },
       { mu: 25, sigma: 8.204837030780652 },
     ])
+  })
+
+  it('accepts weights for partial play', () => {
+    expect.assertions(1)
+    expect(() =>
+      rate(
+        [
+          [a1, b1],
+          [c1, d1],
+        ],
+        {
+          // This is here to demonstrate how to send these in, although
+          // the default Plackett-Luce doesn't care.
+          // TODO: example with a custom model which takes this into account.
+          weight: [
+            [0.9, 1],
+            [1, 0.6],
+          ],
+        }
+      )
+    ).not.toThrow()
   })
 
   it('accepts a tau term', () => {

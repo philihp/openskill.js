@@ -1,6 +1,6 @@
 import { zip } from 'ramda'
 import constants from './constants'
-import { Rating, Options } from './types'
+import { Rating, Options, Gamma } from './types'
 
 type TeamRating = [number, number, Rating[], number]
 
@@ -85,7 +85,7 @@ export const utilA = (teamRatings: TeamRating[]) =>
         .length
   )
 
-export const gamma = (options: Options) =>
+export const gamma = (options: Options): Gamma =>
   options.gamma ??
   // default to iSigma / c
   ((

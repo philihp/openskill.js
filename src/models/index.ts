@@ -4,7 +4,7 @@ import bradleyTerryPart from './bradley-terry-part'
 import thurstoneMostellerFull from './thurstone-mosteller-full'
 import thurstoneMostellerPart from './thurstone-mosteller-part'
 
-export default {
+export {
   plackettLuce,
   bradleyTerryFull,
   bradleyTerryPart,
