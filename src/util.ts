@@ -1,8 +1,12 @@
 import { zip } from 'ramda'
 import constants from './constants'
-import { Rating, Options, Gamma } from './types'
+import { Rating, Options, Gamma, Team, Rank } from './types'
 
-type TeamRating = [number, number, Rating[], number]
+export type TeamMu = number
+
+export type TeamSigmaSq = number
+
+export type TeamRating = [TeamMu, TeamSigmaSq, Team, Rank]
 
 export const sum = (a: number, b: number) => a + b
 
@@ -17,7 +21,7 @@ export const score = (q: number, i: number) => {
   return 0.5
 }
 
-export const rankings = (teams: Rating[][], rank: number[] = []) => {
+export const rankings = (teams: Team[], rank: number[] = []) => {
   const teamScores = teams.map((_, i) => rank[i] || i)
   const outRank = new Array(teams.length)
 
@@ -34,7 +38,7 @@ export const rankings = (teams: Rating[][], rank: number[] = []) => {
 // this is basically shared code, precomputed for every model
 const teamRating =
   (options: Options) =>
-  (game: Rating[][]): TeamRating[] => {
+  (game: Team[]): TeamRating[] => {
     const rank = rankings(game, options.rank)
     return game.map((team, i) => [
       // mu[i]
@@ -48,7 +52,7 @@ const teamRating =
     ])
   }
 
-export const ladderPairs = (ranks: TeamRating[]) => {
+export const ladderPairs = <T>(ranks: T[]): T[][] => {
   const size = ranks.length
   const left = [undefined, ...ranks.slice(0, size - 1)]
   const right = [...ranks.slice(1), undefined]

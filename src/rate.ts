@@ -1,9 +1,9 @@
 import { sortBy, identity, range } from 'ramda'
 import unwind from 'sort-unwind'
 import { plackettLuce } from './models'
-import { Rating, Options } from './types'
+import { Rating, Options, Team } from './types'
 
-const rate = (teams: Rating[][], options: Options = {}): Rating[][] => {
+const rate = (teams: Team[], options: Options = {}): Team[] => {
   const model = options.model ?? plackettLuce
   let processedTeams = teams
 

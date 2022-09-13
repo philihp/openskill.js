@@ -3,6 +3,10 @@ export type Rating = {
   sigma: number
 }
 
+export type Team = Rating[]
+
+export type Rank = number
+
 export type Gamma = (
   c: number,
   k: number,
@@ -13,17 +17,17 @@ export type Gamma = (
 ) => number
 
 // eslint-disable-next-line no-use-before-define
-export type Model = (teams: Rating[][], options: Options) => Rating[][]
+export type Model = (teams: Team[], options?: Options) => Team[]
 
 export type Options = {
   z?: number
   mu?: number
   sigma?: number
   epsilon?: number
-  gamma?: () => number
+  gamma?: Gamma
   beta?: number
   model?: Model
-  rank?: number[]
+  rank?: Rank[]
   score?: number[]
   weight?: number[][]
   tau?: number

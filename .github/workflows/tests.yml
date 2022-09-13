@@ -22,6 +22,7 @@ jobs:
     strategy:
       matrix:
         node-version:
+          # when advancing support, remember to bump @tsconfig/node14
           - 14.x # maintainence ends 2023-04-30
           - 15.x # deprecated
           - 16.x # maintainence ends 2024-04-30

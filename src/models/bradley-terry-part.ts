@@ -1,9 +1,9 @@
 import { zip } from 'ramda'
 import util, { score, ladderPairs } from '../util'
 import constants from '../constants'
-import { Rating } from '../types'
+import { Model, Rating } from '../types'
 
-export default (game: Rating[][], options = {}) => {
+const model: Model = (game: Rating[][], options = {}) => {
   const { TWOBETASQ, EPSILON } = constants(options)
   const { teamRating, gamma } = util(options)
 
@@ -38,3 +38,5 @@ export default (game: Rating[][], options = {}) => {
     })
   })
 }
+
+export default model
