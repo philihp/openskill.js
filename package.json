@@ -75,6 +75,9 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "settings": {
+      "react": {
+        "version": "18.2.0"
+      },
       "import/extensions": [
         ".js",
         ".ts"
