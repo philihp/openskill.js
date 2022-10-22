@@ -119,7 +119,7 @@
   },
   "dependencies": {
     "@types/gaussian": "1.2.0",
-    "@types/ramda": "0.28.16",
+    "@types/ramda": "0.28.18",
     "gaussian": "1.2.0",
     "ramda": "0.28.0",
     "sort-unwind": "2.0.0"
