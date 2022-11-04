@@ -37,7 +37,7 @@
     "@babel/register": "7.18.9",
     "@philihp/eslint-config": "6.0.2",
     "@tsconfig/node14": "1.0.3",
-    "@types/jest": "29.2.0",
+    "@types/jest": "29.2.2",
     "@typescript-eslint/eslint-plugin": "5.42.0",
     "@typescript-eslint/parser": "5.42.0",
     "eslint": "8.26.0",
