@@ -168,6 +168,6 @@ const [[a2],[b2]] = rate([[a1],[b1]], {
 - Python https://github.com/OpenDebates/openskill.py
 - Kotlin https://github.com/brezinajn/openskill.kt
 - Elixir https://github.com/philihp/openskill.ex
-- Lua https://github.com/Vaschex/openskill.lua
+- Lua https://github.com/bstummer/openskill.lua
 - Google Sheets https://docs.google.com/spreadsheets/d/12TA1ZG_qpBi4kDTclaOGB4sd5uJK8w-0My6puMd2-CY/edit?usp=sharing
 - Google Apps Script https://github.com/haya14busa/gas-openskill
