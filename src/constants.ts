@@ -2,6 +2,7 @@ import { Options } from './types'
 
 export const z = (options: Options) => options?.z ?? 3
 export const mu = (options: Options) => options?.mu ?? 25
+export const tau = (options: Options) => options?.tau ?? mu(options) / 300
 export const sigma = (options: Options) =>
   options?.sigma ?? mu(options) / z(options)
 
@@ -15,4 +16,5 @@ export default (options: Options) => ({
   BETA: beta(options),
   BETASQ: betaSq(options),
   Z: z(options),
+  TAU: tau(options),
 })
