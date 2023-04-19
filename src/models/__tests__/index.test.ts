@@ -1,11 +1,5 @@
 import { rate, rating } from '../..'
-import {
-  bradleyTerryFull,
-  bradleyTerryPart,
-  plackettLuce,
-  thurstoneMostellerFull,
-  thurstoneMostellerPart,
-} from '..'
+import { bradleyTerryFull, bradleyTerryPart, plackettLuce, thurstoneMostellerFull, thurstoneMostellerPart } from '..'
 
 // numbers in this test suite come from rank-1.02 on a 3-way
 // these differ in that it uses an epsilon of 0.1

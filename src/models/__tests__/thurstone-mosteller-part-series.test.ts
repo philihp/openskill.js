@@ -15,15 +15,12 @@ describe('thurstoneMostellerPart#series', () => {
     const p20 = rating()
     const p30 = rating()
     const p40 = rating()
-    const [[p01], [p11], [p21], [p31], [p41]] = rate(
-      [[p00], [p10], [p20], [p30], [p40]],
-      {
-        model,
-        epsilon: 0.1,
-        gamma: () => 1,
-        score: [9, 7, 7, 5, 5],
-      }
-    )
+    const [[p01], [p11], [p21], [p31], [p41]] = rate([[p00], [p10], [p20], [p30], [p40]], {
+      model,
+      epsilon: 0.1,
+      gamma: () => 1,
+      score: [9, 7, 7, 5, 5],
+    })
 
     expect(p01.mu).toBeCloseTo(27.108980741)
     expect(p01.sigma).toBeCloseTo(8.063357519)

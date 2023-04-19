@@ -14,8 +14,7 @@ const predictWin = (teams: Team[], options: Options = {}) => {
 
   const denom = (n * (n - 1)) / (n > 2 ? 1 : 2)
   const teamRatings = teamRating(teams)
-  const drawMargin =
-    Math.sqrt(flatten(teams).length) * BETA * phiMajorInverse((1 + 1 / n) / 2)
+  const drawMargin = Math.sqrt(flatten(teams).length) * BETA * phiMajorInverse((1 + 1 / n) / 2)
 
   return (
     Math.abs(
@@ -24,13 +23,8 @@ const predictWin = (teams: Team[], options: Options = {}) => {
           teamRatings
             .filter((_, q) => i !== q)
             .map(([muB, sigmaSqB]) => {
-              const sigmaBar = Math.sqrt(
-                n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2
-              )
-              return (
-                phiMajor((drawMargin - muA + muB) / sigmaBar) -
-                phiMajor((muA - muB - drawMargin) / sigmaBar)
-              )
+              const sigmaBar = Math.sqrt(n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2)
+              return phiMajor((drawMargin - muA + muB) / sigmaBar) - phiMajor((muA - muB - drawMargin) / sigmaBar)
             })
         )
         .flat()

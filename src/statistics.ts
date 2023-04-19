@@ -40,6 +40,5 @@ export const wt = (x: number, t: number) => {
   const b = phiMajor(t - xx) - phiMajor(-t - xx)
   return b < Number.EPSILON
     ? 1.0
-    : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b +
-        vt(x, t) * vt(x, t)
+    : ((t - xx) * phiMinor(t - xx) + (t + xx) * phiMinor(-t - xx)) / b + vt(x, t) * vt(x, t)
 }

@@ -76,9 +76,7 @@ describe('thurstoneMostellerPart', () => {
 
   it('can use a custom gamma with k=5', () => {
     expect.assertions(1)
-    expect(
-      rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })
-    ).toStrictEqual([
+    expect(rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
       [{ mu: 27.102616738180256, sigma: 8.280111667130026 }],
       [{ mu: 25, sigma: 8.226545690375827 }],
       [{ mu: 25, sigma: 8.226545690375827 }],
