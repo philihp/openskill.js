@@ -46,8 +46,6 @@ describe('util#rankings', () => {
   })
   it('ranks sparse scores', () => {
     expect.assertions(1)
-    expect(rankings([a, b, c, d, e], [14, 32, 47, 47, 48])).toStrictEqual([
-      0, 1, 2, 2, 4,
-    ])
+    expect(rankings([a, b, c, d, e], [14, 32, 47, 47, 48])).toStrictEqual([0, 1, 2, 2, 4])
   })
 })

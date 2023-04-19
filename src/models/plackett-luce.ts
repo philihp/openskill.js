@@ -18,10 +18,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
       .reduce(
         ([omega, delta], [_], q) => {
           const quotient = iMuOverCe / sumQ[q]
-          return [
-            omega + (i === q ? 1 - quotient : -quotient) / a[q],
-            delta + (quotient * (1 - quotient)) / a[q],
-          ]
+          return [omega + (i === q ? 1 - quotient : -quotient) / a[q], delta + (quotient * (1 - quotient)) / a[q]]
         },
         [0, 0]
       )
@@ -32,9 +29,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
     return iTeam.map(({ mu, sigma }) => ({
       mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
-      sigma:
-        sigma *
-        Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
+      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
     }))
   })
 }

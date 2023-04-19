@@ -31,9 +31,7 @@ const model: Model = (game: Rating[][], options = {}) => {
       const sigmaSq = sigma * sigma
       return {
         mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma:
-          sigma *
-          Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
+        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
       }
     })
   })

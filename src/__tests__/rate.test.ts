@@ -125,12 +125,9 @@ describe('rate', () => {
 
   it('four-way-tie with newbies', () => {
     expect.assertions(1)
-    const [[a], [b], [c], [d]] = rate(
-      [[rating()], [rating()], [rating()], [rating()]],
-      {
-        rank: [1, 1, 1, 1],
-      }
-    )
+    const [[a], [b], [c], [d]] = rate([[rating()], [rating()], [rating()], [rating()]], {
+      rank: [1, 1, 1, 1],
+    })
     expect([a, b, c, d]).toStrictEqual([
       { mu: 25, sigma: 8.263160757613477 },
       { mu: 25, sigma: 8.263160757613477 },

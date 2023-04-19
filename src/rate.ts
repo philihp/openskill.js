@@ -20,10 +20,7 @@ const rate = (teams: Team[], options: Options = {}): Team[] => {
   }
 
   // if rank provided, use it, otherwise transition scores and use that
-  const rank =
-    options.rank ??
-    options.score?.map((points) => -points) ??
-    range(1, teams.length + 1)
+  const rank = options.rank ?? options.score?.map((points) => -points) ?? range(1, teams.length + 1)
 
   const [orderedTeams, tenet] = unwind(rank, processedTeams)
   const newRatings = model(orderedTeams, {

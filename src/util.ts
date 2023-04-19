@@ -67,11 +67,7 @@ export const ladderPairs = <T>(ranks: T[]): T[][] => {
 const utilC = (options: Options) => {
   const { BETASQ } = constants(options)
   return (teamRatings: TeamRating[]) =>
-    Math.sqrt(
-      teamRatings
-        .map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ)
-        .reduce(sum, 0)
-    )
+    Math.sqrt(teamRatings.map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ).reduce(sum, 0))
 }
 
 export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
@@ -85,21 +81,13 @@ export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
 export const utilA = (teamRatings: TeamRating[]) =>
   teamRatings.map(
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
-      teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank)
-        .length
+      teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank).length
   )
 
 export const gamma = (options: Options): Gamma =>
   options.gamma ??
   // default to iSigma / c
-  ((
-    c: number,
-    _k: number,
-    _mu: number,
-    sigmaSq: number,
-    _team: Rating[],
-    _qRank: number
-  ) => Math.sqrt(sigmaSq) / c)
+  ((c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) => Math.sqrt(sigmaSq) / c)
 
 export default (options: Options) => ({
   utilC: utilC(options),

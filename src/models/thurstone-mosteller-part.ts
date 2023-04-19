@@ -29,8 +29,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
         const sign = qRank > iRank ? 1 : -1
         return [
           omega + sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq),
-          delta +
-            ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
+          delta + ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
         ]
       },
       [0, 0]
@@ -40,9 +39,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
       const sigmaSq = sigma * sigma
       return {
         mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma:
-          sigma *
-          Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
+        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
       }
     })
   })
