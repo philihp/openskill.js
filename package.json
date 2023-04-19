@@ -13,6 +13,10 @@
     "test:coverage": "npm run test -- --coverage"
   },
   "main": "./dist/index.js",
+  "files": [
+    "/dist",
+    "!/dist/**/__tests__/*"
+  ],
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -36,6 +40,7 @@
     "@babel/preset-typescript": "7.21.4",
     "@babel/register": "7.21.0",
     "@philihp/eslint-config": "6.0.2",
+    "@philihp/prettier-config": "^1.0.0",
     "@tsconfig/node16": "1.0.3",
     "@types/jest": "29.5.0",
     "@typescript-eslint/eslint-plugin": "5.58.0",
@@ -51,11 +56,7 @@
       "eslint --fix"
     ]
   },
-  "prettier": {
-    "singleQuote": true,
-    "semi": false,
-    "trailingComma": "es5"
-  },
+  "prettier": "@philihp/prettier-config",
   "jest": {
     "modulePathIgnorePatterns": [
       "dist/"
