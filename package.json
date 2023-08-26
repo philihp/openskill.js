@@ -48,7 +48,7 @@
     "eslint": "8.48.0",
     "eslint-import-resolver-typescript": "3.6.0",
     "husky": "8.0.3",
-    "jest": "29.5.0",
+    "jest": "29.6.4",
     "typescript": "5.2.2"
   },
   "lint-staged": {
