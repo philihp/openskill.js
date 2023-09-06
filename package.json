@@ -39,7 +39,7 @@
     "@babel/preset-env": "7.22.5",
     "@babel/preset-typescript": "7.22.5",
     "@babel/register": "7.22.5",
-    "@philihp/eslint-config": "6.0.2",
+    "@philihp/eslint-config": "6.1.0",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.2",
     "@types/jest": "29.5.2",
