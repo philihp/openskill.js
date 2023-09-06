@@ -28,7 +28,7 @@ jobs:
           - 16.x # maintainence ends 2024-04-30
           - 17.x # deprecated
           - 18.x # maintainence ends 2025-04-30
-          - 19.x # maintainence ends 2023-06-01
+          - 19.x # deprecated
           - 20.x # maintainence ends 2026-04-30
     steps:
       - uses: actions/checkout@v3
