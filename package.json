@@ -42,7 +42,7 @@
     "@philihp/eslint-config": "6.1.0",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.2",
-    "@types/jest": "29.5.10",
+    "@types/jest": "29.5.11",
     "@typescript-eslint/eslint-plugin": "6.13.1",
     "@typescript-eslint/parser": "6.13.1",
     "eslint": "8.55.0",
