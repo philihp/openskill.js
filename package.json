@@ -35,10 +35,10 @@
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
     "@babel/cli": "7.23.4",
-    "@babel/core": "7.23.6",
-    "@babel/preset-env": "7.23.6",
+    "@babel/core": "7.23.7",
+    "@babel/preset-env": "7.23.7",
     "@babel/preset-typescript": "7.23.3",
-    "@babel/register": "7.22.15",
+    "@babel/register": "7.23.7",
     "@philihp/eslint-config": "6.1.0",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.2",
