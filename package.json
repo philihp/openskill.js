@@ -7,7 +7,7 @@
     "build:babel": "babel src --out-dir dist --extensions \".js,.ts\" --source-maps inline",
     "build:typescript": "tsc --emitDeclarationOnly",
     "lint": "eslint src",
-    "prepare": "husky install && npm run build",
+    "prepare": "husky & npm run build",
     "release": "np",
     "test": "jest",
     "test:coverage": "npm run test -- --coverage"
