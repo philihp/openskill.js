@@ -41,7 +41,7 @@
     "@babel/register": "7.23.7",
     "@philihp/eslint-config": "6.1.0",
     "@philihp/prettier-config": "1.0.0",
-    "@tsconfig/node20": "20.1.3",
+    "@tsconfig/node20": "20.1.4",
     "@types/jest": "29.5.12",
     "@typescript-eslint/eslint-plugin": "7.3.1",
     "@typescript-eslint/parser": "7.3.1",
