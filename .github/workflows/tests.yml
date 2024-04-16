@@ -20,16 +20,22 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           # when advancing support, remember to bump @tsconfig/node16
           - 14.x # deprecated
           - 15.x # deprecated
-          - 16.x # maintainence ends 2024-04-30
+          - 16.x # deprecated
           - 17.x # deprecated
-          - 18.x # maintainence ends 2025-04-30
           - 19.x # deprecated
-          - 20.x # maintainence ends 2026-04-30
+        experimental: [true]
+        include:
+          - node-version: 18.x
+            experimental: false
+          - node-version: 20.x
+            experimental: false
+    continue-on-error: ${{ matrix.experimental }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
