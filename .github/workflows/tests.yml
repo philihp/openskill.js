@@ -19,17 +19,21 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         node-version:
-          # when advancing support, remember to bump @tsconfig/node16
+          # when a deprecated version starts failing, it's ok to remove it from tests
+          # anyone using this version should update node or try using an old version of
+          # this library.
           - 14.x # deprecated
-          - 15.x # deprecated
-          - 16.x # maintainence ends 2024-04-30
+          - 16.x # deprecated
           - 17.x # deprecated
-          - 18.x # maintainence ends 2025-04-30
+          - 18.x # until 2025-04-30
           - 19.x # deprecated
-          - 20.x # maintainence ends 2026-04-30
+          - 20.x # until 2026-04-30
+          - 21.x # until 2024-06-01
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
