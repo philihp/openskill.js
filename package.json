@@ -6,7 +6,7 @@
     "build": "npm run build:typescript && npm run build:babel",
     "build:babel": "babel src --out-dir dist --extensions \".js,.ts\" --source-maps inline",
     "build:typescript": "tsc --emitDeclarationOnly",
-    "lint": "eslint src",
+    "lint": "eslint",
     "prepare": "husky & npm run build",
     "release": "np",
     "test": "jest",
@@ -39,7 +39,6 @@
     "@babel/preset-env": "7.24.4",
     "@babel/preset-typescript": "7.24.1",
     "@babel/register": "7.23.7",
-    "@philihp/eslint-config": "6.1.0",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.4",
     "@types/jest": "29.5.12",
@@ -59,31 +58,6 @@
     "modulePathIgnorePatterns": [
       "dist/"
     ]
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
-    "extends": [
-      "@philihp",
-      "plugin:jest/all"
-    ],
-    "settings": {
-      "react": {
-        "version": "18.2.0"
-      }
-    },
-    "rules": {
-      "import/extensions": [
-        "error",
-        "ignorePackages",
-        {
-          "js": "never",
-          "ts": "never"
-        }
-      ],
-      "jest/max-expects": "off"
-    }
   },
   "dependencies": {
     "@types/gaussian": "1.2.2",
