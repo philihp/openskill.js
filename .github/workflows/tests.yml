@@ -23,9 +23,9 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          # when advancing support, remember to bump @tsconfig/node16
+          # nice to know that these work, but not necessary
+          - 12.x # deprecated
           - 14.x # deprecated
-          - 15.x # deprecated
           - 16.x # deprecated
           - 17.x # deprecated
           - 19.x # deprecated
