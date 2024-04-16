@@ -43,10 +43,7 @@
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.4",
     "@types/jest": "29.5.12",
-    "@typescript-eslint/eslint-plugin": "7.6.0",
-    "@typescript-eslint/parser": "7.6.0",
     "eslint": "9.0.0",
-    "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-jest": "28.2.0",
     "husky": "9.0.11",
     "jest": "29.7.0",
@@ -64,39 +61,16 @@
     ]
   },
   "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
     "parserOptions": {
       "project": "./tsconfig.json"
     },
-    "plugins": [
-      "@typescript-eslint"
-    ],
     "extends": [
       "@philihp",
-      "plugin:jest/all",
-      "plugin:@typescript-eslint/recommended"
+      "plugin:jest/all"
     ],
     "settings": {
       "react": {
         "version": "18.2.0"
-      },
-      "import/extensions": [
-        ".js",
-        ".ts"
-      ],
-      "import/parsers": {
-        "@typescript-eslint/parser": [
-          ".ts"
-        ]
-      },
-      "import/resolver": {
-        "typescript": {},
-        "node": {
-          "extensions": [
-            ".js",
-            ".ts"
-          ]
-        }
       }
     },
     "rules": {
@@ -106,14 +80,6 @@
         {
           "js": "never",
           "ts": "never"
-        }
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_"
         }
       ],
       "jest/max-expects": "off"
