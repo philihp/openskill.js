@@ -24,6 +24,88 @@ describe('rate', () => {
     ])
   })
 
+  it('rate accepts and runs a placket-luce model with tau', () => {
+    expect.assertions(1)
+    const a1 = rating({ mu: 29.182, sigma: 4.782 })
+    const b1 = rating({ mu: 27.174, sigma: 4.922 })
+    const c1 = rating({ mu: 16.672, sigma: 6.217 })
+    const d1 = rating()
+
+    const [[a2], [b2], [c2], [d2]] = rate([[a1], [b1], [c1], [d1]], { tau: 0.01 })
+
+    expect([[a2], [b2], [c2], [d2]]).toStrictEqual([
+      [{ mu: 30.20997558824299, sigma: 4.764909330988368 }],
+      [{ mu: 27.64461002009721, sigma: 4.882799245921361 }],
+      [{ mu: 17.403587237635527, sigma: 6.100731158882956 }],
+      [{ mu: 19.21478808745494, sigma: 7.854267281042293 }]
+    ])
+  })
+
+  it("rate accepts and runs a placket-luce model with tau and prevent_sigma_increase", () => {
+    expect.assertions(2)
+    const a1 = rating({ mu: 6.672, sigma: 0.0001 })
+    const b1 = rating({ mu: 29.182, sigma: 4.782 })
+
+    const [[a2], [b2]] = rate([[a1], [b1]], { tau: 0.01, preventSigmaIncrease: true })
+
+    expect(a2.sigma).toBeLessThanOrEqual(a1.sigma)
+    expect([[a2], [b2]]).toStrictEqual([
+      [{ mu: 6.672012533190158, sigma: 0.0001 }],
+      [{ mu: 26.316243774876106, sigma: 4.7540633621019 }]
+    ])
+  })
+
+
+  it("rate accepts and runs a placket-luce model by default for teams", () => {
+    const a1 = rating({ mu: 29.182, sigma: 4.782 })
+    const b1 = rating({ mu: 27.174, sigma: 4.922 })
+    const c1 = rating({ mu: 16.672, sigma: 6.217 })
+    const d1 = rating()
+
+    const [[a2, b2], [c2, d2]] = rate([[a1, b1], [c1, d1]])
+
+    expect([a2, b2, c2, d2]).toStrictEqual([
+      { mu: 29.607218266047376, sigma: 4.754597315295896 },
+      { mu: 27.624480490655575, sigma: 4.89211428863373 },
+      { mu: 15.953288649990139, sigma: 6.125357588584119 },
+      { mu: 23.708690706816785, sigma: 8.111298027437888 }
+    ])
+  })
+
+  it("rate accepts and runs a placket-luce model by default for teams with tau", () => {
+    const a1 = rating({ mu: 29.182, sigma: 4.782 })
+    const b1 = rating({ mu: 27.174, sigma: 4.922 })
+    const c1 = rating({ mu: 16.672, sigma: 6.217 })
+    const d1 = rating()
+
+    const [[a2, b2], [c2, d2]] = rate([[a1, b1], [c1, d1]], { tau: 0.01 })
+
+    expect([a2, b2, c2, d2]).toStrictEqual([
+      { mu: 29.60722003260825, sigma: 4.754607604502581 },
+      { mu: 27.624482251695827, sigma: 4.892124276331747 },
+      { mu: 15.953286947567106, sigma: 6.1253654293947335 },
+      { mu: 23.708689129525133, sigma: 8.111303923213725 }
+    ])
+  })
+
+  it("rate accepts and runs a placket-luce model by default for teams with tau and prevent_sigma_increase", () => {
+    const a1 = rating({ mu: 9.182, sigma: 0.0001 })
+    const b1 = rating({ mu: 27.174, sigma: 4.922 })
+    const c1 = rating({ mu: 16.672, sigma: 6.217 })
+    const d1 = rating()
+
+    const [[a2, b2], [c2, d2]] = rate([[a1, b1], [c1, d1]], { tau: 0.01, preventSigmaIncrease: true })
+
+    expect(a2.sigma).toBeLessThanOrEqual(a1.sigma)
+
+    expect([a2, b2, c2, d2]).toStrictEqual([
+      { mu: 9.182004653636957, sigma: 0.0001 },
+      { mu: 28.301285923165363, sigma: 4.889318394468611 },
+      { mu: 14.87349383521136, sigma: 6.076727029758966 },
+      { mu: 21.768626152890867, sigma: 7.992333183226455 }
+    ])
+  })
+
   it('reverses rank', () => {
     expect.assertions(1)
     const [[loser], [winner]] = rate([[rating()], [rating()]], {
