@@ -42,7 +42,7 @@
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/node20": "20.1.4",
     "@types/jest": "29.5.12",
-    "eslint": "9.0.0",
+    "eslint": "9.1.0",
     "eslint-plugin-jest": "28.2.0",
     "husky": "9.0.11",
     "jest": "29.7.0",
