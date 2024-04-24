@@ -5,9 +5,10 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default tseslint.config(
   {
-    // config with just ignores is the replacement for `.eslintignore`
-    files: ['src/**/*.ts'],
     ignores: ['**/dist/**', '**/benchmark/**', 'eslint.config.js'],
+  },
+  {
+    files: ['src/**/*.ts'],
     extends: [eslint.configs.recommended, eslintPluginPrettierRecommended, ...tseslint.configs.recommended],
     rules: {
       '@typescript-eslint/no-unused-vars': [
