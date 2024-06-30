@@ -15,7 +15,7 @@ const predictWin = (teams: Team[], options: Options = {}) => {
     ([muA, sigmaSqA], i) =>
       teamRatings
         .filter((_, q) => i !== q)
-        .map(([muB, sigmaSqB]) => phiMajor((muA - muB) / Math.sqrt(n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2)))
+        .map(([muB, sigmaSqB]) => phiMajor((muA - muB) / Math.sqrt(n * BETASQ + sigmaSqA + sigmaSqB)))
         .reduce(sum, 0) / denom
   )
 }
