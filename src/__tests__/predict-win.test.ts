@@ -15,8 +15,8 @@ describe('predictWin', () => {
   it('predicts win outcome for two teams', () => {
     expect.assertions(2)
     const [prob1, prob2] = predictWin([team1, team2])
-    expect(prob1).toBeCloseTo(0.34641823958165474, precision)
-    expect(prob2).toBeCloseTo(0.6535817604183453, precision)
+    expect(prob1).toBeCloseTo(0.0008308945674377, precision)
+    expect(prob2).toBeCloseTo(0.9991691054325622, precision)
   })
 
   it('ignores rankings', () => {
@@ -29,10 +29,10 @@ describe('predictWin', () => {
   it('predicts win outcome for multiple asymmetric teams', () => {
     expect.assertions(4)
     const [prob1, prob2, prob3, prob4] = predictWin([team1, team2, [a2], [b2]])
-    expect(prob1).toBeCloseTo(0.2613515941642222, precision)
-    expect(prob2).toBeCloseTo(0.41117430943389155, precision)
-    expect(prob3).toBeCloseTo(0.1750905983112395, precision)
-    expect(prob4).toBeCloseTo(0.15238349809064686, precision)
+    expect(prob1).toBeCloseTo(0.32579822053781543, precision)
+    expect(prob2).toBeCloseTo(0.49965489287103865, precision)
+    expect(prob3).toBeCloseTo(0.12829642754274315, precision)
+    expect(prob4).toBeCloseTo(0.04625045904840272, precision)
   })
 
   it('3 player newbie FFA', () => {
@@ -59,10 +59,10 @@ describe('predictWin', () => {
     const r3 = rating({ mu: 3, sigma: 0.1 })
     const r4 = rating({ mu: 4, sigma: 0.1 })
     const [p1, p2, p3, p4] = predictWin([[r1], [r2], [r3], [r4]])
-    expect(p1).toBeCloseTo(0.2028051110543726, precision)
-    expect(p2).toBeCloseTo(0.23419421333676907, precision)
-    expect(p3).toBeCloseTo(0.2658057866632309, precision)
-    expect(p4).toBeCloseTo(0.29719488894562746, precision)
+    expect(p1).toBeCloseTo(0.20281164759988402, precision)
+    expect(p2).toBeCloseTo(0.2341964232088598, precision)
+    expect(p3).toBeCloseTo(0.2658035767911402, precision)
+    expect(p4).toBeCloseTo(0.297188352400116, precision)
   })
 
   it('5 player newbie FFA', () => {
@@ -78,10 +78,10 @@ describe('predictWin', () => {
   it('5 player FFA with an impostor', () => {
     expect.assertions(5)
     const [p1, p2, p3, p4, p5] = predictWin([[a1], [a1], [a1], [a2], [a1]])
-    expect(p1).toBeCloseTo(0.196037416522638, precision)
-    expect(p2).toBeCloseTo(0.196037416522638, precision)
-    expect(p3).toBeCloseTo(0.196037416522638, precision)
-    expect(p4).toBeCloseTo(0.21585034503812, precision)
-    expect(p5).toBeCloseTo(0.196037416522638, precision)
+    expect(p1).toBeCloseTo(0.1790804191839367, precision)
+    expect(p2).toBeCloseTo(0.1790804191839367, precision)
+    expect(p3).toBeCloseTo(0.1790804191839367, precision)
+    expect(p4).toBeCloseTo(0.2836783412642534, precision)
+    expect(p5).toBeCloseTo(0.1790804191839367, precision)
   })
 })

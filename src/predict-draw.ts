@@ -23,7 +23,7 @@ const predictWin = (teams: Team[], options: Options = {}) => {
           teamRatings
             .filter((_, q) => i !== q)
             .map(([muB, sigmaSqB]) => {
-              const sigmaBar = Math.sqrt(n * BETASQ + sigmaSqA ** 2 + sigmaSqB ** 2)
+              const sigmaBar = Math.sqrt(n * BETASQ + sigmaSqA + sigmaSqB)
               return phiMajor((drawMargin - muA + muB) / sigmaBar) - phiMajor((muA - muB - drawMargin) / sigmaBar)
             })
         )
