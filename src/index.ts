@@ -1,7 +1,5 @@
-import rating from './rating'
-import rate from './rate'
-import ordinal from './ordinal'
-import predictWin from './predict-win'
-import predictDraw from './predict-draw'
-
-export { rating, rate, ordinal, predictWin, predictDraw }
+export { default as rating } from './rating'
+export { default as rate } from './rate'
+export { default as ordinal } from './ordinal'
+export { default as predictWin } from './predict-win'
+export { default as predictDraw } from './predict-draw'
