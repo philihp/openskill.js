@@ -9,7 +9,6 @@ export type Rank = number
 
 export type Gamma = (c: number, k: number, mu: number, sigmaSq: number, team: Rating[], qRank: number) => number
 
-// eslint-disable-next-line no-use-before-define
 export type Model = (teams: Team[], options?: Options) => Team[]
 
 export type Options = {
