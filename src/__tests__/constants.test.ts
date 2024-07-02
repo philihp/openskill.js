@@ -10,5 +10,10 @@ describe('constants', () => {
       expect.assertions(1)
       expect(constants({}).TAU).toBeCloseTo(0.08333333)
     })
+    it('defaults to not limiting sigma', () => {
+      expect.assertions(1)
+      const { LIMIT_SIGMA } = constants({})
+      expect(LIMIT_SIGMA).toBeFalsy()
+    })
   })
 })

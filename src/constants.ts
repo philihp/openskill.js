@@ -10,7 +10,6 @@ export const epsilon = (options: Options) => options?.epsilon ?? 0.0001
 export const beta = (options: Options) => options?.beta ?? sigma(options) / 2
 export const betaSq = (options: Options) => beta(options) ** 2
 export const limitSigma = (options: Options) => options?.limitSigma ?? options?.preventSigmaIncrease ?? false
-export const model = (options: Options) => options?.model ?? plackettLuce
 
 export default (options: Options) => ({
   EPSILON: epsilon(options),
