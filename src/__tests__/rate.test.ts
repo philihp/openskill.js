@@ -312,6 +312,21 @@ describe('rate', () => {
     const b = rating({ mu: -20, sigma: 3 })
     const [[winner], [loser]] = rate([[a], [b]], {
       tau: 0.3,
+      limitSigma: true,
+    })
+
+    expect([winner, loser]).toStrictEqual([
+      { mu: 40.00032667136128, sigma: 3 },
+      { mu: -20.000326671361275, sigma: 3 },
+    ])
+  })
+
+  it('prevents sigma rising with old syntax', () => {
+    expect.assertions(1)
+    const a = rating({ mu: 40, sigma: 3 })
+    const b = rating({ mu: -20, sigma: 3 })
+    const [[winner], [loser]] = rate([[a], [b]], {
+      tau: 0.3,
       preventSigmaIncrease: true,
     })
 
