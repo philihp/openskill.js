@@ -34,6 +34,6 @@ describe('predictDraw', () => {
 
   it('predicts draw for three asymmetric teams', () => {
     expect.assertions(1)
-    expect(predictDraw([team1, team2, [a1], [a2], [b1]])).toBeCloseTo( 0.07517247728677093, precision)
+    expect(predictDraw([team1, team2, [a1], [a2], [b1]])).toBeCloseTo(0.07517247728677093, precision)
   })
 })
