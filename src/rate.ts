@@ -1,5 +1,6 @@
 import { sortBy, identity, range } from 'ramda'
 import unwind from 'sort-unwind'
+
 import { Rating, Options, Team } from './types'
 import constants from './constants'
 import { plackettLuce } from './models'
