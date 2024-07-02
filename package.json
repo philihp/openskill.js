@@ -54,11 +54,6 @@
     "typescript": "5.5.2",
     "typescript-eslint": "7.14.1"
   },
-  "lint-staged": {
-    "src/**/*.{js,jsx,json}": [
-      "eslint --fix"
-    ]
-  },
   "prettier": "@philihp/prettier-config",
   "jest": {
     "modulePathIgnorePatterns": [

@@ -1,4 +1,3 @@
-import { plackettLuce } from './models'
 import { Options } from './types'
 
 export const z = (options: Options) => options?.z ?? 3
