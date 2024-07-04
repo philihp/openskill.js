@@ -1,6 +1,6 @@
 {
   "name": "openskill",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "scripts": {
     "build": "tsup",
