@@ -1,21 +1,22 @@
 import { Options } from './types'
 
-export const z = (options: Options) => options?.z ?? 3
-export const mu = (options: Options) => options?.mu ?? 25
-export const tau = (options: Options) => options?.tau ?? mu(options) / 300
-export const sigma = (options: Options) => options?.sigma ?? mu(options) / z(options)
+const builder = (options: Options) => {
+  // i'd love to know of a better way to do this
+  const { z = 3, mu = 25, preventSigmaIncrease = false, epsilon = 0.0001 } = options
+  const { tau = mu / 300, sigma = mu / z, beta = sigma / 2, limitSigma = preventSigmaIncrease } = options
+  const betaSq = beta ** 2
 
-export const epsilon = (options: Options) => options?.epsilon ?? 0.0001
-export const beta = (options: Options) => options?.beta ?? sigma(options) / 2
-export const betaSq = (options: Options) => beta(options) ** 2
-export const limitSigma = (options: Options) => options?.limitSigma ?? options?.preventSigmaIncrease ?? false
+  return {
+    SIGMA: sigma,
+    MU: mu,
+    EPSILON: epsilon,
+    TWOBETASQ: 2 * betaSq,
+    BETA: beta,
+    BETASQ: betaSq,
+    Z: z,
+    TAU: tau,
+    LIMIT_SIGMA: limitSigma,
+  }
+}
 
-export default (options: Options) => ({
-  EPSILON: epsilon(options),
-  TWOBETASQ: 2 * betaSq(options),
-  BETA: beta(options),
-  BETASQ: betaSq(options),
-  Z: z(options),
-  TAU: tau(options),
-  LIMIT_SIGMA: limitSigma(options),
-})
+export default builder
