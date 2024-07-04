@@ -1,6 +1,11 @@
 export default () => ({
   modulePathIgnorePatterns: ["dist/"],
   transform: {
-    "^.+\\.tsx?$": "esbuild-jest"
+    "^.+\\.tsx?$": [
+      "esbuild-jest",
+      {
+        sourcemap: true
+      }
+    ]
   }
 })
