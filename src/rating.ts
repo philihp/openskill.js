@@ -1,9 +1,9 @@
-import { mu as defaultMu, sigma as defaultSigma } from './constants'
+import constants from './constants'
 import { Options, Rating } from './types'
 
-const rating = (init?: { mu?: number; sigma?: number }, options: Options = {}): Rating => ({
-  mu: init?.mu ?? defaultMu(options),
-  sigma: init?.sigma ?? defaultSigma({ ...options, mu: init?.mu }),
-})
+const rating = (init?: { mu?: number; sigma?: number }, options: Options = {}): Rating => {
+  const { MU: mu, SIGMA: sigma } = constants({ ...options, ...init })
+  return { mu, sigma }
+}
 
 export default rating

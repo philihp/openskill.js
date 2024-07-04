@@ -1,4 +1,4 @@
-import constants, { mu, sigma } from '../constants'
+import constants from '../constants'
 
 describe('constants', () => {
   describe('z', () => {
@@ -23,7 +23,10 @@ describe('constants', () => {
   describe('mu', () => {
     it('defaults to 25', () => {
       expect.assertions(1)
-      expect(mu({})).toBe(25)
+      const env = constants({})
+      expect(env).toMatchObject({
+        MU: 25,
+      })
     })
     it('accepts mu override', () => {
       expect.assertions(1)
@@ -53,8 +56,8 @@ describe('constants', () => {
 
   describe('sigma', () => {
     it('defaults to 8.333333333333334', () => {
-      expect.assertions(1)
-      expect(sigma({})).toBeCloseTo(8.333333333333334)
+      const env = constants({})
+      expect(env.SIGMA).toBeCloseTo(8.333333333333334)
     })
     it('accepts sigma override', () => {
       expect.assertions(1)

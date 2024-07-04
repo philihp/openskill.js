@@ -1,21 +1,23 @@
 import { Options } from './types'
 
-const z = (options: Options) => options?.z ?? 3
-export const mu = (options: Options) => options?.mu ?? 25
-const tau = (options: Options) => options?.tau ?? mu(options) / 300
-export const sigma = (options: Options) => options?.sigma ?? mu(options) / z(options)
+export default (options: Options) => {
+  const z = options?.z ?? 3
+  const mu = options?.mu ?? 25
+  const tau = options?.tau ?? mu / 300
+  const sigma = options?.sigma ?? mu / z
+  const beta = options?.beta ?? sigma / 2
+  const betaSq = beta ** 2
+  const limitSigma = options?.limitSigma ?? options?.preventSigmaIncrease ?? false
 
-const epsilon = (options: Options) => options?.epsilon ?? 0.0001
-const beta = (options: Options) => options?.beta ?? sigma(options) / 2
-const betaSq = (options: Options) => beta(options) ** 2
-const limitSigma = (options: Options) => options?.limitSigma ?? options?.preventSigmaIncrease ?? false
-
-export default (options: Options) => ({
-  EPSILON: epsilon(options),
-  TWOBETASQ: 2 * betaSq(options),
-  BETA: beta(options),
-  BETASQ: betaSq(options),
-  Z: z(options),
-  TAU: tau(options),
-  LIMIT_SIGMA: limitSigma(options),
-})
+  return {
+    SIGMA: sigma,
+    MU: mu,
+    EPSILON: options?.epsilon ?? 0.0001,
+    TWOBETASQ: 2 * betaSq,
+    BETA: beta,
+    BETASQ: betaSq,
+    Z: z,
+    TAU: tau,
+    LIMIT_SIGMA: limitSigma,
+  }
+}
