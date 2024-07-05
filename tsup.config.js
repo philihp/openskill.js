@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/'],
+  entry: ["src/", "!src/**/__tests__/**", "!src/**/*.test.*"],
   splitting: false,
   sourcemap: "inline",
   dts: true,
