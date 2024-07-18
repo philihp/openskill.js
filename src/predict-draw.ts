@@ -4,7 +4,7 @@ import util, { sum } from './util'
 import { phiMajor, phiMajorInverse } from './statistics'
 import { Options, Team } from './types'
 
-const predictWin = (teams: Team[], options: Options = {}) => {
+const predictDraw = (teams: Team[], options: Options = {}) => {
   const { teamRating } = util(options)
   const { BETASQ, BETA } = constants(options)
 
@@ -33,4 +33,4 @@ const predictWin = (teams: Team[], options: Options = {}) => {
   )
 }
 
-export default predictWin
+export default predictDraw
