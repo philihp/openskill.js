@@ -58,7 +58,7 @@
     "husky": "9.1.1",
     "jest": "29.7.0",
     "lint-staged": "15.2.7",
-    "tsup": "8.1.0",
+    "tsup": "8.2.0",
     "typescript": "5.5.3",
     "typescript-eslint": "7.16.1"
   },
