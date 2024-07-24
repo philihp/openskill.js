@@ -1,3 +1,31 @@
 {
-  "extends": ["@philihp"]
+  "extends": [
+    "config:base"
+  ],
+  "schedule": [
+    "every weekend"
+  ],
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Independency Dashboard",
+  "transitiveRemediation": true,
+  "packageRules": [
+    {
+      "semanticCommits": "enabled"
+    },
+    {
+      "updateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "depTypeList": [
+        "devDependencies"
+      ],
+      "automerge": true
+    }
+  ]
 }
