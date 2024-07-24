@@ -7,11 +7,9 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Independency Dashboard",
+  "semanticCommits": "enabled",
   "transitiveRemediation": true,
   "packageRules": [
-    {
-      "semanticCommits": "enabled"
-    },
     {
       "updateTypes": [
         "minor",
