@@ -60,7 +60,7 @@
     "lint-staged": "15.2.7",
     "tsup": "8.2.3",
     "typescript": "5.5.4",
-    "typescript-eslint": "7.16.1"
+    "typescript-eslint": "7.17.0"
   },
   "prettier": "@philihp/prettier-config",
   "dependencies": {
