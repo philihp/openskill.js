@@ -2,7 +2,7 @@ import { rating, predictDraw } from '..'
 
 describe('predictDraw', () => {
   it('if a tree falls in the forest', () => {
-    expect(predictDraw([])).toBe(1)
+    expect(predictDraw([])).toBe(Number.NaN)
   })
 
   it('mirrors results from python', () => {
