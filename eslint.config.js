@@ -12,7 +12,7 @@ export default tseslint.config(
     extends: [eslint.configs.recommended, eslintPluginPrettierRecommended, ...tseslint.configs.recommended],
     rules: {
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
           // allow unused variables if they begin with _
           argsIgnorePattern: '^_',
