@@ -1,4 +1,5 @@
 import { rating, predictWin } from '..'
+import { sum } from 'ramda'
 
 describe('predictWin', () => {
   const precision = 7
@@ -83,5 +84,70 @@ describe('predictWin', () => {
     expect(p3).toBeCloseTo(0.1790804191839367, precision)
     expect(p4).toBeCloseTo(0.2836783412642534, precision)
     expect(p5).toBeCloseTo(0.1790804191839367, precision)
+  })
+
+  describe('test_predict_win in openskill.py', () => {
+    const a1 = rating()
+    const a2 = rating({ mu: 32.444, sigma: 5.123 })
+    const b1 = rating({ mu: 73.381, sigma: 1.421 })
+    const b2 = rating({ mu: 25.188, sigma: 6.211 })
+    const team1 = [a1, a2]
+    const team2 = [b1, b2]
+
+    it('gives the same probabilities with 5 teams', () => {
+      const probabilities = predictWin([team1, team2, [a2], [a1], [b1]])
+      expect(sum(probabilities)).toBeCloseTo(1)
+    })
+
+    it('gives the same probabilities with 2 teams', () => {
+      const probabilities = predictWin([team1, team2])
+      expect(sum(probabilities)).toBeCloseTo(1)
+    })
+  })
+
+  describe('after three pickup games', () => {
+    // these ratings come after new players get the rankings:
+    // [[a,b,c],[d,e]]
+    // [[c,d,e],[a,b]]
+    // [[c],[a],[e]]
+    const a = rating({ mu: 25.704020819730385, sigma: 7.893074938449104 })
+    const b = rating({ mu: 24.94415013523696, sigma: 8.156810439252277 })
+    const c = rating({ mu: 29.292922890627658, sigma: 8.011452568371537 })
+    const d = rating({ mu: 25.059411748211403, sigma: 8.155255551436932 })
+    const e = rating({ mu: 21.598674363731682, sigma: 7.891245891696633 })
+
+    it('predicts a 3 player game of [a,b], [c], [d,e]', () => {
+      const [p1, p2, p3] = predictWin([[a, b], [c], [d, e]])
+      expect(p1).toBeCloseTo(0.4947495579286258, 7)
+      expect(p2).toBeCloseTo(0.08348570519328442, 7)
+      expect(p3).toBeCloseTo(0.42176473687808974, 7)
+    })
+
+    it('rpredicts a 5p free for all', () => {
+      const [p1, p2, p3, p4, p5] = predictWin([[a], [b], [c], [d], [e]])
+      expect(p1).toBeCloseTo(0.20522540383388552, 7)
+      expect(p2).toBeCloseTo(0.19504283187751015, 7)
+      expect(p3).toBeCloseTo(0.25268360117768013, 7)
+      expect(p4).toBeCloseTo(0.19657935197103676, 7)
+      expect(p5).toBeCloseTo(0.15046881113988744, 7)
+    })
+
+    it('predicts a 2p doubles', () => {
+      const [p1, p2] = predictWin([
+        [a, b],
+        [d, e],
+      ])
+      expect(p1).toBeCloseTo(0.5873106768219909, 7)
+      expect(p2).toBeCloseTo(0.4126893231780091, 7)
+    })
+
+    it('predicts a 2p inverse', () => {
+      const [p1, p2] = predictWin([
+        [d, e],
+        [a, b],
+      ])
+      expect(p1).toBeCloseTo(0.4126893231780091, 7)
+      expect(p2).toBeCloseTo(0.5873106768219909, 7)
+    })
   })
 })
