@@ -10,10 +10,10 @@ import { Rating, Options } from './types'
  * options.Z: controls how many standard deviations below μ you want
  *            (3 ⇒ ≈ 99.7 % confidence).
  */
-const ordinal = (rating: Rating, alpha = 1, target = 0, options: Options = {}): number => {
+const ordinal = (rating: Rating, options: Options = {}): number => {
   const { sigma, mu } = rating
-  const { Z } = constants(options)
-  return alpha * ((mu - Z * sigma) + target / alpha);
+  const { Z, ALPHA, TARGET } = constants(options)
+  return ALPHA * (mu - Z * sigma + TARGET / ALPHA)
 }
 
 export default ordinal
