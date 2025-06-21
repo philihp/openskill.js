@@ -61,7 +61,7 @@
     "eslint-plugin-jest": "28.14.0",
     "eslint-plugin-prettier": "5.4.1",
     "husky": "9.1.7",
-    "jest": "30.0.0",
+    "jest": "30.0.2",
     "lint-staged": "16.1.2",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
