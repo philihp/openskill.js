@@ -8,14 +8,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.js"
     },
     "./models": {
+      "types": "./dist/models/index.d.ts",
       "require": "./dist/models/index.cjs",
-      "import": "./dist/models/index.js",
-      "types": "./dist/models/index.d.ts"
+      "import": "./dist/models/index.js"
     }
   },
   "scripts": {
