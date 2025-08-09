@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
-    "@eslint/js": "9.32.0",
+    "@eslint/js": "9.33.0",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.10",
     "@types/jest": "30.0.0",
