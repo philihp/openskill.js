@@ -13,7 +13,7 @@ import { Rating, Options } from './types'
 const ordinal = (rating: Rating, options: Options = {}): number => {
   const { sigma, mu } = rating
   const { Z, ALPHA, TARGET } = constants(options)
-  return ALPHA * (mu - Z * sigma + TARGET / ALPHA)
+  return TARGET + ALPHA * (mu - Z * sigma)
 }
 
 export default ordinal
