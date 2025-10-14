@@ -151,7 +151,7 @@ This can be used in a similar way that you might use _quality_ in TrueSkill if y
 By default, we use a Plackett-Luce model, which is probably good enough for most cases. When speed is an issue, the library runs faster with other models
 
 ```js
-import { bradleyTerryFull } from './models'
+import { bradleyTerryFull } from 'openskill/models'
 const [[a2], [b2]] = rate([[a1], [b1]], {
   model: bradleyTerryFull,
 })
