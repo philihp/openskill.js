@@ -52,7 +52,7 @@
   "devDependencies": {
     "@eslint/js": "9.38.0",
     "@philihp/prettier-config": "1.0.0",
-    "@tsconfig/recommended": "1.0.10",
+    "@tsconfig/recommended": "1.0.11",
     "@types/jest": "30.0.0",
     "esbuild": "0.25.11",
     "esbuild-jest": "0.5.0",
