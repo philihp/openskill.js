@@ -54,7 +54,7 @@
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.13",
     "@types/jest": "30.0.0",
-    "esbuild": "0.27.0",
+    "esbuild": "0.27.1",
     "esbuild-jest": "0.5.0",
     "eslint": "8.57.1",
     "eslint-config-prettier": "10.1.8",
