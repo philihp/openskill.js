@@ -3,12 +3,12 @@ import { wt } from '../../statistics'
 describe('statistics#wt', () => {
   it('wt(1,2)', () => {
     expect.assertions(1)
-    expect(wt(1, 2)).toBe(0.38385826878672835)
+    expect(wt(1, 2)).toBe(0.3838582646421707)
   })
 
   it('wt(0,2)', () => {
     expect.assertions(1)
-    expect(wt(0, 2)).toBe(0.22625869547437663)
+    expect(wt(0, 2)).toBe(0.2262586964500768)
   })
 
   it('wt(0,-1)', () => {

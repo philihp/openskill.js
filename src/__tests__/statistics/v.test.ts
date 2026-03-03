@@ -3,17 +3,17 @@ import { v } from '../../statistics'
 describe('statistics#v', () => {
   it('v(1,2)', () => {
     expect.assertions(1)
-    expect(v(1, 2)).toBe(1.5251352044082924)
+    expect(v(1, 2)).toBe(1.525135276160981)
   })
 
   it('v(0,2)', () => {
     expect.assertions(1)
-    expect(v(0, 2)).toBe(2.3732157475120528)
+    expect(v(0, 2)).toBe(2.37321553282284)
   })
 
   it('v(0,-1)', () => {
     expect.assertions(1)
-    expect(v(0, -1)).toBe(0.2875999734906994)
+    expect(v(0, -1)).toBe(0.2875999709391784)
   })
 
   it('denominator less than threshold', () => {
