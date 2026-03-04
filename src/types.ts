@@ -27,4 +27,6 @@ export type Options = {
   target?: number
   preventSigmaIncrease?: boolean // deprecated, use limitSigma, this will go away someday
   limitSigma?: boolean
+  balance?: boolean
+  kappa?: number
 }

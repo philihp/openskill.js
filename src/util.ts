@@ -39,17 +39,30 @@ export const rankings = (teams: Team[], rank: number[] = []) => {
 const teamRating =
   (options: Options) =>
   (game: Team[]): TeamRating[] => {
+    const { Z, ALPHA, TARGET, BALANCE, KAPPA } = constants(options)
     const rank = rankings(game, options.rank)
-    return game.map((team, i) => [
-      // mu[i]
-      team.map(({ mu }) => mu).reduce(sum, 0),
-      // sigma^2[i]
-      team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
-      // (original team data)
-      team,
-      // rank[i]
-      rank[i],
-    ])
+    return game.map((team, i) => {
+      if (!BALANCE) {
+        return [
+          team.map(({ mu }) => mu).reduce(sum, 0),
+          team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
+          team,
+          rank[i],
+        ]
+      }
+      // When balance=true, weaker players on a team contribute more to the
+      // team rating, emphasizing skill disparity within the team.
+      const ordinals = team.map(({ mu, sigma }) => TARGET + ALPHA * (mu - Z * sigma))
+      const maxOrdinal = Math.max(...ordinals)
+      return [
+        team.map(({ mu }, j) => mu * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))).reduce(sum, 0),
+        team
+          .map(({ sigma }, j) => (sigma * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))) ** 2)
+          .reduce(sum, 0),
+        team,
+        rank[i],
+      ]
+    })
   }
 
 export const ladderPairs = <T>(ranks: T[]): T[][] => {
