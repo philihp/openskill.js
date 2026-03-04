@@ -4,6 +4,7 @@ const builder = (options: Options) => {
   // i'd love to know of a better way to do this
   const { z = 3, mu = 25, preventSigmaIncrease = false, epsilon = 0.0001, alpha = 1, target = 0 } = options
   const { tau = mu / 300, sigma = mu / z, beta = sigma / 2, limitSigma = preventSigmaIncrease } = options
+  const { balance = false, kappa = 0.0001 } = options
   const betaSq = beta ** 2
 
   return {
@@ -18,6 +19,8 @@ const builder = (options: Options) => {
     TARGET: target,
     TAU: tau,
     LIMIT_SIGMA: limitSigma,
+    BALANCE: balance,
+    KAPPA: kappa,
   }
 }
 
