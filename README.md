@@ -1,4 +1,4 @@
-![](https://philihp.com/openskill.js/logo.png)
+![](http://openskill.kennerspiel.com/images/hero.png)
 
 [![Version](https://img.shields.io/npm/v/openskill)](https://www.npmjs.com/package/openskill)
 [![tests](https://github.com/philihp/openskill.js/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/philihp/openskill.js/actions/workflows/tests.yml)
