@@ -56,7 +56,9 @@ const teamRating =
       const maxOrdinal = Math.max(...ordinals)
       return [
         team.map(({ mu }, j) => mu * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))).reduce(sum, 0),
-        team.map(({ sigma }, j) => (sigma * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))) ** 2).reduce(sum, 0),
+        team
+          .map(({ sigma }, j) => (sigma * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))) ** 2)
+          .reduce(sum, 0),
         team,
         rank[i],
       ]
