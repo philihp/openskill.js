@@ -1,13 +1,12 @@
-import gaussian from 'gaussian'
+import cdf from '@stdlib/stats-base-dists-normal-cdf'
+import pdf from '@stdlib/stats-base-dists-normal-pdf'
+import quantile from '@stdlib/stats-base-dists-normal-quantile'
 
-// use a standard normal distribution - mean of zero, stddev/variance of one
-const normal = gaussian(0, 1)
+export const phiMajor = (x: number) => cdf(x, 0, 1)
 
-export const phiMajor = (x: number) => normal.cdf(x)
+export const phiMajorInverse = (x: number) => quantile(x, 0, 1)
 
-export const phiMajorInverse = (x: number) => normal.ppf(x)
-
-export const phiMinor = (x: number) => normal.pdf(x)
+export const phiMinor = (x: number) => pdf(x, 0, 1)
 
 export const v = (x: number, t: number) => {
   const xt = x - t

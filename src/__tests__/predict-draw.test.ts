@@ -9,14 +9,11 @@ describe('predictDraw', () => {
     // from https://github.com/philihp/openskill.js/issues/599
     const t1 = [rating({ mu: 25, sigma: 1 }), rating({ mu: 25, sigma: 1 })]
     const t2 = [rating({ mu: 25, sigma: 1 }), rating({ mu: 25, sigma: 1 })]
-    expect(predictDraw([t1, t2])).toBe(0.2433180271619435)
+    expect(predictDraw([t1, t2])).toBe(0.2433180309076689)
   })
 
-  // we use toBeCloseTo because of differences between the gaussian library we use in js and
-  // the statistics.NormalDist impl in py, so the conditioning of the answer is only equivalent
-  // to a certain degree of precision.
-  //
-  // This is known and accepted.
+  // we use toBeCloseTo because the gaussian CDF computed by erfc has inherent floating-point
+  // precision limits, so full bit-exact equality is not expected.
 
   it('gives a low probability in a 5 team match', () => {
     // from https://openskill.me/en/stable/manual.html
@@ -59,6 +56,35 @@ describe('predictDraw', () => {
   it('returns 1 when one team verses an empty team', () => {
     const p2 = rating({ mu: 28.450555874288018, sigma: 8.156810439252277 })
     expect(predictDraw([[p2], []])).toBe(1)
+  })
+
+  // The following tests mirror scenarios from openskill.py.
+  it('identical single-player teams have ~50% draw probability', () => {
+    const b1 = rating({ mu: 35.881, sigma: 0.0001 })
+    expect(predictDraw([[b1], [b1]])).toBeCloseTo(0.5, 5)
+  })
+
+  it('gives expected draw probability in a 2-team match with confident ratings', () => {
+    // Python (openskill.py): pytest.approx(0.1919967, 0.0001)
+    const a1 = rating()
+    const a2 = rating({ mu: 32.444, sigma: 1.123 })
+    const b1 = rating({ mu: 35.881, sigma: 0.0001 })
+    const b2 = rating({ mu: 25.188, sigma: 0.00001 })
+    expect(
+      predictDraw([
+        [a1, a2],
+        [b1, b2],
+      ])
+    ).toBeCloseTo(0.16947728952977592, 7)
+  })
+
+  it('gives lower draw probability in a 5-team match with confident ratings', () => {
+    // Python (openskill.py): pytest.approx(0.0603735, 0.0001)
+    const a1 = rating()
+    const a2 = rating({ mu: 32.444, sigma: 1.123 })
+    const b1 = rating({ mu: 35.881, sigma: 0.0001 })
+    const b2 = rating({ mu: 25.188, sigma: 0.00001 })
+    expect(predictDraw([[a1, a2], [b1, b2], [a1], [a2], [b1]])).toBeCloseTo(0.051825313019975505, 7)
   })
 
   describe('two game, 2v2 scenario with 5th defector', () => {

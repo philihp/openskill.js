@@ -75,6 +75,18 @@ describe('predictWin', () => {
     expect(p5).toBeCloseTo(0.2, precision)
   })
 
+  it('probabilities always sum to 1 (2 teams)', () => {
+    expect.assertions(1)
+    const probs = predictWin([team1, team2])
+    expect(probs.reduce((sum, p) => sum + p, 0)).toBeCloseTo(1, 10)
+  })
+
+  it('probabilities always sum to 1 (5 teams, mirroring openskill.py)', () => {
+    expect.assertions(1)
+    const probs = predictWin([team1, team2, [a2], [a1], [b1]])
+    expect(probs.reduce((sum, p) => sum + p, 0)).toBeCloseTo(1, 10)
+  })
+
   it('5 player FFA with an impostor', () => {
     expect.assertions(5)
     const [p1, p2, p3, p4, p5] = predictWin([[a1], [a1], [a1], [a2], [a1]])
