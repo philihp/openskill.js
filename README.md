@@ -135,6 +135,19 @@ Ties should have either equivalent rank or score.
 ]
 ```
 
+Some models can use score gaps as a margin of victory. Currently this is supported by `thurstoneMostellerFull`; pass raw `score` values and a positive `margin` threshold. Score differences greater than `margin` scale the rating update, while `margin: 0` keeps legacy score-as-ordering behavior.
+
+```js
+import { rate, rating } from 'openskill'
+import { thurstoneMostellerFull } from 'openskill/models'
+
+const [[winner], [loser]] = rate([[rating()], [rating()]], {
+  model: thurstoneMostellerFull,
+  score: [21, 7],
+  margin: 3,
+})
+```
+
 ### Predicting Winners
 
 For a given match of any number of teams, using `predictWin` you can find a relative

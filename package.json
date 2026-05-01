@@ -61,6 +61,8 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",
+    "jest": "30.3.0",
+    "jest-html-reporter": "^4.4.0",
     "lint-staged": "17.0.5",
     "tsup": "8.5.1",
     "tsx": "4.22.3",

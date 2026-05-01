@@ -21,6 +21,7 @@ export type Options = {
   model?: Model
   rank?: Rank[]
   score?: number[]
+  margin?: number
   weight?: number[][]
   tau?: number
   margin?: number

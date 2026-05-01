@@ -1,6 +1,7 @@
 import { describe, it, expect } from '#test-helpers'
-import { rating } from '../..'
+import { rate as rateGame, rating } from '../..'
 import rate from '../thurstone-mosteller-full'
+import { thurstoneMostellerFull } from '..'
 
 describe('thurstoneMostellerFull', () => {
   const r = rating()
@@ -107,5 +108,55 @@ describe('thurstoneMostellerFull', () => {
       [{ mu: 16.53856258201357, sigma: 4.958964145006544 }],
       [{ mu: 8.077125164027137, sigma: 4.958964145006544 }],
     ])
+  })
+
+  it('keeps legacy results when margin is zero', () => {
+    expect.assertions(1)
+    const winner = rating({ mu: 32, sigma: 5 })
+    const loser = rating({ mu: 18, sigma: 6 })
+
+    expect(rate([[winner], [loser]], { score: [10, 2], margin: 0 })).toStrictEqual(
+      rate([[winner], [loser]], { rank: [1, 2] })
+    )
+  })
+
+  it('keeps legacy results when score is absent', () => {
+    expect.assertions(1)
+    const winner = rating({ mu: 32, sigma: 5 })
+    const loser = rating({ mu: 18, sigma: 6 })
+
+    expect(rate([[winner], [loser]], { rank: [1, 2], margin: 1 })).toStrictEqual(
+      rate([[winner], [loser]], { rank: [1, 2] })
+    )
+  })
+
+  it('changes updates when score gap exceeds margin', () => {
+    expect.assertions(1)
+    const winner = rating({ mu: 32, sigma: 5 })
+    const loser = rating({ mu: 18, sigma: 6 })
+
+    const narrow = rate([[winner], [loser]], { score: [2, 1], margin: 1 })
+    const blowout = rate([[winner], [loser]], { score: [20, 1], margin: 1 })
+
+    expect(blowout).not.toStrictEqual(narrow)
+  })
+
+  it('keeps scores aligned after rate reorders teams', () => {
+    expect.assertions(1)
+    const loser = rating({ mu: 18, sigma: 6 })
+    const winner = rating({ mu: 32, sigma: 5 })
+    const [expectedWinner, expectedLoser] = rate([[winner], [loser]], {
+      rank: [1, 2],
+      score: [20, 1],
+      margin: 1,
+    })
+
+    expect(
+      rateGame([[loser], [winner]], {
+        model: thurstoneMostellerFull,
+        score: [1, 20],
+        margin: 1,
+      })
+    ).toStrictEqual([expectedLoser, expectedWinner])
   })
 })

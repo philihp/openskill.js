@@ -25,9 +25,11 @@ const rate = (teams: Team[], options: Options = {}): Team[] => {
   const rank = options.rank ?? options.score?.map((points) => -points) ?? range(1, teams.length + 1)
 
   const [orderedTeams, tenet] = unwind(rank, processedTeams)
+  const orderedScore = options.score ? unwind(rank, options.score)[0] : undefined
   const newRatings = model(orderedTeams, {
     ...options,
     rank: sortBy(identity, rank),
+    score: orderedScore,
   })
   let [reorderedTeams] = unwind(tenet, newRatings)
 
