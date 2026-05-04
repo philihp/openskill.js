@@ -1,0 +1,1131 @@
+"""Plackett-Luce Model
+
+Specific classes and functions for the Plackett-Luce model.
+"""
+
+import copy
+import itertools
+import math
+import uuid
+from collections.abc import Callable, Sequence
+from typing import Any
+
+from openskill.models.common import _normalize
+from openskill.models.weng_lin.common import _unwind, phi_major, phi_major_inverse
+
+__all__: list[str] = ["PlackettLuce", "PlackettLuceRating"]
+
+
+class PlackettLuceRating:
+    """
+    Plackett-Luce player rating data.
+
+    This object is returned by the :code:`PlackettLuce.rating` method.
+    """
+
+    def __init__(
+        self,
+        mu: float,
+        sigma: float,
+        name: str | None = None,
+    ):
+        r"""
+        :param mu: Represents the initial belief about the skill of
+                   a player before any matches have been played. Known
+                   mostly as the mean of the Guassian prior distribution.
+
+                   *Represented by:* :math:`\mu`
+
+        :param sigma: Standard deviation of the prior distribution of player.
+
+                      *Represented by:* :math:`\sigma = \frac{\mu}{z}`
+                      where :math:`z` is an integer that represents the
+                      variance of the skill of a player.
+
+        :param name: Optional name for the player.
+        """
+
+        # Player Information
+        self.id: str = uuid.uuid4().hex.lower()
+        self.name: str | None = name
+
+        self.mu: float = mu
+        self.sigma: float = sigma
+
+    def __repr__(self) -> str:
+        return f"PlackettLuceRating(mu={self.mu}, sigma={self.sigma})"
+
+    def __str__(self) -> str:
+        if self.name:
+            return (
+                f"Plackett-Luce Player Data: \n\n"
+                f"id: {self.id}\n"
+                f"name: {self.name}\n"
+                f"mu: {self.mu}\n"
+                f"sigma: {self.sigma}\n"
+            )
+        else:
+            return (
+                f"Plackett-Luce Player Data: \n\n"
+                f"id: {self.id}\n"
+                f"mu: {self.mu}\n"
+                f"sigma: {self.sigma}\n"
+            )
+
+    def __hash__(self) -> int:
+        return hash((self.id, self.mu, self.sigma))
+
+    def __deepcopy__(self, memodict: dict[Any, Any] = {}) -> "PlackettLuceRating":
+        plr = PlackettLuceRating(self.mu, self.sigma, self.name)
+        plr.id = self.id
+        return plr
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PlackettLuceRating):
+            return NotImplemented
+
+        return self.mu == other.mu and self.sigma == other.sigma
+
+    def __lt__(self, other: "PlackettLuceRating") -> bool:
+        if not isinstance(other, PlackettLuceRating):
+            raise ValueError(
+                "You can only compare PlackettLuceRating objects with each other."
+            )
+
+        return self.ordinal() < other.ordinal()
+
+    def __gt__(self, other: "PlackettLuceRating") -> bool:
+        if not isinstance(other, PlackettLuceRating):
+            raise ValueError(
+                "You can only compare PlackettLuceRating objects with each other."
+            )
+
+        return self.ordinal() > other.ordinal()
+
+    def __le__(self, other: "PlackettLuceRating") -> bool:
+        if not isinstance(other, PlackettLuceRating):
+            raise ValueError(
+                "You can only compare PlackettLuceRating objects with each other."
+            )
+
+        return self.ordinal() <= other.ordinal()
+
+    def __ge__(self, other: "PlackettLuceRating") -> bool:
+        if not isinstance(other, PlackettLuceRating):
+            raise ValueError(
+                "You can only compare PlackettLuceRating objects with each other."
+            )
+
+        return self.ordinal() >= other.ordinal()
+
+    def ordinal(self, z: float = 3.0, alpha: float = 1, target: float = 0) -> float:
+        r"""
+        A single scalar value that represents the player's skill where their
+        true skill is 99.7% likely to be higher.
+
+        :param z: Float that represents the number of standard deviations to subtract
+              from the mean. By default, set to 3.0, which corresponds to a
+              99.7% confidence interval in a normal distribution.
+
+        :param alpha: Float scaling factor applied to the entire calculation.
+                      Adjusts the overall scale of the ordinal value.
+                      Defaults to 1.
+
+        :param target: Float value used to shift the ordinal value
+                       towards a specific target. The shift is adjusted by the
+                       alpha scaling factor. Defaults to 0.
+
+        :return: :math:`\alpha \cdot ((\mu - z * \sigma) + \frac{\text{target}}{\alpha})`
+        """
+        return alpha * ((self.mu - z * self.sigma) + (target / alpha))
+
+
+class PlackettLuceTeamRating:
+    """
+    The collective Plackett-Luce rating of a team.
+    """
+
+    def __init__(
+        self,
+        mu: float,
+        sigma_squared: float,
+        team: Sequence[PlackettLuceRating],
+        rank: int,
+    ):
+        r"""
+        :param mu: Represents the initial belief about the collective skill of
+                   a team before any matches have been played. Known
+                   mostly as the mean of the Guassian prior distribution.
+
+                   *Represented by:* :math:`\mu`
+
+        :param sigma_squared: Standard deviation of the prior distribution of a team.
+
+                      *Represented by:* :math:`\sigma = \frac{\mu}{z}`
+                      where :math:`z` is an integer that represents the
+                      variance of the skill of a player.
+
+        :param team: A list of Weng-Lin player ratings.
+
+        :param rank: The rank of the team within a gam
+        """
+        self.mu = float(mu)
+        self.sigma_squared = float(sigma_squared)
+        self.team = team
+        self.rank = rank
+
+    def __repr__(self) -> str:
+        return (
+            f"PlackettLuceTeamRating(mu={self.mu}, sigma_squared={self.sigma_squared})"
+        )
+
+    def __str__(self) -> str:
+        return (
+            f"PlackettLuceTeamRating Details:\n\n"
+            f"mu: {self.mu}\n"
+            f"sigma_squared: {self.sigma_squared}\n"
+            f"rank: {self.rank}\n"
+        )
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, PlackettLuceTeamRating):
+            return NotImplemented
+
+        return (
+            self.mu == other.mu
+            and self.sigma_squared == other.sigma_squared
+            and self.team == other.team
+            and self.rank == other.rank
+        )
+
+    def __hash__(self) -> int:
+        return hash((self.mu, self.sigma_squared, tuple(self.team), self.rank))
+
+
+def _gamma(
+    c: float,
+    k: int,
+    mu: float,
+    sigma_squared: float,
+    team: Sequence[PlackettLuceRating],
+    rank: int,
+    weights: list[float] | None = None,
+) -> float:
+    """
+    Default gamma function for Plackett-Luce.
+
+    :param c: The square root of the collective team sigma.
+
+    :param k: The number of teams in the game.
+
+    :param mu: The mean of the team's rating.
+
+    :param sigma_squared: The variance of the team's rating.
+
+    :param team: The team rating object.
+
+    :param rank: The rank of the team.
+
+    :param weights: The weights of the players in a team.
+
+    :return: A number.
+    """
+    return math.sqrt(sigma_squared) / c
+
+
+class PlackettLuce:
+    r"""
+    Algorithm 4 by :cite:t:`JMLR:v12:weng11a`
+
+    The PlackettLuce model departs from single scalar representations of
+    player performance present in simpler models. There is a vector of
+    abilities for each player that captures their performance across multiple
+    dimensions. The outcome of a match between multiple players depends on
+    their abilities in each dimension. By introducing this multidimensional
+    aspect, the Plackett-Luce model provides a richer framework for ranking
+    players based on their abilities in various dimensions.
+    """
+
+    def __init__(
+        self,
+        mu: float = 25.0,
+        sigma: float = 25.0 / 3.0,
+        beta: float = 25.0 / 6.0,
+        kappa: float = 0.0001,
+        gamma: Callable[
+            [
+                float,
+                int,
+                float,
+                float,
+                Sequence[PlackettLuceRating],
+                int,
+                list[float] | None,
+            ],
+            float,
+        ] = _gamma,
+        tau: float = 25.0 / 300.0,
+        margin: float = 0.0,
+        limit_sigma: bool = False,
+        balance: bool = False,
+        weight_bounds: tuple[float, float] = (1.0, 2.0),
+    ):
+        r"""
+        :param mu: Represents the initial belief about the skill of
+                   a player before any matches have been played. Known
+                   mostly as the mean of the Gaussian prior distribution.
+
+                   *Represented by:* :math:`\mu`
+
+        :param sigma: Standard deviation of the prior distribution of player.
+
+                      *Represented by:* :math:`\sigma = \frac{\mu}{z}`
+                      where :math:`z` is an integer that represents the
+                      variance of the skill of a player.
+
+
+        :param beta: Hyperparameter that determines the level of uncertainty
+                     or variability present in the prior distribution of
+                     ratings.
+
+                     *Represented by:* :math:`\beta = \frac{\sigma}{2}`
+
+        :param kappa: Arbitrary small positive real number that is used to
+                      prevent the variance of the posterior distribution from
+                      becoming too small or negative. It can also be thought
+                      of as a regularization parameter.
+
+                      *Represented by:* :math:`\kappa`
+
+        :param gamma: Custom function you can pass that must contain 5
+                      parameters. The function must return a float or int.
+
+                      *Represented by:* :math:`\gamma`
+
+        :param tau: Additive dynamics parameter that prevents sigma from
+                    getting too small to increase rating change volatility.
+
+                    *Represented by:* :math:`\tau`
+
+        :param margin: The margin of victory needed for a win to be considered
+                       impressive.
+
+        :param limit_sigma: Boolean that determines whether to restrict
+                            the value of sigma from increasing.
+
+        :param balance: Boolean that determines whether to emphasize
+                        rating outliers.
+
+        :param weight_bounds: Tuple of (min, max) bounds for normalizing player
+                              weights within a team. Weights are scaled to this
+                              range. Default is (1.0, 2.0). Set to None to
+                              disable weight normalization.
+        """
+        # Model Parameters
+        self.mu: float = float(mu)
+        self.sigma: float = float(sigma)
+        self.beta: float = beta
+        self.kappa: float = float(kappa)
+        self.gamma: Callable[
+            [
+                float,
+                int,
+                float,
+                float,
+                Sequence[PlackettLuceRating],
+                int,
+                list[float] | None,
+            ],
+            float,
+        ] = gamma
+
+        self.tau: float = float(tau)
+        self.margin: float = float(margin)
+        self.limit_sigma: bool = limit_sigma
+        self.balance: bool = balance
+        self.weight_bounds: tuple[float, float] | None = weight_bounds
+
+        # Model Data Container
+        self.PlackettLuceRating: type[PlackettLuceRating] = PlackettLuceRating
+
+    def __repr__(self) -> str:
+        return f"PlackettLuce(mu={self.mu}, sigma={self.sigma})"
+
+    def __str__(self) -> str:
+        return (
+            f"Plackett-Luce Model Parameters: \n\n"
+            f"mu: {self.mu}\n"
+            f"sigma: {self.sigma}\n"
+        )
+
+    def rating(
+        self,
+        mu: float | None = None,
+        sigma: float | None = None,
+        name: str | None = None,
+    ) -> PlackettLuceRating:
+        r"""
+        Returns a new rating object with your default parameters. The given
+        parameters can be overridden from the defaults provided by the main
+        model, but is not recommended unless you know what you are doing.
+
+        :param mu: Represents the initial belief about the skill of
+                   a player before any matches have been played. Known
+                   mostly as the mean of the Gaussian prior distribution.
+
+                   *Represented by:* :math:`\mu`
+
+        :param sigma: Standard deviation of the prior distribution of player.
+
+                      *Represented by:* :math:`\sigma = \frac{\mu}{z}`
+                      where :math:`z` is an integer that represents the
+                      variance of the skill of a player.
+
+        :param name: Optional name for the player.
+
+        :return: :class:`PlackettLuceRating` object
+        """
+        return self.PlackettLuceRating(
+            mu if mu is not None else self.mu,
+            sigma if sigma is not None else self.sigma,
+            name,
+        )
+
+    @staticmethod
+    def create_rating(
+        rating: list[float], name: str | None = None
+    ) -> PlackettLuceRating:
+        """
+        Create a :class:`PlackettLuceRating` object from a list of `mu`
+        and `sigma` values.
+
+        :param rating: A list of two values where the first value is the :code:`mu`
+                       and the second value is the :code:`sigma`.
+
+        :param name: An optional name for the player.
+
+        :return: A :class:`PlackettLuceRating` object created from the list passed in.
+        """
+        if isinstance(rating, PlackettLuceRating):
+            raise TypeError("Argument is already a 'PlackettLuceRating' object.")
+        elif len(rating) == 2 and isinstance(rating, list):
+            for value in rating:
+                if not isinstance(value, (int, float)):
+                    raise ValueError(
+                        f"The {rating.__class__.__name__} contains an "
+                        f"element '{value}' of type '{value.__class__.__name__}'"
+                    )
+            if not name:
+                return PlackettLuceRating(mu=rating[0], sigma=rating[1])
+            else:
+                return PlackettLuceRating(mu=rating[0], sigma=rating[1], name=name)
+        else:
+            raise TypeError(f"Cannot accept '{rating.__class__.__name__}' type.")
+
+    @staticmethod
+    def _check_teams(teams: list[list[PlackettLuceRating]]) -> None:
+        """
+        Ensure teams argument is valid.
+
+        :param teams: List of lists of PlackettLuceRating objects.
+        """
+        # Catch teams argument errors
+        if not isinstance(teams, list):
+            raise TypeError(
+                f"Argument 'teams' must be a list of lists of 'PlackettLuceRating' objects, "
+                f"not '{teams.__class__.__name__}'."
+            )
+
+        if len(teams) < 2:
+            raise ValueError(
+                f"Argument 'teams' must have at least 2 teams, not {len(teams)}."
+            )
+
+        for team in teams:
+            if not isinstance(team, list):
+                raise TypeError(
+                    f"Argument 'teams' must be a list of lists of 'PlackettLuceRating' objects, "
+                    f"not '{team.__class__.__name__}'."
+                )
+
+            if len(team) < 1:
+                raise ValueError(
+                    f"Argument 'teams' must have at least 1 player per team, not {len(team)}."
+                )
+
+            for player in team:
+                if not isinstance(player, PlackettLuceRating):
+                    raise TypeError(
+                        f"Argument 'teams' must be a list of lists of 'PlackettLuceRating' objects, "
+                        f"not '{player.__class__.__name__}'."
+                    )
+
+    def rate(
+        self,
+        teams: list[list[PlackettLuceRating]],
+        ranks: list[float] | None = None,
+        scores: list[float] | None = None,
+        weights: list[list[float]] | None = None,
+        tau: float | None = None,
+        limit_sigma: bool | None = None,
+    ) -> list[list[PlackettLuceRating]]:
+        """
+        Calculate the new ratings based on the given teams and parameters.
+
+        :param teams: A list of teams where each team is a list of
+                      :class:`PlackettLuceRating` objects.
+
+        :param ranks: A list of floats where the lower values
+                      represent winners.
+
+        :param scores: A list of floats where higher values
+                      represent winners.
+
+        :param weights: A list of lists of floats, where each inner list
+                        represents the contribution of each player to the
+                        team's performance.
+
+        :param tau: Additive dynamics parameter that prevents sigma from
+                    getting too small to increase rating change volatility.
+
+        :param limit_sigma: Boolean that determines whether to restrict
+                            the value of sigma from increasing.
+
+        :return: A list of teams where each team is a list of updated
+                :class:`PlackettLuceRating` objects.
+        """
+        # Catch teams argument errors
+        self._check_teams(teams)
+
+        # Catch ranks argument errors
+        if ranks:
+            if not isinstance(ranks, list):
+                raise TypeError(
+                    f"Argument 'ranks' must be a list of 'int' or 'float' values, "
+                    f"not '{ranks.__class__.__name__}'."
+                )
+
+            if len(ranks) != len(teams):
+                raise ValueError(
+                    f"Argument 'ranks' must have the same number of elements as 'teams', "
+                    f"not {len(ranks)}."
+                )
+
+            for rank in ranks:
+                if not isinstance(rank, (int, float)):
+                    raise TypeError(
+                        f"Argument 'ranks' must be a list of 'int' or 'float' values, "
+                        f"not '{rank.__class__.__name__}'."
+                    )
+
+            # Catch scores and ranks together
+            if scores:
+                raise ValueError(
+                    "Cannot accept both 'ranks' and 'scores' arguments at the same time."
+                )
+
+        # Catch scores argument errors
+        if scores:
+            if not isinstance(scores, list):
+                raise TypeError(
+                    f"Argument 'scores' must be a list of 'int' or 'float' values, "
+                    f"not '{scores.__class__.__name__}'."
+                )
+
+            if len(scores) != len(teams):
+                raise ValueError(
+                    f"Argument 'scores' must have the same number of elements as 'teams', "
+                    f"not {len(scores)}."
+                )
+
+            for score in scores:
+                if not isinstance(score, (int, float)):
+                    raise TypeError(
+                        f"Argument 'scores' must be a list of 'int' or 'float' values, "
+                        f"not '{score.__class__.__name__}'."
+                    )
+
+        # Catch weights argument errors
+        if weights:
+            if not isinstance(weights, list):
+                raise TypeError(
+                    f"Argument 'weights' must be a list of lists of 'float' values, "
+                    f"not '{weights.__class__.__name__}'."
+                )
+
+            if len(weights) != len(teams):
+                raise ValueError(
+                    f"Argument 'weights' must have the same number of elements as"
+                    f" 'teams', not {len(weights)}."
+                )
+
+            for index, team_weights in enumerate(weights):
+                if not isinstance(team_weights, list):
+                    raise TypeError(
+                        f"Argument 'weights' must be a list of lists of 'float' values, "
+                        f"not '{team_weights.__class__.__name__}'."
+                    )
+
+                if len(team_weights) != len(teams[index]):
+                    raise ValueError(
+                        f"Argument 'weights' must have the same number of elements"
+                        f"as each team in 'teams', not {len(team_weights)}."
+                    )
+
+                for weight in team_weights:
+                    if not isinstance(weight, (int, float)):
+                        raise TypeError(
+                            f"Argument 'weights' must be a list of lists of 'float' values, "
+                            f"not '{weight.__class__.__name__}'."
+                        )
+
+        # Deep Copy Teams
+        original_teams = teams
+        teams = copy.deepcopy(original_teams)
+
+        # Correct Sigma With Tau
+        tau = tau if tau else self.tau
+        tau_squared = tau * tau
+        for team_index, team in enumerate(teams):
+            for player_index, player in enumerate(team):
+                teams[team_index][player_index].sigma = math.sqrt(
+                    player.sigma * player.sigma + tau_squared
+                )
+
+        # Convert Score to Ranks
+        if not ranks and scores:
+            ranks = list(map(lambda s: -s, scores))
+            ranks = self._calculate_rankings(teams, ranks)
+
+        # Normalize Weights
+        if weights and self.weight_bounds is not None:
+            weights = [
+                _normalize(team_weights, self.weight_bounds[0], self.weight_bounds[1])
+                for team_weights in weights
+            ]
+
+        tenet = None
+        if ranks:
+            rank_teams_unwound = _unwind(ranks, teams)
+
+            if weights:
+                weights, _ = _unwind(ranks, weights)
+
+            if scores:
+                scores, _ = _unwind(ranks, scores)
+
+            ordered_teams = rank_teams_unwound[0]
+            tenet = rank_teams_unwound[1]
+            teams = ordered_teams
+            ranks = sorted(ranks)
+
+        processed_result = []
+        if ranks and tenet:
+            result = self._compute(
+                teams=teams, ranks=ranks, scores=scores, weights=weights
+            )
+            unwound_result = _unwind(tenet, result)[0]
+            for item in unwound_result:
+                team = []
+                for player in item:
+                    team.append(player)
+                processed_result.append(team)
+        else:
+            result = self._compute(teams=teams, weights=weights)
+            for item in result:
+                team = []
+                for player in item:
+                    team.append(player)
+                processed_result.append(team)
+
+        # Possible Final Result
+        final_result = processed_result
+
+        if limit_sigma is not None:
+            self.limit_sigma = limit_sigma
+
+        if self.limit_sigma:
+            final_result = []
+
+            # Reuse processed_result
+            for team_index, team in enumerate(processed_result):
+                final_team = []
+                for player_index, player in enumerate(team):
+                    player.sigma = min(
+                        player.sigma, original_teams[team_index][player_index].sigma
+                    )
+                    final_team.append(player)
+                final_result.append(final_team)
+        return final_result
+
+    def _c(self, team_ratings: list[PlackettLuceTeamRating]) -> float:
+        r"""
+        Calculate the square root of the collective team sigma.
+
+        *Represented by:*
+
+        .. math::
+
+           c = \Biggl(\sum_{i=1}^k (\sigma_i^2 + \beta^2) \Biggr)
+
+        Algorithm 4: Procedure 3 in :cite:p:`JMLR:v12:weng11a`
+
+        :param team_ratings: The whole rating of a list of teams in a game.
+        :return: A number.
+        """
+        beta_squared = self.beta**2
+        collective_team_sigma = 0.0
+        for team in team_ratings:
+            collective_team_sigma += team.sigma_squared + beta_squared
+        return math.sqrt(collective_team_sigma)
+
+    def _sum_q(
+        self,
+        team_ratings: list[PlackettLuceTeamRating],
+        c: float,
+        scores: list[float] | None = None,
+    ) -> list[float]:
+        r"""
+        Sum up all the values of :code:`mu / c` raised to :math:`e`.
+
+        *Represented by:*
+
+        .. math::
+
+           \sum_{s \in C_q} e^{\theta_s / c}, q=1, ...,k, \text{where } C_q = \{i: r(i) \geq r(q)\}
+
+        Algorithm 4: Procedure 3 in :cite:p:`JMLR:v12:weng11a`
+
+        :param team_ratings: The whole rating of a list of teams in a game.
+
+        :param c: The square root of the collective team sigma.
+
+        :param scores: Optional scores for margin factor calculation.
+
+        :return: A list of floats.
+        """
+        # Create Score Mapping for Margin Calculations
+        score_mapping = {}
+        if scores and len(scores) == len(team_ratings):
+            for i, team in enumerate(team_ratings):
+                score_mapping[i] = scores[i]
+
+        sum_q: dict[int, float] = {}
+        for i, team_i in enumerate(team_ratings):
+            adjusted_mu = team_i.mu
+
+            if scores and i in score_mapping:
+                margin_adjustment = 0.0
+                comparison_count = 0
+
+                for j, team_j in enumerate(team_ratings):
+                    if i != j and j in score_mapping:
+                        score_diff = abs(score_mapping[i] - score_mapping[j])
+                        if score_diff > 0:
+                            margin_factor = 1.0
+                            if score_diff > self.margin and self.margin > 0.0:
+                                margin_factor = math.log1p(score_diff / self.margin)
+
+                            # Apply Margin Factor to the Skill Difference
+                            if score_mapping[i] > score_mapping[j]:  # Performed Better
+                                margin_adjustment -= (team_i.mu - team_j.mu) * (
+                                    margin_factor - 1.0
+                                )
+                            else:  # Performed Worse
+                                margin_adjustment += (team_j.mu - team_i.mu) * (
+                                    margin_factor - 1.0
+                                )
+                            comparison_count += 1
+
+                adjusted_mu += (
+                    (margin_adjustment / comparison_count)
+                    if comparison_count
+                    else margin_adjustment
+                )
+
+            summed = math.exp(adjusted_mu / c)
+            for q, team_q in enumerate(team_ratings):
+                if team_i.rank >= team_q.rank:
+                    if q in sum_q:
+                        sum_q[q] += summed
+                    else:
+                        sum_q[q] = summed
+        return list(sum_q.values())
+
+    @staticmethod
+    def _a(team_ratings: list[PlackettLuceTeamRating]) -> list[int]:
+        r"""
+        Count the number of times a rank appears in the list of team ratings.
+
+        *Represented by:*
+
+        .. math::
+
+           A_q = |\{s: r(s) = r(q)\}|, q = 1,...,k
+
+        :param team_ratings: The whole rating of a list of teams in a game.
+        :return: A list of ints.
+        """
+        return [sum(1 for q in team_ratings if q.rank == i.rank) for i in team_ratings]
+
+    def _compute(
+        self,
+        teams: Sequence[Sequence[PlackettLuceRating]],
+        ranks: list[float] | None = None,
+        scores: list[float] | None = None,
+        weights: list[list[float]] | None = None,
+    ) -> list[list[PlackettLuceRating]]:
+        # Initialize Constants
+        original_teams = teams
+        team_ratings = self._calculate_team_ratings(teams, ranks=ranks)
+        c = self._c(team_ratings)
+        sum_q = self._sum_q(team_ratings, c, scores)
+        a = self._a(team_ratings)
+
+        score_mapping = {}
+        if scores and len(scores) == len(team_ratings):
+            for i, team in enumerate(team_ratings):
+                score_mapping[i] = scores[i]
+
+        rank_groups: dict[int, list[int]] = {}
+        for i, team_i in enumerate(team_ratings):
+            if team_i.rank not in rank_groups:
+                rank_groups[team_i.rank] = []
+            rank_groups[team_i.rank].append(i)
+
+        result = []
+        for i, team_i in enumerate(team_ratings):
+            omega = 0.0
+            delta = 0.0
+
+            adjusted_mu_i = team_i.mu
+            if scores and i in score_mapping:
+                margin_adjustment = 0.0
+                comparison_count = 0
+
+                for j, team_j in enumerate(team_ratings):
+                    if i != j and j in score_mapping:
+                        score_diff = abs(score_mapping[i] - score_mapping[j])
+                        if score_diff > 0:
+                            margin_factor = 1.0
+                            if score_diff > self.margin and self.margin > 0.0:
+                                margin_factor = math.log1p(score_diff / self.margin)
+
+                            if score_mapping[i] > score_mapping[j]:
+                                margin_adjustment -= (team_i.mu - team_j.mu) * (
+                                    margin_factor - 1.0
+                                )
+                            else:
+                                margin_adjustment += (team_j.mu - team_i.mu) * (
+                                    margin_factor - 1.0
+                                )
+                            comparison_count += 1
+
+                adjusted_mu_i += (
+                    (margin_adjustment / comparison_count)
+                    if comparison_count
+                    else margin_adjustment
+                )
+
+            i_mu_over_c = math.exp(adjusted_mu_i / c)
+
+            for q, team_q in enumerate(team_ratings):
+                i_mu_over_ce_over_sum_q = i_mu_over_c / sum_q[q]
+                if team_q.rank <= team_i.rank:
+                    delta += (
+                        i_mu_over_ce_over_sum_q * (1 - i_mu_over_ce_over_sum_q) / a[q]
+                    )
+                    if q == i:
+                        omega += (1 - i_mu_over_ce_over_sum_q) / a[q]
+                    else:
+                        omega -= i_mu_over_ce_over_sum_q / a[q]
+
+            omega *= team_i.sigma_squared / c
+            delta *= team_i.sigma_squared / c**2
+
+            if weights:
+                gamma_value = self.gamma(
+                    c,
+                    len(team_ratings),
+                    team_i.mu,
+                    team_i.sigma_squared,
+                    team_i.team,
+                    team_i.rank,
+                    weights[i],
+                )
+            else:
+                gamma_value = self.gamma(
+                    c,
+                    len(team_ratings),
+                    team_i.mu,
+                    team_i.sigma_squared,
+                    team_i.team,
+                    team_i.rank,
+                    None,
+                )
+            delta *= gamma_value
+
+            intermediate_result_per_team = []
+            for j, j_players in enumerate(team_i.team):
+                if weights:
+                    weight = weights[i][j]
+                else:
+                    weight = 1.0
+
+                mu = j_players.mu
+                sigma = j_players.sigma
+
+                if omega >= 0:
+                    mu += (sigma**2 / team_i.sigma_squared) * omega * weight
+                    sigma *= math.sqrt(
+                        max(
+                            1 - (sigma**2 / team_i.sigma_squared) * delta * weight,
+                            self.kappa,
+                        ),
+                    )
+                else:
+                    mu += (sigma**2 / team_i.sigma_squared) * omega / weight
+                    sigma *= math.sqrt(
+                        max(
+                            1 - (sigma**2 / team_i.sigma_squared) * delta / weight,
+                            self.kappa,
+                        ),
+                    )
+
+                modified_player = original_teams[i][j]
+                modified_player.mu = mu
+                modified_player.sigma = sigma
+                intermediate_result_per_team.append(modified_player)
+            result.append(intermediate_result_per_team)
+
+        for rank, indices in rank_groups.items():
+            if len(indices) > 1:
+                avg_mu_change = sum(
+                    result[i][0].mu - original_teams[i][0].mu for i in indices
+                ) / len(indices)
+                for i in indices:
+                    for j in range(len(result[i])):
+                        result[i][j].mu = original_teams[i][j].mu + avg_mu_change
+
+        return result
+
+    def predict_win(self, teams: list[list[PlackettLuceRating]]) -> list[float]:
+        r"""
+        Predict how likely a match up against teams of one or more players
+        will go. This algorithm has a time complexity of
+        :math:`\mathcal{0}(n^2)` where 'n' is the number of teams.
+
+        This is a generalization of the algorithm in
+        :cite:p:`Ibstedt1322103` to asymmetric n-player n-teams.
+
+        :param teams: A list of two or more teams.
+        :return: A list of odds of each team winning.
+        """
+        # Check Arguments
+        self._check_teams(teams)
+
+        n = len(teams)
+
+        # 2 Player Case
+        if n == 2:
+            teams_ratings = self._calculate_team_ratings(teams)
+            a = teams_ratings[0]
+            b = teams_ratings[1]
+            result = phi_major(
+                (a.mu - b.mu)
+                / math.sqrt(2 * self.beta**2 + a.sigma_squared + b.sigma_squared)
+            )
+            return [result, 1 - result]
+
+        pairwise_probabilities = []
+        for pair_a, pair_b in itertools.permutations(teams, 2):
+            pair_a_subset = self._calculate_team_ratings([pair_a])
+            pair_b_subset = self._calculate_team_ratings([pair_b])
+            mu_a = pair_a_subset[0].mu
+            sigma_a = pair_a_subset[0].sigma_squared
+            mu_b = pair_b_subset[0].mu
+            sigma_b = pair_b_subset[0].sigma_squared
+            pairwise_probabilities.append(
+                phi_major(
+                    (mu_a - mu_b) / math.sqrt(2 * self.beta**2 + sigma_a + sigma_b)
+                )
+            )
+
+        win_probabilities = []
+        for i in range(n):
+            team_win_probability = sum(
+                pairwise_probabilities[j] for j in range(i * (n - 1), (i + 1) * (n - 1))
+            ) / (n - 1)
+            win_probabilities.append(team_win_probability)
+
+        total_probability = sum(win_probabilities)
+        return [probability / total_probability for probability in win_probabilities]
+
+    def predict_draw(self, teams: list[list[PlackettLuceRating]]) -> float:
+        r"""
+        Predict how likely a match up against teams of one or more players
+        will draw. This algorithm has a time complexity of
+        :math:`\mathcal{0}(n^2)` where 'n' is the number of teams.
+
+        :param teams: A list of two or more teams.
+        :return: The odds of a draw.
+        """
+        # Check Arguments
+        self._check_teams(teams)
+
+        total_player_count = sum(len(team) for team in teams)
+        draw_probability = 1 / total_player_count
+        draw_margin = (
+            math.sqrt(total_player_count)
+            * self.beta
+            * phi_major_inverse((1 + draw_probability) / 2)
+        )
+
+        pairwise_probabilities = []
+        for pair_a, pair_b in itertools.combinations(teams, 2):
+            pair_a_subset = self._calculate_team_ratings([pair_a])
+            pair_b_subset = self._calculate_team_ratings([pair_b])
+            mu_a = pair_a_subset[0].mu
+            sigma_a = pair_a_subset[0].sigma_squared
+            mu_b = pair_b_subset[0].mu
+            sigma_b = pair_b_subset[0].sigma_squared
+            pairwise_probabilities.append(
+                phi_major(
+                    (draw_margin - mu_a + mu_b)
+                    / math.sqrt(2 * self.beta**2 + sigma_a + sigma_b)
+                )
+                - phi_major(
+                    (mu_b - mu_a - draw_margin)
+                    / math.sqrt(2 * self.beta**2 + sigma_a + sigma_b)
+                )
+            )
+
+        return sum(pairwise_probabilities) / len(pairwise_probabilities)
+
+    def predict_rank(
+        self, teams: list[list[PlackettLuceRating]]
+    ) -> list[tuple[int, float]]:
+        r"""
+        Predict the shape of a match outcome. This algorithm has a time
+        complexity of :math:`\mathcal{0}(n^2)` where 'n' is the
+        number of teams.
+
+        :param teams: A list of two or more teams.
+        :return: A list of team ranks with their probabilities.
+        """
+        self._check_teams(teams)
+
+        n = len(teams)
+        team_ratings = self._calculate_team_ratings(teams)
+
+        win_probabilities = []
+        for i, team_i in enumerate(team_ratings):
+            team_win_probability = 0.0
+            for j, team_j in enumerate(team_ratings):
+                if i != j:
+                    team_win_probability += phi_major(
+                        (team_i.mu - team_j.mu)
+                        / math.sqrt(
+                            2 * self.beta**2
+                            + team_i.sigma_squared
+                            + team_j.sigma_squared
+                        )
+                    )
+            win_probabilities.append(team_win_probability / (n - 1))
+
+        total_probability = sum(win_probabilities)
+        normalized_probabilities = [p / total_probability for p in win_probabilities]
+
+        sorted_teams = sorted(
+            enumerate(normalized_probabilities), key=lambda x: x[1], reverse=True
+        )
+
+        ranks = [0] * n
+        current_rank = 1
+        for i, (team_index, _) in enumerate(sorted_teams):
+            if i > 0 and sorted_teams[i][1] < sorted_teams[i - 1][1]:
+                current_rank = i + 1
+            ranks[team_index] = current_rank
+
+        return list(zip(ranks, normalized_probabilities))
+
+    def _calculate_team_ratings(
+        self,
+        game: Sequence[Sequence[PlackettLuceRating]],
+        ranks: list[float] | None = None,
+        weights: list[list[float]] | None = None,
+    ) -> list[PlackettLuceTeamRating]:
+        """
+        Get the team ratings of a game.
+
+        :param game: A list of teams, where teams are lists of
+                     :class:`PlackettLuceRating` objects.
+
+        :param ranks: A list of ranks for each team in the game.
+
+        :param weights: A list of lists of floats, where each inner list
+                        represents the contribution of each player to the
+                        team's performance. The values should be normalized
+                        from 0 to 1.
+
+        :return: A list of :class:`PlackettLuceTeamRating` objects.
+        """
+        if ranks is None:
+            ranks = self._calculate_rankings(game)
+
+        result = []
+        for index, team in enumerate(game):
+            sorted_team = sorted(team, key=lambda p: p.ordinal(), reverse=True)
+            max_ordinal = sorted_team[0].ordinal()
+
+            mu_summed = 0.0
+            sigma_squared_summed = 0.0
+            for player in sorted_team:
+                if self.balance:
+                    ordinal_diff = max_ordinal - player.ordinal()
+                    balance_weight = 1 + (ordinal_diff / (max_ordinal + self.kappa))
+                else:
+                    balance_weight = 1.0
+                mu_summed += player.mu * balance_weight
+                sigma_squared_summed += (player.sigma * balance_weight) ** 2
+            result.append(
+                PlackettLuceTeamRating(
+                    mu_summed, sigma_squared_summed, team, int(ranks[index])
+                )
+            )
+        return result
+
+    def _calculate_rankings(
+        self,
+        game: Sequence[Sequence[PlackettLuceRating]],
+        ranks: list[float] | None = None,
+    ) -> list[float]:
+        """
+        Calculates the rankings based on the scores of the teams.
+
+        It assigns a rank to each team based on their score, with the team with
+        the highest score being ranked first.
+
+        :param game: A list of teams, where teams are lists of
+                     :class:`PlackettLuceRating` objects.
+
+        :param ranks: A list of ranks for each team in the game.
+
+        :return: A list of ranks for each team in the game.
+        """
+        if not game:
+            return []
+
+        if ranks:
+            team_scores = []
+            for index, _ in enumerate(game):
+                team_scores.append(ranks[index] if ranks[index] is not None else index)
+        else:
+            team_scores = [i for i, _ in enumerate(game)]
+
+        sorted_scores = sorted(team_scores)
+        rank_map: dict[float, int] = {}
+        for index, value in enumerate(sorted_scores):
+            if value not in rank_map:
+                rank_map[value] = index
+        return [rank_map[v] for v in team_scores]

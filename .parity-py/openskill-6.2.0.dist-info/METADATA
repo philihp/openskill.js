@@ -1,0 +1,222 @@
+Metadata-Version: 2.4
+Name: openskill
+Version: 6.2.0
+Summary: Multiplayer Rating System. No Friction.
+Author-email: Vivek Joshy <git@vivekjoshy.com>
+Maintainer-email: Vivek Joshy <git@vivekjoshy.com>
+License-Expression: MIT
+Project-URL: Source, https://github.com/vivekjoshy/openskill.py
+Project-URL: Documentation, https://openskill.me/en/stable
+Project-URL: Changelog, https://github.com/vivekjoshy/openskill.py/blob/main/CHANGELOG.rst
+Project-URL: Funding, https://github.com/sponsors/vivekjoshy
+Project-URL: Tracker, https://github.com/vivekjoshy/openskill.py/issues
+Keywords: ranking,trueskill,statistics,rating,math,rank
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: ~=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: docs
+Requires-Dist: sphinx~=8.1; extra == "docs"
+Requires-Dist: nbsphinx~=0.9; extra == "docs"
+Requires-Dist: pygments~=2.19; extra == "docs"
+Requires-Dist: shibuya~=2026.1; extra == "docs"
+Requires-Dist: ipykernel~=7.1; extra == "docs"
+Requires-Dist: matplotlib~=3.10; extra == "docs"
+Requires-Dist: myst-parser~=4.0; extra == "docs"
+Requires-Dist: sphinx-intl~=2.3; extra == "docs"
+Requires-Dist: sphinx-favicon~=1.0; extra == "docs"
+Requires-Dist: sphinx-docsearch~=0.1; extra == "docs"
+Requires-Dist: sphinx-copybutton~=0.5; extra == "docs"
+Requires-Dist: sphinxext-opengraph~=0.9; extra == "docs"
+Requires-Dist: sphinxcontrib-bibtex~=2.6; extra == "docs"
+Requires-Dist: sphinx-autodoc-typehints~=3.0; extra == "docs"
+Provides-Extra: tests
+Requires-Dist: tox~=4.24; extra == "tests"
+Requires-Dist: mypy~=1.15; extra == "tests"
+Requires-Dist: pytest~=9.0; extra == "tests"
+Requires-Dist: codecov~=2.1; extra == "tests"
+Requires-Dist: coverage~=7.6; extra == "tests"
+Requires-Dist: pytest-cov~=7.0; extra == "tests"
+Provides-Extra: build
+Requires-Dist: twine~=6.1; extra == "build"
+Requires-Dist: build~=1.2; extra == "build"
+Requires-Dist: isort~=7.0; extra == "build"
+Requires-Dist: mypy[mypyc]~=1.15; extra == "build"
+Requires-Dist: black[jupyter]~=25.1; extra == "build"
+Requires-Dist: towncrier~=25.8; extra == "build"
+Requires-Dist: bump-my-version~=1.1; extra == "build"
+Provides-Extra: benchmark
+Requires-Dist: rich~=14.0; extra == "benchmark"
+Requires-Dist: tqdm~=4.67; extra == "benchmark"
+Requires-Dist: pooch~=1.8; extra == "benchmark"
+Requires-Dist: jsonlines~=4.0; extra == "benchmark"
+Requires-Dist: scikit-learn~=1.6; extra == "benchmark"
+Dynamic: license-file
+
+<p align="center" style="text-align: center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/7yAVFkZ.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://i.imgur.com/UvrkUF3.png">
+  <img alt="Multiplayer Rating System. No Friction." src="https://i.imgur.com/QJUy18S.png">
+</picture>
+</p>
+
+<p align="center" style="text-align: center">A faster and open license asymmetric multi-team, multiplayer rating system comparable to TrueSkill.</p>
+
+<p align="center" style="text-align: center">
+    <a href="https://stand-with-ukraine.pp.ua">
+        <img
+            src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg"
+            alt="Stand With Ukraine"
+        />
+    </a>
+</p>
+
+<p align="center" style="text-align: center">
+    <a
+        href="https://github.com/vivekjoshy/openskill.py/actions/workflows/main.yml">
+            <img
+                src="https://github.com/vivekjoshy/openskill.py/actions/workflows/main.yml/badge.svg"
+                alt="Tests"
+    />
+    </a>
+    <a
+        href="https://codecov.io/gh/vivekjoshy/openskill.py">
+            <img
+                src="https://codecov.io/gh/vivekjoshy/openskill.py/branch/main/graph/badge.svg?token=Ep07QEelsi"
+                alt="codecov" />
+    <a
+        href="https://openskill.me/en/latest/?badge=latest">
+            <img
+                src="https://readthedocs.org/projects/openskillpy/badge/?version=latest"
+                    alt="Documentation Status"
+            />
+    </a>
+    <img
+        src="https://img.shields.io/github/all-contributors/vivekjoshy/openskill.py/main"
+    />
+    <a style="border-width:0" href="https://doi.org/10.21105/joss.05901">
+      <img src="https://joss.theoj.org/papers/10.21105/joss.05901/status.svg" alt="DOI badge" >
+    </a>
+</p>
+
+
+
+## Description
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/openskill) ![Conda (channel only)](https://anaconda.org/conda-forge/openskill/badges/version.svg) ![PyPI - Implementation](https://img.shields.io/pypi/implementation/openskill)
+
+[![Discord](https://img.shields.io/discord/1127581396345556994?logo=discord&label=Official%20Discord%20Server&color=%235865F2&link=https%3A%2F%2Fdiscord.com%2Finvite%2F4JNDeHMYkM)](https://discord.com/invite/4JNDeHMYkM)
+
+In the multifaceted world of online gaming, an accurate multiplayer rating system plays a crucial role. A multiplayer rating system measures and compares players' skill levels in competitive games to ensure balanced match-making, boosting overall gaming experiences. Currently, TrueSkill by Microsoft Research is a notable rating system, but gaming communities are yearning for faster, more adaptable alternatives.
+
+Here are *some*, but not all, of the reasons you should drop TrueSkill
+and bury Elo once and for all:
+
+```mermaid
+graph TD
+    subgraph OpenSkill["OpenSkill Features"]
+
+    subgraph Game["Game"]
+    GF1[Multiplayer]
+    GF2[Multifaction]
+    GF3[Asymmetric Faction Size]
+    GF4[Predict Win, Draw, Rank]
+    GF5[Weights, Score Margins]
+    end
+
+    subgraph Technical["Technical"]
+    TF1[100% Pure Python]
+    TF2[CPython and PyPy Support]
+    TF3[C-compiled Wheels]
+    TF4[100% Test Coverage]
+    TF5[5 Separate Models]
+    end
+
+    subgraph Performance["Performance"]
+    PF1[150% faster than TrueSkill]
+    PF2[Accuracy matches TrueSkill]
+    PF3[Open License]
+    PF4[Partial Play]
+    PF5[Fine-grained Parameter Control]
+    end
+
+    end
+
+    style GF1 fill:#f37231,color:#ffffff,stroke:#f37231
+    style GF2 fill:#f37231,color:#ffffff,stroke:#f37231
+    style GF3 fill:#f37231,color:#ffffff,stroke:#f37231
+    style GF4 fill:#f37231,color:#ffffff,stroke:#f37231
+    style GF5 fill:#f37231,color:#ffffff,stroke:#f37231
+
+    style TF1 fill:#f37231,color:#ffffff,stroke:#f37231
+    style TF2 fill:#f37231,color:#ffffff,stroke:#f37231
+    style TF3 fill:#f37231,color:#ffffff,stroke:#f37231
+    style TF4 fill:#f37231,color:#ffffff,stroke:#f37231
+    style TF5 fill:#f37231,color:#ffffff,stroke:#f37231
+
+    style PF1 fill:#f37231,color:#ffffff,stroke:#f37231
+    style PF2 fill:#f37231,color:#ffffff,stroke:#f37231
+    style PF3 fill:#f37231,color:#ffffff,stroke:#f37231
+    style PF4 fill:#f37231,color:#ffffff,stroke:#f37231
+    style PF5 fill:#f37231,color:#ffffff,stroke:#f37231
+```
+
+
+## Installation
+```shell
+pip install openskill
+```
+
+## Usage
+
+The official documentation is hosted [here](https://openskill.me/en/stable/).
+Please refer to it for details on how to use this library.
+
+### Limited Example
+
+```python
+>>> from openskill.models import PlackettLuce
+>>> model = PlackettLuce()
+>>> model.rating()
+PlackettLuceRating(mu=25.0, sigma=8.333333333333334)
+>>> r = model.rating
+>>> [[a, b], [x, y]] = [[r(), r()], [r(), r()]]
+>>> [[a, b], [x, y]] = model.rate([[a, b], [x, y]])
+>>> a
+PlackettLuceRating(mu=26.964294621803063, sigma=8.177962604389991)
+>>> x
+PlackettLuceRating(mu=23.035705378196937, sigma=8.177962604389991)
+>>> (a == b) and (x == y)
+True
+```
+
+# Support
+If you're struggling with any of the concepts, please search the discussions section to see if your question has already been answered.
+If you can't find an answer, please open a new [discussion](https://github.com/vivekjoshy/openskill.py/discussions) and we'll try to help you out.
+You can also get help from the official [Discord Server](https://discord.com/invite/4JNDeHMYkM). If you have a feature request, or want to report
+a bug please create a new [issue](https://github.com/vivekjoshy/openskill.py/issues/new/choose) if one already doesn't exist.
+
+# References
+This project is originally based off the [openskill.js](https://github.com/philihp/openskill.js) package. All of the Weng-Lin models are based off the work in this wonderful [paper](https://jmlr.org/papers/v12/weng11a.html) or are the derivatives of algorithms found in it.
+
+- Julia Ibstedt, Elsa Rådahl, Erik Turesson, and Magdalena vande Voorde. Application and further development of trueskill™ ranking in sports. 2019.
+- Ruby C. Weng and Chih-Jen Lin. A bayesian approximation method for online ranking. Journal of Machine Learning Research, 12(9):267–300, 2011. URL: http://jmlr.org/papers/v12/weng11a.html.
+
+## Implementations in other Languages
+- [Javascript](https://github.com/philihp/openskill.js)
+- [Elixir](https://github.com/philihp/openskill.ex)
+- [Java](https://github.com/pocketcombats/openskill-java)
+- [Kotlin](https://github.com/brezinajn/openskill.kt)
+- [Lua](https://github.com/bstummer/openskill.lua)
+- [Ruby](https://github.com/erdostom/openskill-ruby)

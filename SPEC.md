@@ -51,6 +51,10 @@ V16: `rate()` ! pass score array sorted same as ranked teams to model; model ind
 V17: `thurstoneMostellerFull` margin ! use `marginDivisor = log1p(abs(score[i]-score[q])/margin)` only when `scoreDiff > margin && margin > 0`; else `1`.
 V18: `thurstoneMostellerFull` margin divisor ! apply to `v`, `w`, `vt`, `wt` input delta, not draw epsilon: `v((sign*deltaMu)/divisor, EPSILON/ciq)`, `vt(deltaMu/divisor, EPSILON/ciq)`.
 V19: margin blowout test ! same ranks + larger score gap with positive margin changes update magnitude vs narrow win; zero margin equals legacy score-as-rank behavior.
+V20: Python parity tests ! not require Python, network, or cloned `openskill.py` during normal `npm test`; fixtures checked into repo.
+V21: parity fixture metadata ! record `openskill.py` repo URL, commit/ref, Python version, model, options, input teams, expected teams, tolerance.
+V22: TMFull parity cases ! cover no score, zero margin, margin below threshold, margin above threshold, tie, reordered score, asymmetric teams.
+V23: parity tolerance ! default `1e-9`; any looser tolerance needs case-local reason.
 
 ## §T TASKS
 
@@ -67,7 +71,10 @@ T9|x|Plan A tests: TMFull legacy unchanged, zero margin unchanged, narrow vs blo
 T10|x|Plan A docs: README/API mention margin only affects score-based TMFull currently|§I,V17
 T11|.|Plan B: after Plan A, add same margin semantics to `bradleyTerryFull` with fixtures|V15,V16,V19
 T12|.|Plan C: port margin to all Weng-Lin models; decide PL listwise semantics before code|V12,V15,V16
-T13|.|Plan D: Python parity suite against `openskill.py` selected fixtures; compare output tolerances per model|V17,V18,V19
+T13|.|Plan D spec: design fixture-based Python parity suite; pin `openskill.py` source/ref and fixture schema|V20,V21,V22,V23
+T14|.|Plan D generator: create optional script to produce TMFull fixtures from pinned `openskill.py`; output checked-in JSON|V20,V21,V22
+T15|.|Plan D tests: Jest loads TMFull parity JSON and compares JS output within per-case tolerance|V17,V18,V20,V23
+T16|.|Plan D docs: document how to refresh parity fixtures and why Python not required for normal tests|§I,V20,V21
 
 ## §B BUGS
 
