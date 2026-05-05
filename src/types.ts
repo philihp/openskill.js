@@ -23,6 +23,7 @@ export type Options = {
   score?: number[]
   weight?: number[][]
   tau?: number
+  margin?: number
   alpha?: number
   target?: number
   preventSigmaIncrease?: boolean // deprecated, use limitSigma, this will go away someday
