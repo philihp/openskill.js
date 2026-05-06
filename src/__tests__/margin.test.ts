@@ -28,20 +28,16 @@ describe('margin', () => {
 
   it('winner gains more mu with a large margin than without', () => {
     expect.assertions(1)
-    const [[winner], [loser]] = rate([[a], [b]], { score: [10, 0] })
-    const [[winnerM], [loserM]] = rate([[a], [b]], { score: [10, 0], margin: 1 })
+    const [[winner]] = rate([[a], [b]], { score: [10, 0] })
+    const [[winnerM]] = rate([[a], [b]], { score: [10, 0], margin: 1 })
     expect(winnerM.mu).toBeGreaterThan(winner.mu)
-    void loser
-    void loserM
   })
 
   it('loser loses more mu with a large margin than without', () => {
     expect.assertions(1)
-    const [[winner], [loser]] = rate([[a], [b]], { score: [10, 0] })
-    const [[winnerM], [loserM]] = rate([[a], [b]], { score: [10, 0], margin: 1 })
+    const [, [loser]] = rate([[a], [b]], { score: [10, 0] })
+    const [, [loserM]] = rate([[a], [b]], { score: [10, 0], margin: 1 })
     expect(loserM.mu).toBeLessThan(loser.mu)
-    void winner
-    void winnerM
   })
 
   it('differences within the margin threshold are not amplified', () => {
@@ -70,12 +66,10 @@ describe('margin', () => {
   it('three-team ffa: winner benefits most from large margin', () => {
     expect.assertions(2)
     const c = rating()
-    const [[w1], [p2], [l1]] = rate([[a], [b], [c]], { score: [10, 5, 0] })
-    const [[w2], [p2m], [l2]] = rate([[a], [b], [c]], { score: [10, 5, 0], margin: 1 })
+    const [[w1], , [l1]] = rate([[a], [b], [c]], { score: [10, 5, 0] })
+    const [[w2], , [l2]] = rate([[a], [b], [c]], { score: [10, 5, 0], margin: 1 })
     expect(w2.mu).toBeGreaterThan(w1.mu)
     expect(l2.mu).toBeLessThan(l1.mu)
-    void p2
-    void p2m
   })
 
   it('margin is compatible with tau', () => {
