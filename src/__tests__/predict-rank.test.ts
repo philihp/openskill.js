@@ -7,6 +7,52 @@ describe('predictRank', () => {
   const strong = rating({ mu: 45, sigma: 2 })
   const weak = rating({ mu: 10, sigma: 3 })
 
+  // ---------------------------------------------------------------------------
+  // Python-equivalent tests — same rating values and assertions as
+  // test_predict_rank in openskill.py (all five model test files).
+  //
+  // Python raises ValueError for a single team; JS returns [[1, NaN]] because
+  // predictWin divides by n*(n-1)/2 which is 0 when n=1.
+  // ---------------------------------------------------------------------------
+
+  it('probabilities of mixed-skill teams sum to 1 (Python parity)', () => {
+    expect.assertions(1)
+    const a1 = rating({ mu: 34, sigma: 0.25 })
+    const a2 = rating({ mu: 32, sigma: 0.25 })
+    const a3 = rating({ mu: 30, sigma: 0.25 })
+    const b1 = rating({ mu: 24, sigma: 0.5 })
+    const b2 = rating({ mu: 22, sigma: 0.5 })
+    const b3 = rating({ mu: 20, sigma: 0.5 })
+    const teams = [
+      [a1, b1],
+      [a2, b2],
+      [a3, b3],
+    ]
+    const ranks = predictRank(teams)
+    const totalProbability = ranks.reduce((acc, [, prob]) => acc + prob, 0)
+    expect(totalProbability).toBeCloseTo(1, precision)
+  })
+
+  it('probabilities of identical teams sum to 1 (Python parity)', () => {
+    expect.assertions(1)
+    const a1 = rating({ mu: 34, sigma: 0.25 })
+    const b1 = rating({ mu: 24, sigma: 0.5 })
+    const team = [a1, b1]
+    const ranks = predictRank([team, team, team])
+    const totalProbability = ranks.reduce((acc, [, prob]) => acc + prob, 0)
+    expect(totalProbability).toBeCloseTo(1, precision)
+  })
+
+  // Python raises ValueError for a single team; JS returns [[1, NaN]] instead.
+  it('single team returns NaN probability (JS differs from Python ValueError)', () => {
+    expect.assertions(2)
+    const a1 = rating({ mu: 34, sigma: 0.25 })
+    const b1 = rating({ mu: 24, sigma: 0.5 })
+    const [[rank, prob]] = predictRank([[a1, b1]])
+    expect(rank).toBe(1)
+    expect(prob).toBeNaN()
+  })
+
   it('returns one [rank, probability] tuple per team', () => {
     expect.assertions(1)
     const result = predictRank([[newbie], [newbie]])
