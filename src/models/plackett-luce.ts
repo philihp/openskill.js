@@ -25,7 +25,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
     const iGamma = gamma(c, teamRatings.length, ...iTeamRating)
     const iOmega = omegaSum * (iSigmaSq / c)
-    const iDelta = iGamma * deltaSum * (iSigmaSq / c ** 2)
+    const iDelta = deltaSum * (iSigmaSq / c ** 2) * iGamma
 
     return iTeam.map(({ mu, sigma }) => ({
       mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,

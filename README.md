@@ -23,6 +23,27 @@ Up to 20x faster than TrueSkill!
 
 See [this post](https://philihp.com/2020/openskill.html) for more.
 
+## v5 — Plackett-Luce parity with openskill.py
+
+Starting in v5, `rate()` produces bit-for-bit identical Plackett-Luce ratings to
+[`openskill==6.x` (Python)](https://github.com/vivekjoshy/openskill.py) for
+single-match calls. Two breaking behavioural changes were required:
+
+- **Hyperparameter defaults are now constants, not derived from `mu`/`z`.**
+  Previously `sigma` defaulted to `mu / z`, `beta` to `sigma / 2`, and `tau` to
+  `mu / 300`. They now default to `25/3`, `25/6`, and `25/300` respectively,
+  matching `openskill.py`. If you were passing `mu` (e.g. `rate(teams, { mu: 1000 })`)
+  and relying on the implicit derived defaults, pass `sigma`/`beta`/`tau`
+  explicitly to keep the old behaviour.
+- **`tau` is now applied unconditionally.** Previously the additive sigma
+  dynamics (`sqrt(σ² + τ²)`) were skipped unless `options.tau` was explicitly
+  passed. They now always run with the resolved `tau` value (default `25/300`).
+  Pass `tau: 0` to disable.
+
+The `q`-index quirk in the Plackett-Luce kernel and the order of the `iDelta`
+multiplication were also adjusted to match Python's operation order, so
+single-match outputs are now byte-identical to `openskill.py`.
+
 ## Installation
 
 Add `openskill` to your list of dependencies in `package.json`:
