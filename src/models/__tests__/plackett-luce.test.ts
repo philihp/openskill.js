@@ -64,4 +64,20 @@ describe('plackettLuce', () => {
       ],
     ])
   })
+
+  it('2-player tie with equal ratings does not change mu', () => {
+    expect.assertions(2)
+    const [[x], [y]] = rate([team1, team1], { rank: [1, 1] })
+    expect(x.mu).toBeCloseTo(25)
+    expect(y.mu).toBeCloseTo(25)
+  })
+
+  it('2-player tie with unequal ratings: stronger loses mu, weaker gains mu', () => {
+    expect.assertions(2)
+    const strong = [rating({ mu: 35, sigma: 8 })]
+    const weak = [rating({ mu: 15, sigma: 8 })]
+    const [[s2], [w2]] = rate([strong, weak], { rank: [1, 1] })
+    expect(s2.mu).toBeLessThan(35)
+    expect(w2.mu).toBeGreaterThan(15)
+  })
 })
