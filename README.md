@@ -23,40 +23,22 @@ Up to 20x faster than TrueSkill!
 
 See [this post](https://philihp.com/2020/openskill.html) for more.
 
-## v5 — bit-for-bit parity with openskill.py
+## Breaking Changes in v5.0.0
 
-Starting in v5, `rate()` produces bit-for-bit identical ratings to
-[`openskill==6.x` (Python)](https://github.com/vivekjoshy/openskill.py) for
-single-match calls across all five models (Plackett-Luce, Bradley-Terry
-Full/Part, Thurstone-Mosteller Full/Part). Several breaking behavioural
+Outputs should now match bit-for-bit with [python](https://github.com/vivekjoshy/openskill.py). To do this, several breaking behavioural
 changes were required:
 
-- **Hyperparameter defaults are now constants, not derived from `mu`/`z`.**
-  Previously `sigma` defaulted to `mu / z`, `beta` to `sigma / 2`, and `tau` to
-  `mu / 300`. They now default to `25/3`, `25/6`, and `25/300` respectively,
-  matching `openskill.py`. If you were passing `mu` (e.g. `rate(teams, { mu: 1000 })`)
+- Hyperparameter defaults are now constants, not derived from `mu`/`z`.
+  If you were passing `mu` (e.g. `rate(teams, { mu: 1000 })`)
   and relying on the implicit derived defaults, pass `sigma`/`beta`/`tau`
   explicitly to keep the old behaviour.
-- **`tau` is now applied unconditionally.** Previously the additive sigma
-  dynamics (`sqrt(σ² + τ²)`) were skipped unless `options.tau` was explicitly
-  passed. They now always run with the resolved `tau` value (default `25/300`).
-  Pass `tau: 0` to disable.
-- **`epsilon` (the Thurstone-Mosteller draw margin) defaults to `0.1`** to
-  match Python's `epsilon`. Previously it was `0.0001` and double-served as
-  both the draw margin and the per-step sigma floor. The floor is now keyed
-  off `kappa` (default `0.0001`) for every model.
+- `tau` is now applied unconditionally. Pass `tau: 0` to keep the old behavior.
+- `epsilon` (the Thurstone-Mosteller draw margin) defaults to `0.1` Previously
+  it was `0.0001` and double-served as both the draw margin and the per-step
+  sigma floor. The floor is now keyed off `kappa` (default `0.0001`).
 - **The standard-normal CDF/PDF in `src/statistics.ts` are now computed via
   `erf` using Python's `NormalDist` formulas** (`0.5 * (1 + erf(z / √2))`,
-  `exp(z²/-2) / √(2π)`). Previously they used `@stdlib/stats-base-dists-normal-{cdf,pdf}`,
-  whose internal polynomial approximations differed from CPython's libm by a
-  few ULPs and caused Thurstone-Mosteller ratings to drift by ~0.01 mu per
-  match.
-
-The `q`-index quirk in the Plackett-Luce kernel and the order of the `iDelta`
-multiplication were also adjusted to match Python's operation order. Single-
-match outputs are now byte-identical to `openskill.py` for all five models;
-chained-match deltas are bounded by platform libm noise (≲1e-12 absolute
-after 1024 matches).
+  `exp(z²/-2) / √(2π)`). This should only affect the Thurstone-Mosteller model.
 
 ## Installation
 
