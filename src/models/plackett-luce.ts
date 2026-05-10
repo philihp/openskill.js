@@ -3,7 +3,7 @@ import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { EPSILON } = constants(options)
+  const { KAPPA } = constants(options)
   const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
@@ -12,24 +12,23 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const iMuOverCe = Math.exp(iMu / c) // tmp1
-    const [omegaSum, deltaSum] = teamRatings
-      .filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => qRank <= iRank)
-      .reduce(
-        ([omega, delta], [_], q) => {
-          const quotient = iMuOverCe / sumQ[q]
-          return [omega + (i === q ? 1 - quotient : -quotient) / a[q], delta + (quotient * (1 - quotient)) / a[q]]
-        },
-        [0, 0]
-      )
+    const iMuOverCe = Math.exp(iMu / c)
+    const [omegaSum, deltaSum] = teamRatings.reduce(
+      ([omega, delta], [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
+        if (qRank > iRank) return [omega, delta]
+        const quotient = iMuOverCe / sumQ[q]
+        return [omega + (i === q ? 1 - quotient : -quotient) / a[q], delta + (quotient * (1 - quotient)) / a[q]]
+      },
+      [0, 0]
+    )
 
     const iGamma = gamma(c, teamRatings.length, ...iTeamRating)
     const iOmega = omegaSum * (iSigmaSq / c)
-    const iDelta = iGamma * deltaSum * (iSigmaSq / c ** 2)
+    const iDelta = deltaSum * (iSigmaSq / c ** 2) * iGamma
 
     return iTeam.map(({ mu, sigma }) => ({
       mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
-      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
+      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, KAPPA)),
     }))
   })
 }

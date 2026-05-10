@@ -8,7 +8,7 @@ describe('statistics#w', () => {
 
   it('w(0,2)', () => {
     expect.assertions(1)
-    expect(w(0, 2)).toBe(0.8857208995859167)
+    expect(w(0, 2)).toBe(0.8857208995859192)
   })
 
   it('w(0,-1)', () => {

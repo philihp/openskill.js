@@ -9,12 +9,11 @@ describe('constants', () => {
         Z: 3,
       })
     })
-    it('accepts z override', () => {
+    it('accepts z override without affecting beta', () => {
       expect.assertions(1)
       const env = constants({ z: 2 })
       expect(env).toMatchObject({
-        BETA: 6.25,
-        BETASQ: 39.0625,
+        BETA: 25 / 6,
         Z: 2,
       })
     })
@@ -28,13 +27,13 @@ describe('constants', () => {
         MU: 25,
       })
     })
-    it('accepts mu override', () => {
+    it('accepts mu override without affecting beta/tau', () => {
       expect.assertions(1)
       const env = constants({ mu: 300 })
       expect(env).toMatchObject({
-        BETA: 50,
-        BETASQ: 2500,
-        TAU: 1,
+        MU: 300,
+        BETA: 25 / 6,
+        TAU: 25 / 300,
         Z: 3,
       })
     })
@@ -59,22 +58,22 @@ describe('constants', () => {
       const env = constants({})
       expect(env.SIGMA).toBeCloseTo(8.333333333333334)
     })
-    it('accepts sigma override', () => {
+    it('accepts sigma override without affecting beta', () => {
       expect.assertions(1)
       const env = constants({ sigma: 7 })
       expect(env).toMatchObject({
-        BETA: 3.5,
-        BETASQ: 12.25,
+        SIGMA: 7,
+        BETA: 25 / 6,
       })
     })
   })
 
   describe('epsilon', () => {
-    it('defaults to 0.0001', () => {
+    it('defaults to 0.1', () => {
       expect.assertions(1)
       const env = constants({})
       expect(env).toMatchObject({
-        EPSILON: 0.0001,
+        EPSILON: 0.1,
       })
     })
     it('accepts epsilon override', () => {
