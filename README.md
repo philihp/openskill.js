@@ -36,8 +36,8 @@ changes were required:
 - `epsilon` (the Thurstone-Mosteller draw margin) defaults to `0.1` Previously
   it was `0.0001` and double-served as both the draw margin and the per-step
   sigma floor. The floor is now keyed off `kappa` (default `0.0001`).
-- **The standard-normal CDF/PDF in `src/statistics.ts` are now computed via
-  `erf` using Python's `NormalDist` formulas** (`0.5 * (1 + erf(z / √2))`,
+- The standard-normal CDF/PDF in `src/statistics.ts` are now computed via
+  `erf` using Python's `NormalDist` formulas (`0.5 * (1 + erf(z / √2))`,
   `exp(z²/-2) / √(2π)`). This should only affect the Thurstone-Mosteller model.
 
 ## Installation
