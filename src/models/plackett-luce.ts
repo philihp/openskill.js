@@ -17,10 +17,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
       ([omega, delta], [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
         if (qRank > iRank) return [omega, delta]
         const quotient = iMuOverCe / sumQ[q]
-        return [
-          omega + (i === q ? 1 - quotient : -quotient) / a[q],
-          delta + (quotient * (1 - quotient)) / a[q],
-        ]
+        return [omega + (i === q ? 1 - quotient : -quotient) / a[q], delta + (quotient * (1 - quotient)) / a[q]]
       },
       [0, 0]
     )
