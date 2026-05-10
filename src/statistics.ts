@@ -1,12 +1,20 @@
-import cdf from '@stdlib/stats-base-dists-normal-cdf'
-import pdf from '@stdlib/stats-base-dists-normal-pdf'
+import erf from '@stdlib/math-base-special-erf'
 import quantile from '@stdlib/stats-base-dists-normal-quantile'
 
-export const phiMajor = (x: number) => cdf(x, 0, 1)
+const SQRT_2 = Math.sqrt(2.0)
+const SQRT_TAU = Math.sqrt(2.0 * Math.PI)
+
+// Standard-normal CDF, matching CPython's statistics.NormalDist.cdf:
+//   0.5 * (1 + erf((x - mu) / (sigma * sqrt(2))))
+// At mu=0, sigma=1 this collapses to 0.5 * (1 + erf(x / sqrt(2))).
+export const phiMajor = (x: number) => 0.5 * (1.0 + erf(x / SQRT_2))
 
 export const phiMajorInverse = (x: number) => quantile(x, 0, 1)
 
-export const phiMinor = (x: number) => pdf(x, 0, 1)
+// Standard-normal PDF, matching CPython's statistics.NormalDist.pdf:
+//   exp((x - mu)**2 / (-2*variance)) / sqrt(tau*variance)
+// At mu=0, sigma=1 this collapses to exp(x*x / -2) / sqrt(2*pi).
+export const phiMinor = (x: number) => Math.exp((x * x) / -2.0) / SQRT_TAU
 
 export const v = (x: number, t: number) => {
   const xt = x - t

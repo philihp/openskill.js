@@ -4,7 +4,7 @@ import { w, v, vt, wt } from '../statistics'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { TWOBETASQ, EPSILON } = constants(options)
+  const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
 
@@ -39,7 +39,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
       const sigmaSq = sigma * sigma
       return {
         mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
+        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, KAPPA)),
       }
     })
   })

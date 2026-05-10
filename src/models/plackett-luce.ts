@@ -3,7 +3,7 @@ import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { EPSILON } = constants(options)
+  const { KAPPA } = constants(options)
   const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
@@ -29,7 +29,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
     return iTeam.map(({ mu, sigma }) => ({
       mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
-      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, EPSILON)),
+      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, KAPPA)),
     }))
   })
 }

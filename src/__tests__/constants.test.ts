@@ -69,11 +69,11 @@ describe('constants', () => {
   })
 
   describe('epsilon', () => {
-    it('defaults to 0.0001', () => {
+    it('defaults to 0.1', () => {
       expect.assertions(1)
       const env = constants({})
       expect(env).toMatchObject({
-        EPSILON: 0.0001,
+        EPSILON: 0.1,
       })
     })
     it('accepts epsilon override', () => {

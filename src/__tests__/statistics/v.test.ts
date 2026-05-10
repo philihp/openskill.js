@@ -8,7 +8,7 @@ describe('statistics#v', () => {
 
   it('v(0,2)', () => {
     expect.assertions(1)
-    expect(v(0, 2)).toBe(2.37321553282284)
+    expect(v(0, 2)).toBe(2.373215532822841)
   })
 
   it('v(0,-1)', () => {
