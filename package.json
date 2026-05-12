@@ -24,7 +24,7 @@
     "prepare": "husky && npm run build",
     "release": "np",
     "test": "node --import tsx --test",
-    "test:coverage": "mkdir -p coverage && node --import tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
+    "test:coverage": "mkdir -p coverage && node --import tsx --test --experimental-test-coverage --test-coverage-exclude='src/**/__tests__/**' --test-coverage-exclude='src/**/*.test.ts' --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
   },
   "engines": {
     "node": ">=20.0.0"
