@@ -25,7 +25,6 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 18.x # until 2025-04-30
           - 20.x # until 2026-04-30
           - 22.x # until 2027-04-30
           - 24.x # until 2028-04-30
@@ -43,10 +42,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
       - run: npm install
       - run: npm run build --if-present
       - run: npm run test:coverage
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info

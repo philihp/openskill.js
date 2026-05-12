@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import { rate } from '..'
 
 // These expected values are produced by openskill==6.2.0 (Python).

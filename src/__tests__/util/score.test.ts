@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import { score } from '../../util'
 
 describe('util#score', () => {

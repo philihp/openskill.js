@@ -18,11 +18,14 @@ cd openskill.js
 npm install
 ```
 
-While working on changes, I like to leave jest running in a side window, watching for changes and running what it thinks the appropriate unit tests are.
+While working on changes, I like to leave the test runner watching in a side window.
 
 ```bash
 npm run test -- --watch
 ```
+
+The tests run on Node's built-in test runner (`node:test`) with `tsx` as a
+TypeScript loader — no Jest, no separate config file.
 
 Any supported version of Node [listed here](https://nodejs.org/en/about/releases/) is fine. You shouldn't need anything else.
 
