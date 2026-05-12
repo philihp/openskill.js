@@ -23,8 +23,8 @@
     "lint": "eslint .",
     "prepare": "husky && npm run build",
     "release": "np",
-    "test": "node --import tsx --test 'src/**/*.test.ts'",
-    "test:coverage": "node --import tsx --test --experimental-test-coverage 'src/**/*.test.ts'"
+    "test": "node --import tsx --test",
+    "test:coverage": "mkdir -p coverage && node --import tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
   },
   "engines": {
     "node": ">=20.0.0"
