@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import { rating } from '../..'
 import rate from '../bradley-terry-full'
 

@@ -23,11 +23,14 @@
     "lint": "eslint .",
     "prepare": "husky && npm run build",
     "release": "np",
-    "test": "jest",
-    "test:coverage": "npm run test -- --coverage"
+    "test": "node --import tsx --test 'src/**/*.test.ts'",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage 'src/**/*.test.ts'"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
+  },
+  "imports": {
+    "#test-helpers": "./src/__tests__/_helpers.ts"
   },
   "files": [
     "/dist",
@@ -53,17 +56,14 @@
     "@eslint/js": "10.0.1",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.13",
-    "@types/jest": "30.0.0",
     "esbuild": "0.28.0",
-    "esbuild-jest": "0.5.0",
     "eslint": "10.3.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-jest": "29.15.2",
     "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",
-    "jest": "30.4.2",
     "lint-staged": "17.0.4",
     "tsup": "8.5.1",
+    "tsx": "4.21.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.59.2"
   },
