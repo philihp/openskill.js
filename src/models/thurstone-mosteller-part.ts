@@ -12,27 +12,25 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
   return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = iAdjacents.reduce(
-      ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
+    const { omega: iOmega, delta: iDelta } = iAdjacents.reduce(
+      (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
         const ciq = 2 * Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
         const deltaMu = (iMu - qMu) / ciq
         const sigSqToCiq = iSigmaSq / ciq
         const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
         if (qRank === iRank) {
-          return [
-            omega + sigSqToCiq * vt(deltaMu, EPSILON / ciq),
-            delta + ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq),
-          ]
+          acc.omega += sigSqToCiq * vt(deltaMu, EPSILON / ciq)
+          acc.delta += ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq)
+          return acc
         }
 
         const sign = qRank > iRank ? 1 : -1
-        return [
-          omega + sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq),
-          delta + ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
-        ]
+        acc.omega += sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq)
+        acc.delta += ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq)
+        return acc
       },
-      [0, 0]
+      { omega: 0, delta: 0 }
     )
 
     return iTeam.map(({ mu, sigma }) => {

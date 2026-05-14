@@ -13,13 +13,15 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const iMuOverCe = Math.exp(iMu / c)
-    const [omegaSum, deltaSum] = teamRatings.reduce(
-      ([omega, delta], [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
-        if (qRank > iRank) return [omega, delta]
+    const { omega: omegaSum, delta: deltaSum } = teamRatings.reduce(
+      (acc, [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
+        if (qRank > iRank) return acc
         const quotient = iMuOverCe / sumQ[q]
-        return [omega + (i === q ? 1 - quotient : -quotient) / a[q], delta + (quotient * (1 - quotient)) / a[q]]
+        acc.omega += (i === q ? 1 - quotient : -quotient) / a[q]
+        acc.delta += (quotient * (1 - quotient)) / a[q]
+        return acc
       },
-      [0, 0]
+      { omega: 0, delta: 0 }
     )
 
     const iGamma = gamma(c, teamRatings.length, ...iTeamRating)
