@@ -1,4 +1,4 @@
-import { head, map, reduce } from 'ramda'
+import { filter, head, map, range, reduce, xprod } from 'ramda'
 import constants from './constants'
 import util, { TeamRating } from './util'
 import { phiMajor, phiMajorInverse } from './statistics'
@@ -14,21 +14,24 @@ const predictDraw = (teams: Team[], options: Options = {}): number => {
 
   const teamRatings = map<Team, TeamRating>((team) => head<TeamRating>(teamRating([team]))!, teams)
 
-  // Sum draw-probabilities over every unordered pair (i < j). Single flat
-  // accumulator instead of the previous nested reduce + intermediate array.
-  const n = teamRatings.length
-  let pairCount = 0
-  let total = 0
-  for (let i = 0; i < n; i++) {
-    const [muA, sigmaSqA] = teamRatings[i]
-    for (let j = i + 1; j < n; j++) {
+  // Sum draw-probabilities over every unordered pair (i < j) — single flat
+  // reduce over the upper-triangle pair list instead of the previous nested
+  // reduce + intermediate `pairwiseProbs` array.
+  const idx = range(0, teamRatings.length)
+  const pairs = filter(([i, j]: number[]) => i < j, xprod(idx, idx))
+  const { total, count } = reduce(
+    (acc: { total: number; count: number }, [i, j]: number[]) => {
+      const [muA, sigmaSqA] = teamRatings[i]
       const [muB, sigmaSqB] = teamRatings[j]
       const sharedDenom = Math.sqrt(totalPlayerCount * BETASQ + sigmaSqA + sigmaSqB)
-      total += phiMajor((drawMargin - muA + muB) / sharedDenom) - phiMajor((muB - muA - drawMargin) / sharedDenom)
-      pairCount += 1
-    }
-  }
-  return total / pairCount
+      acc.total += phiMajor((drawMargin - muA + muB) / sharedDenom) - phiMajor((muB - muA - drawMargin) / sharedDenom)
+      acc.count += 1
+      return acc
+    },
+    { total: 0, count: 0 },
+    pairs
+  )
+  return total / count
 }
 
 export default predictDraw
