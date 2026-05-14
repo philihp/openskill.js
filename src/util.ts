@@ -97,10 +97,11 @@ export const utilA = (teamRatings: TeamRating[]) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank).length
   )
 
-export const gamma = (options: Options): Gamma =>
-  options.gamma ??
-  // default to iSigma / c
-  ((c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) => Math.sqrt(sigmaSq) / c)
+// default to iSigma / c
+const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) =>
+  Math.sqrt(sigmaSq) / c
+
+export const gamma = (options: Options): Gamma => options.gamma ?? defaultGamma
 
 export default (options: Options) => ({
   utilC: utilC(options),
