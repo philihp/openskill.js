@@ -9,21 +9,20 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
 
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = teamRatings
+    const { omega: iOmega, delta: iDelta } = teamRatings
       .filter((_, q) => q !== i)
       .reduce(
-        ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
+        (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
           const sigSqToCiq = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
-          return [
-            omega + sigSqToCiq * (score(qRank, iRank) - piq),
-            delta + ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq),
-          ]
+          acc.omega += sigSqToCiq * (score(qRank, iRank) - piq)
+          acc.delta += ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq)
+          return acc
         },
-        [0, 0]
+        { omega: 0, delta: 0 }
       )
 
     return iTeam.map(({ mu, sigma }) => {
