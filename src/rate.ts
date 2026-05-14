@@ -3,6 +3,7 @@ import { unwind } from 'sort-unwind'
 
 import { Rating, Options, Team } from './types'
 import constants from './constants'
+import { marginFactor } from './margin'
 import { plackettLuce } from './models'
 
 const rate = (teams: Team[], options: Options = {}): Team[] => {
@@ -37,18 +38,12 @@ const rate = (teams: Team[], options: Options = {}): Team[] => {
   if (options.score && options.margin) {
     const scores = options.score
     const margin = options.margin
-    const n = teams.length
     reorderedTeams = reorderedTeams.map((team: Rating[], i: number) => {
-      const factor =
-        1 +
-        scores.reduce((acc, sj, j) => {
-          if (j === i) return acc
-          return acc + Math.log1p(Math.max(0, Math.abs(scores[i] - sj) - margin)) / (n - 1)
-        }, 0)
-      return team.map((p: Rating, k: number) => ({
-        mu: processedTeams[i][k].mu + factor * (p.mu - processedTeams[i][k].mu),
-        sigma: p.sigma,
-      }))
+      const factor = marginFactor(scores, i, margin)
+      return team.map((p: Rating, k: number) => {
+        const priorMu = processedTeams[i][k].mu
+        return { mu: priorMu + factor * (p.mu - priorMu), sigma: p.sigma }
+      })
     })
   }
 
