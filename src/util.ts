@@ -88,12 +88,28 @@ export const ladderPairs = <T>(ranks: T[]): T[][] => {
   })
 }
 
+/**
+ * `c`: total uncertainty across all teams in the game.
+ *
+ * Defined as sqrt( Σ_q (σ²_q + β²) ) where the sum runs over every team in
+ * the game. Used as the normalizing scale in every model's update equations.
+ *
+ * Reference: Weng & Lin (2011), "A Bayesian Approximation Method for Online
+ * Ranking", JMLR 12, sec. 3 (eq. for c_q).
+ */
 const utilC = (options: Options) => {
   const { BETASQ } = constants(options)
   return (teamRatings: TeamRating[]) =>
     Math.sqrt(teamRatings.map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ).reduce(sum, 0))
 }
 
+/**
+ * `sumQ[q]`: Plackett-Luce normalizer for team `q` — the sum of exp(μ_i / c)
+ * over every team `i` whose rank is at or worse than team q's rank
+ * (i.e. teams that placed equal or below q).
+ *
+ * Reference: Weng & Lin (2011), Plackett-Luce derivation (sec. 3.2).
+ */
 export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
     teamRatings
@@ -102,6 +118,13 @@ export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
       .reduce(sum, 0)
   )
 
+/**
+ * `A[i]`: size of the rank-tie group containing team `i` — i.e. the number of
+ * teams (including `i` itself) sharing rank `i`'s placement. Used by
+ * Plackett-Luce to scale ω/Δ contributions from ties.
+ *
+ * Reference: Weng & Lin (2011), Plackett-Luce tie handling (sec. 3.2).
+ */
 export const utilA = (teamRatings: TeamRating[]) =>
   teamRatings.map(
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
