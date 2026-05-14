@@ -35,6 +35,8 @@ export const rankings = (teams: Team[], rank: number[] = []) => {
   return outRank
 }
 
+type TeamSums = { mu: number; sigSq: number }
+
 // this is basically shared code, precomputed for every model
 const teamRating =
   (options: Options) =>
@@ -43,25 +45,34 @@ const teamRating =
     const rank = rankings(game, options.rank)
     return game.map((team, i) => {
       if (!BALANCE) {
-        return [
-          team.map(({ mu }) => mu).reduce(sum, 0),
-          team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
-          team,
-          rank[i],
-        ]
+        // Single fused traversal: accumulate Σμ and Σσ² in one pass instead
+        // of `team.map(mu).reduce + team.map(σ²).reduce`.
+        const { mu: muSum, sigSq } = team.reduce<TeamSums>(
+          (a, { mu, sigma }) => {
+            a.mu += mu
+            a.sigSq += sigma * sigma
+            return a
+          },
+          { mu: 0, sigSq: 0 }
+        )
+        return [muSum, sigSq, team, rank[i]]
       }
       // When balance=true, weaker players on a team contribute more to the
       // team rating, emphasizing skill disparity within the team.
       const ordinals = team.map(({ mu, sigma }) => TARGET + ALPHA * (mu - Z * sigma))
       const maxOrdinal = Math.max(...ordinals)
-      return [
-        team.map(({ mu }, j) => mu * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))).reduce(sum, 0),
-        team
-          .map(({ sigma }, j) => (sigma * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))) ** 2)
-          .reduce(sum, 0),
-        team,
-        rank[i],
-      ]
+      const denom = maxOrdinal + KAPPA
+      const { mu: muSum, sigSq } = team.reduce<TeamSums>(
+        (a, { mu, sigma }, j) => {
+          const factor = 1 + (maxOrdinal - ordinals[j]) / denom
+          a.mu += mu * factor
+          const s = sigma * factor
+          a.sigSq += s * s
+          return a
+        },
+        { mu: 0, sigSq: 0 }
+      )
+      return [muSum, sigSq, team, rank[i]]
     })
   }
 
