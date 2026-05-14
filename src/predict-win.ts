@@ -1,19 +1,14 @@
-import { reduce } from 'ramda'
+import { chain, map, range, reduce } from 'ramda'
 import constants from './constants'
 import util from './util'
 import { phiMajor } from './statistics'
 import { Options, Team } from './types'
 
-// Lazily yield every unordered pair (i, j) with i < j over [0, n).
-// Used by predictWin to walk the upper triangle without materializing
-// the n²/2 pair list that xprod+filter would build eagerly.
-function* upperTrianglePairs(n: number): Generator<[number, number]> {
-  for (let i = 0; i < n; i += 1) {
-    for (let j = i + 1; j < n; j += 1) {
-      yield [i, j]
-    }
-  }
-}
+// Every unordered pair (i, j) with i < j over [0, n), built tacitly via
+// chain (flatMap). Eager allocation of n²/2 pair tuples; for predictWin's
+// typical n this is negligible.
+const upperTrianglePairs = (n: number): [number, number][] =>
+  chain((i: number) => map((j: number): [number, number] => [i, j], range(i + 1, n)), range(0, n))
 
 const predictWin = (teams: Team[], options: Options = {}) => {
   const { teamRating } = util(options)
@@ -25,8 +20,8 @@ const predictWin = (teams: Team[], options: Options = {}) => {
 
   // phiMajor is symmetric: phiMajor(-x) === 1 - phiMajor(x), and the
   // sqrt(n·β² + σ²_A + σ²_B) denominator is symmetric in (A, B). Walk only
-  // the upper-triangle pair stream and add the complementary mass to the
-  // lower index — halves both Math.sqrt and phiMajor calls.
+  // the upper triangle and add the complementary mass to the lower index —
+  // halves both Math.sqrt and phiMajor calls.
   const wins = reduce<[number, number], number[]>(
     (acc, [i, j]) => {
       const [muA, sigmaSqA] = teamRatings[i]
@@ -37,7 +32,7 @@ const predictWin = (teams: Team[], options: Options = {}) => {
       return acc
     },
     new Array(n).fill(0),
-    upperTrianglePairs(n) as unknown as [number, number][]
+    upperTrianglePairs(n)
   )
 
   return wins.map((w) => w / denom)
