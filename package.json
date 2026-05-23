@@ -63,7 +63,7 @@
     "husky": "9.1.7",
     "lint-staged": "17.0.5",
     "tsup": "8.5.1",
-    "tsx": "4.22.1",
+    "tsx": "4.22.3",
     "typescript": "6.0.3",
     "typescript-eslint": "8.59.3"
   },
