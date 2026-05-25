@@ -46,11 +46,14 @@ V11: `predictDraw()` ! mirror known Python/manual fixtures within tolerance; emp
 V12: all exported models ! run through `rate()` and match locked fixtures for 3-way default ratings with `epsilon=0.1`.
 V13: statistics helpers `phiMajor`, `phiMajorInverse`, `v`, `w`, `vt`, `wt` ! match existing numeric fixtures.
 V14: build artifacts ! expose both root package and `/models` subpath types, CJS, and ESM.
-V15: `Options.margin?: number` ! default `0`; no `score` or `margin<=0` → existing `thurstoneMostellerFull` fixtures unchanged.
+V15: `Options.margin?: number` ! default `0`; no `score` or `margin<=0` → all model fixtures unchanged; zero/missing score or small margin → legacy rank-only behavior preserved.
 V16: `rate()` ! pass score array sorted same as ranked teams to model; model index and `score[i]` stay aligned after unwind.
 V17: `thurstoneMostellerFull` margin ! use `marginDivisor = log1p(abs(score[i]-score[q])/margin)` only when `scoreDiff > margin && margin > 0`; else `1`.
 V18: `thurstoneMostellerFull` margin divisor ! apply to `v`, `w`, `vt`, `wt` input delta, not draw epsilon: `v((sign*deltaMu)/divisor, EPSILON/ciq)`, `vt(deltaMu/divisor, EPSILON/ciq)`.
 V19: margin blowout test ! same ranks + larger score gap with positive margin changes update magnitude vs narrow win; zero margin equals legacy score-as-rank behavior.
+V24: `bradleyTerryFull`/`bradleyTerryPart` margin ! divisor applied to `(qMu-iMu)/divisor` inside `piq` exponential.
+V25: `thurstoneMostellerPart` margin ! divisor applied to `deltaMu` as in TMFull.
+V26: `plackettLuce` margin ! adjust effective `mu` in `exp(mu/c)` via pairwise margin factors (Python `openskill.py` PL semantics); no margin → unadjusted mu, same as legacy.
 V20: Python parity tests ! not require Python, network, or cloned `openskill.py` during normal `npm test`; fixtures checked into repo.
 V21: parity fixture metadata ! record `openskill.py` repo URL, commit/ref, Python version, model, options, input teams, expected teams, tolerance.
 V22: TMFull parity cases ! cover no score, zero margin, margin below threshold, margin above threshold, tie, reordered score, asymmetric teams.
@@ -69,8 +72,8 @@ T7|.|audit `predictDraw` degenerate naming/docs: one-team/empty-team tests say `
 T8|x|Plan A: add `margin?: number` + sorted score plumbing; implement margin only in `thurstoneMostellerFull`|V15,V16,V17,V18
 T9|x|Plan A tests: TMFull legacy unchanged, zero margin unchanged, narrow vs blowout differs, sorted score alignment covered|V15,V16,V19
 T10|x|Plan A docs: README/API mention margin only affects score-based TMFull currently|§I,V17
-T11|.|Plan B: after Plan A, add same margin semantics to `bradleyTerryFull` with fixtures|V15,V16,V19
-T12|.|Plan C: port margin to all Weng-Lin models; decide PL listwise semantics before code|V12,V15,V16
+T11|x|Plan B: after Plan A, add same margin semantics to `bradleyTerryFull` with fixtures|V15,V16,V19
+T12|x|Plan C: port margin to all Weng-Lin models; decide PL listwise semantics before code|V12,V15,V16
 T13|.|Plan D spec: design fixture-based Python parity suite; pin `openskill.py` source/ref and fixture schema|V20,V21,V22,V23
 T14|.|Plan D generator: create optional script to produce TMFull fixtures from pinned `openskill.py`; output checked-in JSON|V20,V21,V22
 T15|.|Plan D tests: Jest loads TMFull parity JSON and compares JS output within per-case tolerance|V17,V18,V20,V23

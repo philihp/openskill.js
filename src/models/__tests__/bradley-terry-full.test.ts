@@ -86,3 +86,33 @@ describe('bradleyTerryFull', () => {
     ])
   })
 })
+
+describe('bradleyTerryFull margin', () => {
+  const w = rating({ mu: 32, sigma: 5 })
+  const l = rating({ mu: 18, sigma: 6 })
+
+  it('zero margin with score equals rank-only', () => {
+    expect(rate([[w], [l]], { score: [20, 1], margin: 0 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('no score with margin equals rank-only', () => {
+    expect(rate([[w], [l]], { rank: [1, 2], margin: 10 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('narrow score below margin equals legacy', () => {
+    expect(rate([[w], [l]], { score: [6, 1], margin: 5 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('blowout above margin differs from narrow', () => {
+    const narrow = rate([[w], [l]], { score: [6, 1], margin: 5 })
+    const blowout = rate([[w], [l]], { score: [20, 1], margin: 5 })
+    expect(blowout).not.toStrictEqual(narrow)
+  })
+
+  it('blowout fixture', () => {
+    expect(rate([[w], [l]], { score: [20, 1], margin: 5 })).toStrictEqual([
+      [{ mu: 32.732190491527874, sigma: 4.931311782257958 }],
+      [{ mu: 16.94564569219986, sigma: 5.8568385167554675 }],
+    ])
+  })
+})

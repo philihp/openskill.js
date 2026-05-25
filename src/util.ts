@@ -21,6 +21,13 @@ export const score = (q: number, i: number) => {
   return 0.5
 }
 
+export const marginDivisor = (score: number[], margin: number, i: number, q: number): number => {
+  if (!score || margin <= 0) return 1
+  const scoreDiff = Math.abs(score[i] - score[q])
+  if (scoreDiff <= margin) return 1
+  return Math.log1p(scoreDiff / margin)
+}
+
 export const rankings = (teams: Team[], rank: number[] = []) => {
   const teamScores = teams.map((_, i) => rank[i] || i)
   const outRank = new Array(teams.length)
@@ -110,13 +117,20 @@ const utilC = (options: Options) => {
  *
  * Reference: Weng & Lin (2011), Plackett-Luce derivation (sec. 3.2).
  */
-export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
-  teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
-    teamRatings
-      .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
-      .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
+export const utilSumQ = (teamRatings: TeamRating[], c: number, adjustedMus?: number[]) =>
+  teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) => {
+    if (!adjustedMus) {
+      return teamRatings
+        .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
+        .map(([iMu]) => Math.exp(iMu / c))
+        .reduce(sum, 0)
+    }
+    return teamRatings
+      .map(([_iMu, _iSigmaSq, _iTeam, iRank], i) => ({ iRank, idx: i }))
+      .filter(({ iRank }) => iRank >= qRank)
+      .map(({ idx }) => Math.exp(adjustedMus[idx] / c))
       .reduce(sum, 0)
-  )
+  })
 
 /**
  * `A[i]`: size of the rank-tie group containing team `i` — i.e. the number of
@@ -130,6 +144,29 @@ export const utilA = (teamRatings: TeamRating[]) =>
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank).length
   )
+
+export const plMarginAdjustedMu = (teamRatings: TeamRating[], scores: number[], margin: number): number[] =>
+  teamRatings.map(([iMu], i) => {
+    if (!scores || margin <= 0) return iMu
+    let adjustment = 0
+    let comparisons = 0
+    for (let j = 0; j < teamRatings.length; j++) {
+      if (i === j) continue
+      const scoreDiff = Math.abs(scores[i] - scores[j])
+      if (scoreDiff <= 0) continue
+      const factor = scoreDiff > margin ? Math.log1p(scoreDiff / margin) : 1
+      if (factor === 1) continue
+      const [jMu] = teamRatings[j]
+      if (scores[i] > scores[j]) {
+        adjustment -= (iMu - jMu) * (factor - 1)
+      } else {
+        adjustment += (jMu - iMu) * (factor - 1)
+      }
+      comparisons++
+    }
+    return comparisons > 0 ? iMu + adjustment / comparisons : iMu + adjustment
+  })
+
 
 // default to iSigma / c
 const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) =>

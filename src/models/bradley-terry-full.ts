@@ -1,20 +1,24 @@
-import util, { score } from '../util'
+import util, { score, marginDivisor } from '../util'
 import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { TWOBETASQ, KAPPA } = constants(options)
+  const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { margin = 0, score: scoreArr } = options
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
 
+  const divisor = (i: number, q: number): number => marginDivisor(scoreArr!, margin, i, q)
+
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const { omega: iOmega, delta: iDelta } = teamRatings
-      .filter((_, q) => q !== i)
+    const [iOmega, iDelta] = teamRatings
+      .map((tr, idx) => ({ tr, idx }))
+      .filter(({ idx }) => idx !== i)
       .reduce(
-        (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
+        ([omega, delta], { tr: [qMu, qSigmaSq, _qTeam, qRank], idx: q }) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
-          const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
+          const piq = 1 / (1 + Math.exp((qMu - iMu) / divisor(i, q) / ciq))
           const sigSqToCiq = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 

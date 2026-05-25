@@ -16,38 +16,38 @@ describe('thurstoneMostellerPart', () => {
   it('2p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1])).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
+      [{ mu: 27.10261680121866, sigma: 8.249024727693394 }],
+      [{ mu: 22.89738319878134, sigma: 8.249024727693394 }],
     ])
   })
 
   it('3p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1])).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
+      [{ mu: 27.10261680121866, sigma: 8.249024727693394 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 22.89738319878134, sigma: 8.249024727693394 }],
     ])
   })
 
   it('4p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1])).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
+      [{ mu: 27.10261680121866, sigma: 8.249024727693394 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 22.89738319878134, sigma: 8.249024727693394 }],
     ])
   })
 
   it('5p FFA', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1, team1])).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 25, sigma: 8.163623409651494 }],
-      [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
+      [{ mu: 27.10261680121866, sigma: 8.249024727693394 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 25, sigma: 8.163845507587077 }],
+      [{ mu: 22.89738319878134, sigma: 8.249024727693394 }],
     ])
   })
 
@@ -55,14 +55,14 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team3, team1, team2])).toStrictEqual([
       [
-        { mu: 25.314271358583422, sigma: 8.309539398724164 },
-        { mu: 25.314271358583422, sigma: 8.309539398724164 },
-        { mu: 25.314271358583422, sigma: 8.309539398724164 },
+        { mu: 25.312878118346458, sigma: 8.309613085350666 },
+        { mu: 25.312878118346458, sigma: 8.309613085350666 },
+        { mu: 25.312878118346458, sigma: 8.309613085350666 },
       ],
-      [{ mu: 27.739803427379016, sigma: 8.25750343942877 }],
+      [{ mu: 27.735657070878023, sigma: 8.257580571375808 }],
       [
-        { mu: 21.94592521403756, sigma: 8.245518834730671 },
-        { mu: 21.94592521403756, sigma: 8.245518834730671 },
+        { mu: 21.95146481077552, sigma: 8.245567442404347 },
+        { mu: 21.95146481077552, sigma: 8.245567442404347 },
       ],
     ])
   })
@@ -70,19 +70,49 @@ describe('thurstoneMostellerPart', () => {
   it('can use a custom gamma with k=2', () => {
     expect.assertions(1)
     expect(rate([team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.199456653433591 }],
-      [{ mu: 22.89101923349663, sigma: 8.199456653433591 }],
+      [{ mu: 27.10261680121866, sigma: 8.19963147044701 }],
+      [{ mu: 22.89738319878134, sigma: 8.19963147044701 }],
     ])
   })
 
   it('can use a custom gamma with k=5', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
-      [{ mu: 27.10898076650337, sigma: 8.280042417239251 }],
-      [{ mu: 25, sigma: 8.226406288174564 }],
-      [{ mu: 25, sigma: 8.226406288174564 }],
-      [{ mu: 25, sigma: 8.226406288174564 }],
-      [{ mu: 22.89101923349663, sigma: 8.280042417239251 }],
+      [{ mu: 27.10261680121866, sigma: 8.280111663928492 }],
+      [{ mu: 25, sigma: 8.226545683931066 }],
+      [{ mu: 25, sigma: 8.226545683931066 }],
+      [{ mu: 25, sigma: 8.226545683931066 }],
+      [{ mu: 22.89738319878134, sigma: 8.280111663928492 }],
+    ])
+  })
+})
+
+describe('thurstoneMostellerPart margin', () => {
+  const w = rating({ mu: 32, sigma: 5 })
+  const l = rating({ mu: 18, sigma: 6 })
+
+  it('zero margin with score equals rank-only', () => {
+    expect(rate([[w], [l]], { score: [20, 1], margin: 0 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('no score with margin equals rank-only', () => {
+    expect(rate([[w], [l]], { rank: [1, 2], margin: 10 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('narrow score below margin equals legacy', () => {
+    expect(rate([[w], [l]], { score: [6, 1], margin: 5 })).toStrictEqual(rate([[w], [l]]))
+  })
+
+  it('blowout above margin differs from narrow', () => {
+    const narrow = rate([[w], [l]], { score: [6, 1], margin: 5 })
+    const blowout = rate([[w], [l]], { score: [20, 1], margin: 5 })
+    expect(blowout).not.toStrictEqual(narrow)
+  })
+
+  it('blowout fixture', () => {
+    expect(rate([[w], [l]], { score: [20, 1], margin: 5 })).toStrictEqual([
+      [{ mu: 32.67966060068269, sigma: 4.978027588046163 }],
+      [{ mu: 17.021288735016928, sigma: 5.954364567872638 }],
     ])
   })
 })

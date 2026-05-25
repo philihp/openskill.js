@@ -1,28 +1,24 @@
-import util, { utilSumQ, utilA } from '../util'
+import util, { utilSumQ, utilA, plMarginAdjustedMu } from '../util'
 import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { KAPPA } = constants(options)
+  const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { margin = 0, score: scoreArr } = options
   const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
-  const sumQ = utilSumQ(teamRatings, c)
+  const adjustedMus = score && margin > 0 ? plMarginAdjustedMu(teamRatings, score, margin) : undefined
+  const sumQ = utilSumQ(teamRatings, c, adjustedMus)
   const a = utilA(teamRatings)
 
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const iMuOverCe = Math.exp(iMu / c)
-    const { omega: omegaSum, delta: deltaSum } = teamRatings.reduce(
-      (acc, [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
-        if (qRank > iRank) return acc
-        const quotient = iMuOverCe / sumQ[q]
-        acc.omega += (i === q ? 1 - quotient : -quotient) / a[q]
-        acc.delta += (quotient * (1 - quotient)) / a[q]
-        return acc
-      },
-      { omega: 0, delta: 0 }
-    )
+    const [iOmega, iDelta] = teamRatings
+      .map((tr, idx) => ({ tr, idx }))
+      .filter(({ idx }) => idx !== i)
+      .reduce(
+        ([omega, delta], { tr: [qMu, qSigmaSq, _qTeam, qRank], idx: q }) => {
 
     const iGamma = gamma(c, teamRatings.length, ...iTeamRating)
     const iOmega = omegaSum * (iSigmaSq / c)

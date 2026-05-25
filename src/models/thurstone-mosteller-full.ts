@@ -1,4 +1,4 @@
-import util from '../util'
+import util, { marginDivisor } from '../util'
 import constants from '../constants'
 import { w, v, vt, wt } from '../statistics'
 import { Rating, Options, Model } from '../types'
@@ -9,12 +9,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
 
-  const marginDivisor = (i: number, q: number): number => {
-    if (!score || margin <= 0) return 1
-    const scoreDiff = Math.abs(score[i] - score[q])
-    if (scoreDiff <= margin) return 1
-    return Math.log1p(scoreDiff / margin)
-  }
+  const divisor = (i: number, q: number): number => marginDivisor(score!, margin, i, q)
 
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
@@ -27,7 +22,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
           const deltaMu = (iMu - qMu) / ciq
           const sigSqToCiq = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
-          const adjustedDeltaMu = deltaMu / marginDivisor(i, q)
+          const adjustedDeltaMu = deltaMu / divisor(i, q)
 
           if (qRank === iRank) {
             return [
