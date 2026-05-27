@@ -23,22 +23,9 @@ Up to 20x faster than TrueSkill!
 
 See [this post](https://philihp.com/2020/openskill.html) for more.
 
-## Breaking Changes in v5.0.0
+## Changelog
 
-Outputs should now match bit-for-bit with [python](https://github.com/vivekjoshy/openskill.py). To do this, several breaking behavioural
-changes were required:
-
-- Hyperparameter defaults are now constants, not derived from `mu`/`z`.
-  If you were passing `mu` (e.g. `rate(teams, { mu: 1000 })`)
-  and relying on the implicit derived defaults, pass `sigma`/`beta`/`tau`
-  explicitly to keep the old behaviour.
-- `tau` is now applied unconditionally. Pass `tau: 0` to keep the old behavior.
-- `epsilon` (the Thurstone-Mosteller draw margin) defaults to `0.1` Previously
-  it was `0.0001` and double-served as both the draw margin and the per-step
-  sigma floor. The floor is now keyed off `kappa` (default `0.0001`).
-- The standard-normal CDF/PDF in `src/statistics.ts` are now computed via
-  `erf` using Python's `NormalDist` formulas (`0.5 * (1 + erf(z / √2))`,
-  `exp(z²/-2) / √(2π)`). This should only affect the Thurstone-Mosteller model.
+See [CHANGELOG.md](./CHANGELOG.md) for release notes and breaking changes.
 
 ## Installation
 
