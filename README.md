@@ -39,6 +39,8 @@ changes were required:
 - The standard-normal CDF/PDF in `src/statistics.ts` are now computed via
   `erf` using Python's `NormalDist` formulas (`0.5 * (1 + erf(z / √2))`,
   `exp(z²/-2) / √(2π)`). This should only affect the Thurstone-Mosteller model.
+- The long-deprecated `preventSigmaIncrease` option has been removed. Use
+  `limitSigma` instead.
 
 ## Installation
 

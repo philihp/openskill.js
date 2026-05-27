@@ -42,12 +42,12 @@ describe('rate', () => {
     ])
   })
 
-  it('rate accepts and runs a placket-luce model with tau and prevent_sigma_increase', () => {
+  it('rate accepts and runs a placket-luce model with tau and limitSigma', () => {
     expect.assertions(2)
     const a1 = rating({ mu: 6.672, sigma: 0.0001 })
     const b1 = rating({ mu: 29.182, sigma: 4.782 })
 
-    const [[a2], [b2]] = rate([[a1], [b1]], { tau: 0.01, preventSigmaIncrease: true })
+    const [[a2], [b2]] = rate([[a1], [b1]], { tau: 0.01, limitSigma: true })
 
     expect(a2.sigma).toBeLessThanOrEqual(a1.sigma)
     expect([[a2], [b2]]).toStrictEqual([
@@ -97,7 +97,7 @@ describe('rate', () => {
     ])
   })
 
-  it('rate accepts and runs a placket-luce model by default for teams with tau and prevent_sigma_increase', () => {
+  it('rate accepts and runs a placket-luce model by default for teams with tau and limitSigma', () => {
     const a1 = rating({ mu: 9.182, sigma: 0.0001 })
     const b1 = rating({ mu: 27.174, sigma: 4.922 })
     const c1 = rating({ mu: 16.672, sigma: 6.217 })
@@ -108,7 +108,7 @@ describe('rate', () => {
         [a1, b1],
         [c1, d1],
       ],
-      { tau: 0.01, preventSigmaIncrease: true }
+      { tau: 0.01, limitSigma: true }
     )
 
     expect(a2.sigma).toBeLessThanOrEqual(a1.sigma)
@@ -314,21 +314,6 @@ describe('rate', () => {
     const [[winner], [loser]] = rate([[a], [b]], {
       tau: 0.3,
       limitSigma: true,
-    })
-
-    expect([winner, loser]).toStrictEqual([
-      { mu: 40.00032667136128, sigma: 3 },
-      { mu: -20.000326671361275, sigma: 3 },
-    ])
-  })
-
-  it('prevents sigma rising with old syntax', () => {
-    expect.assertions(1)
-    const a = rating({ mu: 40, sigma: 3 })
-    const b = rating({ mu: -20, sigma: 3 })
-    const [[winner], [loser]] = rate([[a], [b]], {
-      tau: 0.3,
-      preventSigmaIncrease: true,
     })
 
     expect([winner, loser]).toStrictEqual([
