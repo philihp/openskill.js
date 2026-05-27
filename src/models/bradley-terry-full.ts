@@ -15,11 +15,11 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
         (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
-          const sigSqToCiq = iSigmaSq / ciq
+          const qEta = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
-          acc.omega += sigSqToCiq * (score(qRank, iRank) - piq)
-          acc.delta += ((iGamma * sigSqToCiq) / ciq) * piq * (1 - piq)
+          acc.omega += qEta * (score(qRank, iRank) - piq)
+          acc.delta += ((iGamma * qEta) / ciq) * piq * (1 - piq)
           return acc
         },
         { omega: 0, delta: 0 }

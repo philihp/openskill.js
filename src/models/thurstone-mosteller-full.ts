@@ -16,18 +16,18 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
         (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const deltaMu = (iMu - qMu) / ciq
-          const sigSqToCiq = iSigmaSq / ciq
+          const qEta = iSigmaSq / ciq
           const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
           if (qRank === iRank) {
-            acc.omega += sigSqToCiq * vt(deltaMu, EPSILON / ciq)
-            acc.delta += ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq)
+            acc.omega += qEta * vt(deltaMu, EPSILON / ciq)
+            acc.delta += ((iGamma * qEta) / ciq) * wt(deltaMu, EPSILON / ciq)
             return acc
           }
 
           const sign = qRank > iRank ? 1 : -1
-          acc.omega += sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq)
-          acc.delta += ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq)
+          acc.omega += sign * qEta * v(sign * deltaMu, EPSILON / ciq)
+          acc.delta += ((iGamma * qEta) / ciq) * w(sign * deltaMu, EPSILON / ciq)
           return acc
         },
         { omega: 0, delta: 0 }
