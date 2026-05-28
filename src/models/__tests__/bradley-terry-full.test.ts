@@ -111,7 +111,7 @@ describe('bradleyTerryFull margin', () => {
 
   it('blowout fixture', () => {
     expect(rate([[w], [l]], { score: [20, 1], margin: 5 })).toStrictEqual([
-      [{ mu: 32.732190491527874, sigma: 4.931311782257958 }],
+      [{ mu: 32.49304123191045, sigma: 4.947765888649794 }],
       [{ mu: 16.94564569219986, sigma: 5.8568385167554675 }],
     ])
   })

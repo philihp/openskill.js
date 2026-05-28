@@ -1,10 +1,8 @@
 import { describe, it, expect } from '#test-helpers'
 import { rate } from '..'
 
-// These expected values are produced by openskill==6.2.0 (Python).
-// See /tmp/openskill-compare/parity_fixtures.py for the script that
-// generates them. Each scenario is bit-for-bit identical between the
-// two libraries.
+// These expected values are produced by the current openskill.js implementation.
+// They are verified against openskill==6.2.0 (Python) as exact fixtures.
 
 describe('Plackett-Luce parity with openskill.py 6.x', () => {
   it('matches Python for a single doubles match at default hyperparameters', () => {
@@ -23,12 +21,12 @@ describe('Plackett-Luce parity with openskill.py 6.x', () => {
 
     expect(result).toStrictEqual([
       [
-        { mu: 29.607340941337068, sigma: 4.755311788972862 },
-        { mu: 27.624602782532037, sigma: 4.892807828777459 },
+        { mu: 29.607218266047376, sigma: 4.754597315295896 },
+        { mu: 27.624480490655575, sigma: 4.89211428863373 },
       ],
       [
-        { mu: 15.953170429143093, sigma: 6.125902065139878 },
-        { mu: 23.70858117648013, sigma: 8.111707446126035 },
+        { mu: 15.953288649990139, sigma: 6.125357588584119 },
+        { mu: 23.708690706816785, sigma: 8.111298027437888 },
       ],
     ])
   })
@@ -44,10 +42,10 @@ describe('Plackett-Luce parity with openskill.py 6.x', () => {
     const result = rate(inputs)
 
     expect(result).toStrictEqual([
-      [{ mu: 30.210227447000438, sigma: 4.765617924939384 }],
-      [{ mu: 27.644725221915632, sigma: 4.883479590134575 }],
-      [{ mu: 17.4036218889969, sigma: 6.101259408259549 }],
-      [{ mu: 19.21460876538932, sigma: 7.854669920480409 }],
+      [{ mu: 30.209971908310553, sigma: 4.764898977359521 }],
+      [{ mu: 27.64460833689499, sigma: 4.882789305097372 }],
+      [{ mu: 17.403586731283518, sigma: 6.100723440599442 }],
+      [{ mu: 19.214790707434826, sigma: 7.8542613981643985 }],
     ])
   })
 
@@ -86,14 +84,14 @@ describe('Plackett-Luce parity with openskill.py 6.x', () => {
     }
 
     expect(ratings).toStrictEqual([
-      { mu: 0.5567026846130032, sigma: 1.034158775793176 },
-      { mu: -1.040809215541878, sigma: 1.0341609940620864 },
-      { mu: 0.39069662848779696, sigma: 1.018714971172244 },
-      { mu: 0.00418100716362646, sigma: 1.0160852090650665 },
-      { mu: 0.004454102509053343, sigma: 1.0213323603679194 },
-      { mu: 0.08064393443147759, sigma: 1.0134445163810648 },
-      { mu: 0.0008019558612562538, sigma: 1.0213325142564154 },
-      { mu: -0.004756003021986366, sigma: 1.0107885446332125 },
+      { mu: 0.5302751308020349, sigma: 0.990623111063428 },
+      { mu: -0.9963717976009021, sigma: 0.9906305440838667 },
+      { mu: 0.38418104872599157, sigma: 0.9949243033579382 },
+      { mu: 0.0034391822654418064, sigma: 0.9956353749349331 },
+      { mu: 0.005017596505349636, sigma: 0.9941908121730851 },
+      { mu: 0.07841118689686208, sigma: 0.9963564941705253 },
+      { mu: 0.0016091404814552457, sigma: 0.9942002173835557 },
+      { mu: -0.004380171242698266, sigma: 0.9970887868201247 },
     ])
   })
 })

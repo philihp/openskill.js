@@ -18,6 +18,7 @@ type Matchers = {
   toThrow(expected?: unknown): void
   not: {
     toThrow(expected?: unknown): void
+    toStrictEqual(expected: unknown): void
   }
 }
 
@@ -116,6 +117,9 @@ function buildMatchers(actual: unknown): Matchers {
         if (err === undefined) return
         if (expected !== undefined && !matchesThrown(err, expected)) return
         assert.fail(`Expected function not to throw, but it threw: ${err instanceof Error ? err.message : String(err)}`)
+      },
+      toStrictEqual(expected) {
+        assert.notDeepStrictEqual(actual, expected)
       },
     },
   }

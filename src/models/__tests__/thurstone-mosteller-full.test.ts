@@ -145,12 +145,12 @@ describe('thurstoneMostellerFull', () => {
     expect.assertions(1)
     const loser = rating({ mu: 18, sigma: 6 })
     const winner = rating({ mu: 32, sigma: 5 })
-    const [expectedWinner, expectedLoser] = rate([[winner], [loser]], {
+    const [expectedWinner, expectedLoser] = rateGame([[winner], [loser]], {
+      model: thurstoneMostellerFull,
       rank: [1, 2],
       score: [20, 1],
       margin: 1,
     })
-
     expect(
       rateGame([[loser], [winner]], {
         model: thurstoneMostellerFull,

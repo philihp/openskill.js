@@ -167,7 +167,6 @@ export const plMarginAdjustedMu = (teamRatings: TeamRating[], scores: number[], 
     return comparisons > 0 ? iMu + adjustment / comparisons : iMu + adjustment
   })
 
-
 // default to iSigma / c
 const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) =>
   Math.sqrt(sigmaSq) / c

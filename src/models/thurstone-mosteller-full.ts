@@ -4,7 +4,7 @@ import { w, v, vt, wt } from '../statistics'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
-  const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { TWOBETASQ, EPSILON } = constants(options)
   const { margin = 0, score } = options
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
@@ -14,10 +14,9 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
   return teamRatings.map((iTeamRating, i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const [iOmega, iDelta] = teamRatings
-      .map((teamRating, q) => [teamRating, q] as const)
-      .filter(([, q]) => i !== q)
+      .filter((_, q) => i !== q)
       .reduce(
-        ([omega, delta], [[qMu, qSigmaSq, _qTeam, qRank], q]) => {
+        ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank], q) => {
           const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
           const deltaMu = (iMu - qMu) / ciq
           const sigSqToCiq = iSigmaSq / ciq
@@ -37,14 +36,14 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
             delta + ((iGamma * sigSqToCiq) / ciq) * w(sign * adjustedDeltaMu, EPSILON / ciq),
           ]
         },
-        { omega: 0, delta: 0 }
+        [0, 0]
       )
 
     return iTeam.map(({ mu, sigma }) => {
       const sigmaSq = sigma * sigma
       return {
         mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, KAPPA)),
+        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, EPSILON)),
       }
     })
   })
