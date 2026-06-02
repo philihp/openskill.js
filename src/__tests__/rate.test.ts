@@ -233,6 +233,28 @@ describe('rate', () => {
     ])
   })
 
+  it('treats equal zero ranks as a draw (1v1)', () => {
+    expect.assertions(1)
+    const [[a], [b]] = rate([[rating()], [rating()]], {
+      rank: [0, 0],
+    })
+    expect([a, b]).toStrictEqual([
+      { mu: 25, sigma: 8.06590141354368 },
+      { mu: 25, sigma: 8.06590141354368 },
+    ])
+  })
+
+  it('treats equal zero scores as a draw (1v1)', () => {
+    expect.assertions(1)
+    const [[a], [b]] = rate([[rating()], [rating()]], {
+      score: [0, 0],
+    })
+    expect([a, b]).toStrictEqual([
+      { mu: 25, sigma: 8.06590141354368 },
+      { mu: 25, sigma: 8.06590141354368 },
+    ])
+  })
+
   it('fixes orders of ties', () => {
     expect.assertions(1)
     const [[w2], [x2], [y2], [z2]] = rate([[w1], [x1], [y1], [z1]], {
