@@ -8,6 +8,8 @@
 
 Javascript implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
 
+📖 **Full documentation: https://philihp.github.io/openskill.js/**
+
 ## Speed
 
 Up to 20x faster than TrueSkill!
