@@ -22,7 +22,7 @@ export const score = (q: number, i: number) => {
 }
 
 export const rankings = (teams: Team[], rank: number[] = []) => {
-  const teamScores = teams.map((_, i) => rank[i] || i)
+  const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
 
   let s = 0
