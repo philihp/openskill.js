@@ -5,23 +5,12 @@ export type Rating = {
 
 export type Team = Rating[]
 
-// Teams is the input shape accepted by rate(): a list of teams, each team a
-// list of ratings. It is declared with `readonly` so that `const` type
-// parameters can capture the exact tuple lengths of literal arguments.
 export type Teams = readonly (readonly Rating[])[]
 
-// RateTeam replaces every rating in a single team with a freshly computed
-// Rating while preserving the team's length. U is a naked type parameter so the
-// mapped type stays homomorphic and keeps the array/tuple structure intact.
 export type RateTeam<U extends readonly Rating[]> = {
   -readonly [J in keyof U]: Rating
 }
 
-// RateResult mirrors the shape of the input teams: the same number of teams,
-// and within each team the same number of ratings, with every rating replaced
-// by a freshly computed Rating. Homomorphic mapped types preserve tuple lengths
-// when the input was inferred as a tuple (e.g. an array literal captured by a
-// `const` type parameter), while a plain Rating[][] maps back to Rating[][].
 export type RateResult<T extends Teams> = {
   -readonly [K in keyof T]: RateTeam<T[K]>
 }

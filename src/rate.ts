@@ -58,8 +58,6 @@ const rate = <const T extends Teams>(teams: T, options: Options = {}): RateResul
     )
   }
 
-  // the runtime always returns teams matching the input shape; the cast bridges
-  // the dynamically built Team[] to the statically inferred RateResult<T>.
   return reorderedTeams as RateResult<T>
 }
 
