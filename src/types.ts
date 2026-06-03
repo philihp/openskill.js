@@ -5,6 +5,16 @@ export type Rating = {
 
 export type Team = Rating[]
 
+export type Teams = readonly (readonly Rating[])[]
+
+export type RateTeam<U extends readonly Rating[]> = {
+  -readonly [J in keyof U]: Rating
+}
+
+export type RateResult<T extends Teams> = {
+  -readonly [K in keyof T]: RateTeam<T[K]>
+}
+
 export type Rank = number
 
 export type Gamma = (c: number, k: number, mu: number, sigmaSq: number, team: Rating[], qRank: number) => number

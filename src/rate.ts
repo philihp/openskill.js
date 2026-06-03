@@ -1,12 +1,12 @@
 import { sortBy, identity, range } from 'ramda'
 import { unwind } from 'sort-unwind'
 
-import { Rating, Options, Team } from './types'
+import { Rating, Options, Teams, RateResult } from './types'
 import constants from './constants'
 import { marginFactor } from './margin'
 import { plackettLuce } from './models'
 
-const rate = (teams: Team[], options: Options = {}): Team[] => {
+const rate = <const T extends Teams>(teams: T, options: Options = {}): RateResult<T> => {
   const { LIMIT_SIGMA, TAU } = constants(options)
   const { model = plackettLuce } = options
 
@@ -58,7 +58,7 @@ const rate = (teams: Team[], options: Options = {}): Team[] => {
     )
   }
 
-  return reorderedTeams
+  return reorderedTeams as RateResult<T>
 }
 
 export default rate
