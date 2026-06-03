@@ -67,3 +67,28 @@ const mixed = rate(
   { score: [2, 1], margin: 5 }
 )
 type _mixed = Expect<Equal<typeof mixed, [[Rating, Rating, Rating], [Rating, Rating]]>>
+
+// The guarantee holds for ANY number of teams and ANY number of ratings per
+// team -- nothing about the typing is specialized to a particular size.
+
+// One team, one rating.
+const solo = rate([[a]])
+type _solo = Expect<Equal<typeof solo, [[Rating]]>>
+
+// Ten single-rating teams (classic free-for-all).
+const ffa = rate([[a], [b], [c], [d], [e], [f], [g], [a], [b], [c]])
+type _ffa = Expect<
+  Equal<
+    typeof ffa,
+    [[Rating], [Rating], [Rating], [Rating], [Rating], [Rating], [Rating], [Rating], [Rating], [Rating]]
+  >
+>
+
+// Six teams of wildly different sizes: 2, 1, 3, 1, 4, 2.
+const ragged = rate([[a, b], [c], [d, e, f], [g], [a, b, c, d], [e, f]])
+type _ragged = Expect<
+  Equal<
+    typeof ragged,
+    [[Rating, Rating], [Rating], [Rating, Rating, Rating], [Rating], [Rating, Rating, Rating, Rating], [Rating, Rating]]
+  >
+>
