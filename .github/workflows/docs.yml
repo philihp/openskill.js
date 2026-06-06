@@ -46,7 +46,7 @@ jobs:
         run: npm run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           # Enable GitHub Pages (with the "GitHub Actions" source) automatically
           # if it isn't already, so the deploy job has a Pages site to publish to.
