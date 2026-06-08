@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.0.1
+
+- Shrinks the published package from ~683KB to ~194KB by emitting external
+  sourcemaps and excluding them from the npm tarball, rather than embedding
+  inline base64 sourcemaps in every module. No runtime changes.
+
 ## v5.0.0
 
 - Outputs should now match bit-for-bit with the [python](https://github.com/vivekjoshy/openskill.py)
