@@ -40,4 +40,5 @@ jobs:
 
       # Trusted publishing (OIDC) authenticates via the id-token above, so no
       # NODE_AUTH_TOKEN is needed. Provenance is attached automatically.
-      - run: npm publish --access public
+      # Creates a staged publish that must be promoted to go live.
+      - run: npm stage publish --access public
