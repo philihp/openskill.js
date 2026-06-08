@@ -1,5 +1,11 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    // tsup injects a deprecated `baseUrl` into its rollup-plugin-dts run, which
+    // TypeScript 6 treats as a hard error. Silence it so `dts: true` can bundle
+    // declarations (smaller package than emitting + duplicating via tsc).
+    "ignoreDeprecations": "6.0"
+  },
   "include": ["./src/**/*"],
   "exclude": ["./src/**/__tests__/**", "./src/**/*.test.*"]
 }
