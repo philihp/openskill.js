@@ -1,6 +1,6 @@
 {
   "name": "openskill",
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "Weng-Lin Bayesian approximation method for online skill-ranking.",
   "type": "module",
   "main": "./dist/index.cjs",
