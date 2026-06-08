@@ -1,0 +1,43 @@
+name: publish
+
+on:
+  release:
+    types: [published]
+  # Allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+env:
+  CI: true
+
+# Trusted publishing to npm requires an OIDC token, and provenance
+# attestations are written to the public transparency log.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/openskill
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          registry-url: https://registry.npmjs.org
+
+      # npm 11.5.1+ is required for OIDC trusted publishing.
+      - run: npm install -g npm@latest
+
+      - run: npm install
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      # Trusted publishing (OIDC) authenticates via the id-token above, so no
+      # NODE_AUTH_TOKEN is needed. Provenance is attached automatically.
+      - run: npm publish --access public
