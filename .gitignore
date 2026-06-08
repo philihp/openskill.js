@@ -5,6 +5,8 @@ coverage/
 
 # Modules installed
 node_modules/
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 # vi swap files
 *.swp
