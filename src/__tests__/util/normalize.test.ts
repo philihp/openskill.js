@@ -1,6 +1,11 @@
 import { describe, it, expect } from '#test-helpers'
 import { normalize } from '../../util'
 
+// openskill.py has no direct unit test for its `_normalize` helper; the
+// normalization behavior is exercised through the weight_bounds tests, e.g.
+// `test_weight_bounds_custom` (narrower bounds => smaller spread):
+// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L593-L620
+
 describe('util#normalize', () => {
   it('maps the vector min and max onto the target bounds', () => {
     expect.assertions(1)

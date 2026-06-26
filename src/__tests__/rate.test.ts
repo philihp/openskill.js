@@ -299,6 +299,8 @@ describe('rate', () => {
     // Weights scale each player's update by their relative contribution to the
     // team. By default they are normalized per-team into [1, 2], matching
     // openskill.py. Values below are bit-for-bit identical to openskill.py 6.x.
+    // Upstream: the `weights` case of `test_rate` in openskill.py:
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L373-L378
     const result = rate(
       [
         [a1, b1],
@@ -346,6 +348,8 @@ describe('rate', () => {
     // The 6v5 partial-play case from issue #1018: each player on the larger team
     // sits out 1/6 of the time, so weighting them all at 5/6 damps their update.
     // This only takes effect with normalization disabled.
+    // Upstream: `test_weight_bounds_none_disables_normalization` in openskill.py:
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L623-L640
     const teams = [
       [rating(), rating()],
       [rating(), rating()],

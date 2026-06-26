@@ -9,6 +9,9 @@ import thurstoneMostellerPart from '../models/thurstone-mosteller-part'
 // per-team normalization into [1, 2] (weight_bounds=(1.0, 2.0)), so only the
 // relative contribution of players within a team affects their update. Every
 // scenario below is bit-for-bit identical between the two libraries.
+//
+// Upstream equivalent — the `weights` case of `test_rate` in openskill.py:
+// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L373-L378
 
 describe('weighted partial-play parity with openskill.py 6.x', () => {
   // Fixtures are created once and shared across every test on purpose: rate() and

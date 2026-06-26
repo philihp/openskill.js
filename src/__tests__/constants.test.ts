@@ -126,6 +126,8 @@ describe('constants', () => {
   })
 
   describe('weightBounds', () => {
+    // Upstream: `test_weight_bounds_default` in openskill.py:
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L585-L590
     it('defaults to [1, 2] to match openskill.py', () => {
       expect.assertions(1)
       expect(constants({}).WEIGHT_BOUNDS).toStrictEqual([1, 2])
