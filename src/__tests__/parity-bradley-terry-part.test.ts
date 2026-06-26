@@ -17,6 +17,7 @@ import bradleyTerryPart from '../models/bradley-terry-part'
 describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
   const r = { mu: 8.954715133403496, sigma: 5.848503823078021 }
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L326-L330
   it('normal', () => {
     const result = rate([[r], [r, r]], { model: bradleyTerryPart })
     expect(result).toStrictEqual([
@@ -28,6 +29,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L331-L340
   it.skip('ranks [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r], [r, r]], { model: bradleyTerryPart, rank: [2, 1, 4, 3] })
     expect(result).toStrictEqual([
@@ -44,6 +46,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L341-L346
   it('scores', () => {
     const result = rate([[r], [r, r]], { model: bradleyTerryPart, score: [1, 2] })
     expect(result).toStrictEqual([
@@ -55,6 +58,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L347-L355
   it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
     const result = rate(
       [
@@ -101,6 +105,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L356-L364
   it.skip('limit_sigma [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryPart, rank: [2, 1, 3], limitSigma: true })
     expect(result).toStrictEqual([
@@ -117,6 +122,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L365-L372
   it.skip('ties [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryPart, rank: [1, 2, 1] })
     expect(result).toStrictEqual([
@@ -133,6 +139,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L373-L385
   it.skip('weights [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate(
       [
@@ -174,6 +181,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L386-L393
   it('balance', () => {
     const result = rate(
       [
@@ -197,7 +205,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
   describe('weight_bounds', () => {
     const d = { mu: 25, sigma: 25 / 3 }
 
-    // test_weight_bounds_default: the default bounds are (1.0, 2.0).
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L607-L612
     it('defaults to [1, 2]', () => {
       const teams = [
         [d, d, d],
@@ -212,7 +220,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
       )
     })
 
-    // test_weight_bounds_custom: narrower bounds => smaller within-team spread.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L615-L639
     it('narrower bounds shrink the within-team spread', () => {
       const teams = [
         [d, d, d],
@@ -227,8 +235,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
       expect(narrow[0][2].mu - narrow[0][0].mu).toBeLessThan(wide[0][2].mu - wide[0][0].mu)
     })
 
-    // test_weight_bounds_none_disables_normalization: uniform raw weights leave
-    // every winner with the same mu change.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L642-L657
     it('weightBounds: null applies raw weights (uniform => equal updates)', () => {
       const result = rate(
         [

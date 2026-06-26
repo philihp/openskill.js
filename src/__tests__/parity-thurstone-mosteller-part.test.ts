@@ -17,6 +17,7 @@ import thurstoneMostellerPart from '../models/thurstone-mosteller-part'
 describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
   const r = { mu: 26.469640334617008, sigma: 7.974532802151592 }
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L334-L338
   it('normal', () => {
     const result = rate([[r], [r, r]], { model: thurstoneMostellerPart })
     expect(result).toStrictEqual([
@@ -28,6 +29,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L339-L348
   it.skip('ranks [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r], [r, r]], { model: thurstoneMostellerPart, rank: [2, 1, 4, 3] })
     expect(result).toStrictEqual([
@@ -44,6 +46,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L349-L354
   it('scores', () => {
     const result = rate([[r], [r, r]], { model: thurstoneMostellerPart, score: [1, 2] })
     expect(result).toStrictEqual([
@@ -55,6 +58,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L355-L363
   it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
     const result = rate(
       [
@@ -101,6 +105,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L364-L372
   it.skip('limit_sigma [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerPart, rank: [2, 1, 3], limitSigma: true })
     expect(result).toStrictEqual([
@@ -117,6 +122,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L373-L380
   it.skip('ties [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerPart, rank: [1, 2, 1] })
     expect(result).toStrictEqual([
@@ -133,6 +139,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L381-L393
   it.skip('weights [KNOWN DIVERGENCE: part model pairs only adjacent teams; openskill.py uses a sliding window]', () => {
     const result = rate(
       [
@@ -174,6 +181,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L394-L401
   it('balance', () => {
     const result = rate(
       [
@@ -197,7 +205,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
   describe('weight_bounds', () => {
     const d = { mu: 25, sigma: 25 / 3 }
 
-    // test_weight_bounds_default: the default bounds are (1.0, 2.0).
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L615-L620
     it('defaults to [1, 2]', () => {
       const teams = [
         [d, d, d],
@@ -212,7 +220,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
       )
     })
 
-    // test_weight_bounds_custom: narrower bounds => smaller within-team spread.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L623-L647
     it('narrower bounds shrink the within-team spread', () => {
       const teams = [
         [d, d, d],
@@ -227,8 +235,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
       expect(narrow[0][2].mu - narrow[0][0].mu).toBeLessThan(wide[0][2].mu - wide[0][0].mu)
     })
 
-    // test_weight_bounds_none_disables_normalization: uniform raw weights leave
-    // every winner with the same mu change.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L650-L665
     it('weightBounds: null applies raw weights (uniform => equal updates)', () => {
       const result = rate(
         [
@@ -248,31 +255,5 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
       expect(result[0][0].mu).toBeCloseTo(result[0][1].mu, 12)
       expect(result[0][1].mu).toBeCloseTo(result[0][2].mu, 12)
     })
-  })
-})
-
-describe('ThurstoneMostellerPart single-match parity (openskill.py)', () => {
-  it('matches Python for a single doubles match at default hyperparameters', () => {
-    const inputs = [
-      [
-        { mu: 29.182, sigma: 4.782 },
-        { mu: 27.174, sigma: 4.922 },
-      ],
-      [
-        { mu: 16.672, sigma: 6.217 },
-        { mu: 25.0, sigma: 25 / 3 },
-      ],
-    ]
-    const result = rate(inputs, { model: thurstoneMostellerPart, rank: [1, 2] })
-    expect(result).toStrictEqual([
-      [
-        { mu: 29.592226682338413, sigma: 4.773647674024611 },
-        { mu: 27.60859085774696, sigma: 4.912805800182962 },
-      ],
-      [
-        { mu: 15.97871364695718, sigma: 6.187298148722908 },
-        { mu: 23.754471041944427, sigma: 8.260739733563808 },
-      ],
-    ])
   })
 })

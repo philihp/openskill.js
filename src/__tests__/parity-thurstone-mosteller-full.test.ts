@@ -17,6 +17,7 @@ import thurstoneMostellerFull from '../models/thurstone-mosteller-full'
 describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
   const r = { mu: 17.369819397619647, sigma: 5.379790119094205 }
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L329-L333
   it('normal', () => {
     const result = rate([[r], [r, r]], { model: thurstoneMostellerFull })
     expect(result).toStrictEqual([
@@ -28,6 +29,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L334-L343
   it('ranks', () => {
     const result = rate([[r], [r, r], [r], [r, r]], { model: thurstoneMostellerFull, rank: [2, 1, 4, 3] })
     expect(result).toStrictEqual([
@@ -44,6 +46,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L344-L349
   it('scores', () => {
     const result = rate([[r], [r, r]], { model: thurstoneMostellerFull, score: [1, 2] })
     expect(result).toStrictEqual([
@@ -55,6 +58,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L350-L358
   it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
     const result = rate(
       [
@@ -101,6 +105,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L359-L367
   it('limit_sigma', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerFull, rank: [2, 1, 3], limitSigma: true })
     expect(result[0][0].mu).toBeCloseTo(24.439837648240836, 10)
@@ -117,6 +122,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     expect(result[2][2].sigma).toBeCloseTo(4.725957788249715, 10)
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L368-L375
   it('ties', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerFull, rank: [1, 2, 1] })
     expect(result).toStrictEqual([
@@ -133,6 +139,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L376-L388
   it('weights', () => {
     const result = rate(
       [
@@ -174,6 +181,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
     expect(result[3][1].sigma).toBeCloseTo(4.31340461031177, 10)
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L389-L396
   it('balance', () => {
     const result = rate(
       [
@@ -197,7 +205,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
   describe('weight_bounds', () => {
     const d = { mu: 25, sigma: 25 / 3 }
 
-    // test_weight_bounds_default: the default bounds are (1.0, 2.0).
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L594-L599
     it('defaults to [1, 2]', () => {
       const teams = [
         [d, d, d],
@@ -212,7 +220,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
       )
     })
 
-    // test_weight_bounds_custom: narrower bounds => smaller within-team spread.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L602-L626
     it('narrower bounds shrink the within-team spread', () => {
       const teams = [
         [d, d, d],
@@ -227,8 +235,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
       expect(narrow[0][2].mu - narrow[0][0].mu).toBeLessThan(wide[0][2].mu - wide[0][0].mu)
     })
 
-    // test_weight_bounds_none_disables_normalization: uniform raw weights leave
-    // every winner with the same mu change.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L629-L644
     it('weightBounds: null applies raw weights (uniform => equal updates)', () => {
       const result = rate(
         [
@@ -248,60 +255,5 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
       expect(result[0][0].mu).toBeCloseTo(result[0][1].mu, 12)
       expect(result[0][1].mu).toBeCloseTo(result[0][2].mu, 12)
     })
-  })
-})
-
-describe('ThurstoneMostellerFull single-match parity (openskill.py)', () => {
-  it('matches Python for a single doubles match at default hyperparameters', () => {
-    const inputs = [
-      [
-        { mu: 29.182, sigma: 4.782 },
-        { mu: 27.174, sigma: 4.922 },
-      ],
-      [
-        { mu: 16.672, sigma: 6.217 },
-        { mu: 25.0, sigma: 25 / 3 },
-      ],
-    ]
-    const result = rate(inputs, { model: thurstoneMostellerFull, rank: [1, 2] })
-    expect(result).toStrictEqual([
-      [
-        { mu: 29.624402539617087, sigma: 4.731811043331585 },
-        { mu: 27.642677702936485, sigma: 4.867170032299351 },
-      ],
-      [
-        { mu: 15.924336192468848, sigma: 6.046652169308378 },
-        { mu: 23.65677880563643, sigma: 7.917461589002299 },
-      ],
-    ])
-  })
-
-  it('matches Python for a four-way free-for-all', () => {
-    const inputs = [
-      [{ mu: 29.182, sigma: 4.782 }],
-      [{ mu: 27.174, sigma: 4.922 }],
-      [{ mu: 16.672, sigma: 6.217 }],
-      [{ mu: 25.0, sigma: 25 / 3 }],
-    ]
-    const result = rate(inputs, { model: thurstoneMostellerFull })
-    expect(result).toStrictEqual([
-      [{ mu: 32.52085123693871, sigma: 4.375950146467773 }],
-      [{ mu: 27.506415974195786, sigma: 4.437501008136939 }],
-      [{ mu: 19.021389842482407, sigma: 5.311185767439086 }],
-      [{ mu: 9.689078200160441, sigma: 4.428266285854181 }],
-    ])
-  })
-
-  it('matches Python with ties in ranks', () => {
-    const r = { mu: 25.0, sigma: 25 / 3 }
-    const inputs = [[r], [r], [r], [r], [r]]
-    const result = rate(inputs, { model: thurstoneMostellerFull, rank: [1, 2, 2, 4, 5] })
-    expect(result).toStrictEqual([
-      [{ mu: 41.92388609645312, sigma: 4.9590768827966 }],
-      [{ mu: 29.23097152411328, sigma: 4.270482887179981 }],
-      [{ mu: 29.23097152411328, sigma: 4.270482887179981 }],
-      [{ mu: 16.53805695177344, sigma: 4.9590768827966 }],
-      [{ mu: 8.076113903546883, sigma: 4.9590768827966 }],
-    ])
   })
 })

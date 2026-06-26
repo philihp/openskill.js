@@ -17,6 +17,7 @@ import bradleyTerryFull from '../models/bradley-terry-full'
 describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
   const r = { mu: 16.03354781649136, sigma: 12.429396412128556 }
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L322-L326
   it('normal', () => {
     const result = rate([[r], [r, r]], { model: bradleyTerryFull })
     expect(result).toStrictEqual([
@@ -28,6 +29,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L327-L336
   it('ranks', () => {
     const result = rate([[r], [r, r], [r], [r, r]], { model: bradleyTerryFull, rank: [2, 1, 4, 3] })
     expect(result).toStrictEqual([
@@ -44,6 +46,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L337-L342
   it('scores', () => {
     const result = rate([[r], [r, r]], { model: bradleyTerryFull, score: [1, 2] })
     expect(result).toStrictEqual([
@@ -55,6 +58,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L343-L351
   it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
     const result = rate(
       [
@@ -101,6 +105,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L352-L360
   it('limit_sigma', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryFull, rank: [2, 1, 3], limitSigma: true })
     expect(result).toStrictEqual([
@@ -117,6 +122,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L361-L368
   it('ties', () => {
     const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryFull, rank: [1, 2, 1] })
     expect(result).toStrictEqual([
@@ -133,6 +139,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L369-L381
   it('weights', () => {
     const result = rate(
       [
@@ -174,6 +181,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
     ])
   })
 
+  // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L382-L389
   it('balance', () => {
     const result = rate(
       [
@@ -197,7 +205,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
   describe('weight_bounds', () => {
     const d = { mu: 25, sigma: 25 / 3 }
 
-    // test_weight_bounds_default: the default bounds are (1.0, 2.0).
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L587-L592
     it('defaults to [1, 2]', () => {
       const teams = [
         [d, d, d],
@@ -212,7 +220,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
       )
     })
 
-    // test_weight_bounds_custom: narrower bounds => smaller within-team spread.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L595-L619
     it('narrower bounds shrink the within-team spread', () => {
       const teams = [
         [d, d, d],
@@ -227,8 +235,7 @@ describe('BradleyTerryFull parity with openskill.py 6.2.0', () => {
       expect(narrow[0][2].mu - narrow[0][0].mu).toBeLessThan(wide[0][2].mu - wide[0][0].mu)
     })
 
-    // test_weight_bounds_none_disables_normalization: uniform raw weights leave
-    // every winner with the same mu change.
+    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L622-L637
     it('weightBounds: null applies raw weights (uniform => equal updates)', () => {
       const result = rate(
         [
