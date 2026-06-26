@@ -11,9 +11,19 @@ import thurstoneMostellerPart from '../models/thurstone-mosteller-part'
 // scenario below is bit-for-bit identical between the two libraries.
 
 describe('weighted partial-play parity with openskill.py 6.x', () => {
-  const doubles = () => [
-    [rating(), rating()],
-    [rating(), rating()],
+  // Fixtures are created once and shared across every test on purpose: rate() and
+  // the models must not mutate their inputs. If one ever did, the corruption
+  // would surface in a later test here instead of being hidden behind freshly
+  // constructed objects each run.
+  const a = rating()
+  const b = rating()
+  const c = rating()
+  const d = rating()
+  const e = rating()
+  const f = rating()
+  const doubles = [
+    [a, b],
+    [c, d],
   ]
   const weight = [
     [0.9, 1.0],
@@ -22,7 +32,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
 
   it('matches Python for Plackett-Luce', () => {
     expect.assertions(1)
-    expect(rate(doubles(), { weight })).toStrictEqual([
+    expect(rate(doubles, { weight })).toStrictEqual([
       [
         { mu: 26.964294621803063, sigma: 8.177962604389991 },
         { mu: 28.928589243606122, sigma: 8.019149320764225 },
@@ -36,7 +46,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
 
   it('matches Python for Bradley-Terry Full', () => {
     expect.assertions(1)
-    expect(rate(doubles(), { weight, model: bradleyTerryFull })).toStrictEqual([
+    expect(rate(doubles, { weight, model: bradleyTerryFull })).toStrictEqual([
       [
         { mu: 26.964294621803063, sigma: 8.177962604389991 },
         { mu: 28.928589243606122, sigma: 8.019149320764225 },
@@ -50,7 +60,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
 
   it('matches Python for Bradley-Terry Part', () => {
     expect.assertions(1)
-    expect(rate(doubles(), { weight, model: bradleyTerryPart })).toStrictEqual([
+    expect(rate(doubles, { weight, model: bradleyTerryPart })).toStrictEqual([
       [
         { mu: 26.964294621803063, sigma: 8.177962604389991 },
         { mu: 28.928589243606122, sigma: 8.019149320764225 },
@@ -64,7 +74,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
 
   it('matches Python for Thurstone-Mosteller Full', () => {
     expect.assertions(1)
-    expect(rate(doubles(), { weight, model: thurstoneMostellerFull })).toStrictEqual([
+    expect(rate(doubles, { weight, model: thurstoneMostellerFull })).toStrictEqual([
       [
         { mu: 28.14872165539316, sigma: 7.93021870036415 },
         { mu: 31.29744331078632, sigma: 7.505021544427547 },
@@ -78,7 +88,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
 
   it('matches Python for Thurstone-Mosteller Part', () => {
     expect.assertions(1)
-    expect(rate(doubles(), { weight, model: thurstoneMostellerPart })).toStrictEqual([
+    expect(rate(doubles, { weight, model: thurstoneMostellerPart })).toStrictEqual([
       [
         { mu: 26.570818879381463, sigma: 8.284431340872874 },
         { mu: 28.141637758762926, sigma: 8.234817326108974 },
@@ -94,7 +104,7 @@ describe('weighted partial-play parity with openskill.py 6.x', () => {
     expect.assertions(1)
     // Teams given out of finishing order; weights must follow each team through
     // the internal rank-sort. Bit-for-bit identical to openskill.py.
-    const result = rate([[rating(), rating()], [rating()], [rating(), rating(), rating()]], {
+    const result = rate([[a, b], [c], [d, e, f]], {
       rank: [2, 1, 3],
       weight: [[0.5, 1.0], [1.0], [0.2, 1.0, 0.7]],
     })
