@@ -1,16 +1,17 @@
 import { zip } from 'ramda'
-import util, { ladderPairs } from '../util'
+import util, { ladderPairs, updatePlayer } from '../util'
 import { w, v, vt, wt } from '../statistics'
 import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
   const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { weight } = options
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents], i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const { omega: iOmega, delta: iDelta } = iAdjacents.reduce(
       (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
@@ -33,13 +34,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
       { omega: 0, delta: 0 }
     )
 
-    return iTeam.map(({ mu, sigma }) => {
-      const sigmaSq = sigma * sigma
-      return {
-        mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, KAPPA)),
-      }
-    })
+    return iTeam.map((player, j) => updatePlayer(player, iOmega, iDelta, iSigmaSq, weight?.[i]?.[j] ?? 1, KAPPA))
   })
 }
 

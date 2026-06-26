@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Adds partial-play support via the `weight` option. Weights are shaped like
+  `teams` (one number per player) and scale how much each player's rating moves,
+  matching openskill.py bit-for-bit. By default each team's weights are
+  normalized into `[1, 2]` (configurable via the new `weightBounds` option); pass
+  `weightBounds: null` to apply raw weights without normalization. Previously the
+  `weight` option was accepted but ignored.
+
 ## v5.0.1
 
 - Shrinks the published package from ~683KB to ~194KB by emitting external

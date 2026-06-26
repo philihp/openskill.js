@@ -1,10 +1,11 @@
-import util from '../util'
+import util, { updatePlayer } from '../util'
 import constants from '../constants'
 import { w, v, vt, wt } from '../statistics'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
   const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { weight } = options
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
 
@@ -33,13 +34,7 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
         { omega: 0, delta: 0 }
       )
 
-    return iTeam.map(({ mu, sigma }) => {
-      const sigmaSq = sigma * sigma
-      return {
-        mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, KAPPA)),
-      }
-    })
+    return iTeam.map((player, j) => updatePlayer(player, iOmega, iDelta, iSigmaSq, weight?.[i]?.[j] ?? 1, KAPPA))
   })
 }
 

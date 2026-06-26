@@ -133,5 +133,44 @@ model.rate(
 
 :::
 
+## Partial play
+
+When players don't all contribute equally — someone subbed in late, or a roster
+rotates through fewer slots than it has players — pass a `weight` for each player,
+shaped just like `teams`. A player's rating change scales with their weight.
+
+::: code-group
+
+```ts [JavaScript]
+// bob only played half the match
+rate(
+  [
+    [alice, bob],
+    [carol, dave],
+  ],
+  {
+    weight: [
+      [1.0, 0.5],
+      [1.0, 1.0],
+    ],
+  }
+)
+```
+
+```python [Python]
+model.rate(
+    [[alice, bob], [carol, dave]],
+    weights=[[1.0, 0.5], [1.0, 1.0]],
+)
+```
+
+:::
+
+By default each team's weights are normalized into `[1, 2]`, so only the relative
+differences _within_ a team matter — uniform weights cancel out. To scale updates
+by the raw weights instead (e.g. a 6-player roster rotating through 5 slots, each
+taking `5/6` of a normal update), pass `weightBounds: null`. See
+[Weights (partial play)](/reference/options#weights-partial-play) for the details.
+
 See [Options](/reference/options) for `tau`, `limitSigma`, `model`, and the
 other knobs you can pass here.

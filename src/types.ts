@@ -32,6 +32,7 @@ export type Options = {
   rank?: Rank[]
   score?: number[]
   weight?: number[][]
+  weightBounds?: [number, number] | null
   tau?: number
   margin?: number
   alpha?: number
