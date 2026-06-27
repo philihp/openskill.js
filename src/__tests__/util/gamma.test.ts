@@ -3,7 +3,7 @@ import { gamma } from '../../util'
 import { rating } from '../..'
 
 // Replicates openskill.py's test_gamma: the default gamma is sqrt(sigmaSq) / c.
-// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L270-L283
+// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L270-L280
 describe('util#gamma (default)', () => {
   const defaultGamma = gamma({})
   const team = [rating(), rating(), rating(), rating(), rating()]

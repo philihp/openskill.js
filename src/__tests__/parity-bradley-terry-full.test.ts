@@ -5,7 +5,7 @@ import bradleyTerryFull from '../models/bradley-terry-full'
 // Parity with openskill.py 6.2.0's test_bradley_terry_full.py::test_rate, asserted against
 // the exact constants from its fixture (tests/models/data/bradleyterryfull.json).
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
-// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L308-L392
+// https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_full.py#L308-L389
 //
 // margins and (for the part models) 3+-team games are KNOWN DIVERGENCES from
 // openskill.py 6.2.0, kept here with the upstream constants but skipped:
