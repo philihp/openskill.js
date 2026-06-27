@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: docs
 
 on:
   push:
@@ -6,16 +6,13 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/docs.yml'
-  # Allow manual runs from the Actions tab.
   workflow_dispatch:
 
-# Allow this workflow to publish to GitHub Pages.
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment; don't cancel in-progress production deploys.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -27,35 +24,22 @@ jobs:
       run:
         working-directory: docs
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0 # VitePress lastUpdated needs full git history
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: docs/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build with VitePress
-        run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
+      - run: npm ci
+      - run: npm run build
+        env:
+          GITHUB_PAGES: 'true'
+      - uses: actions/configure-pages@v6
         with:
-          # Enable GitHub Pages (with the "GitHub Actions" source) automatically
-          # if it isn't already, so the deploy job has a Pages site to publish to.
           enablement: true
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@v5
         with:
-          path: docs/.vitepress/dist
+          path: docs/out
 
   deploy:
     needs: build
@@ -64,6 +48,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v5

@@ -2,14 +2,28 @@
   "name": "openskill-docs",
   "version": "0.0.0",
   "private": true,
-  "description": "Documentation site for openskill.js",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@mdx-js/loader": "3.1.0",
+    "@mdx-js/react": "3.1.0",
+    "@next/mdx": "^15.5.18",
+    "@types/mdx": "2.0.13",
+    "next": "^15.5.18",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "rehype-autolink-headings": "7.1.0",
+    "rehype-slug": "6.0.0",
+    "remark-gfm": "4.0.1"
   },
   "devDependencies": {
-    "vitepress": "^1.6.4"
+    "@types/node": "22.10.10",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "typescript": "5.7.3"
   }
 }
