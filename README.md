@@ -170,11 +170,11 @@ const [[a2], [b2]] = rate([[a1], [b1]], {
 
 ## Implementations in other languages
 
-- Python https://github.com/OpenDebates/openskill.py
-- Java https://github.com/pocketcombats/openskill-java
+- Python https://github.com/vivekjoshy/openskill.py
+- Lua (Roblox) https://github.com/bstummer/openskill.lua
 - Kotlin https://github.com/brezinajn/openskill.kt
 - Elixir https://github.com/philihp/openskill.ex
-- Lua https://github.com/bstummer/openskill.lua
+- Java https://github.com/pocketcombats/openskill-java
+- C# https://github.com/myssto/OpenSkillSharp
 - Ruby https://github.com/erdostom/openskill-ruby
 - Google Apps Script https://github.com/haya14busa/gas-openskill
-- Google Sheets https://docs.google.com/spreadsheets/d/12TA1ZG_qpBi4kDTclaOGB4sd5uJK8w-0My6puMd2-CY/edit?usp=sharing
