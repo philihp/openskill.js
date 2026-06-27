@@ -1,5 +1,5 @@
 import { zip } from 'ramda'
-import util, { score, ladderPairs, updatePlayer } from '../util'
+import util, { score, ladderPairs } from '../util'
 import constants from '../constants'
 import { Model, Rating } from '../types'
 
@@ -27,7 +27,15 @@ const model: Model = (game: Rating[][], options = {}) => {
       { omega: 0, delta: 0 }
     )
 
-    return iTeam.map((player, j) => updatePlayer(player, iOmega, iDelta, iSigmaSq, weight?.[i]?.[j] ?? 1, KAPPA))
+    return iTeam.map((player, j) => {
+      const w = weight?.[i]?.[j] ?? 1
+      const sigmaSq = player.sigma * player.sigma
+      const factor = iOmega >= 0 ? w : 1 / w
+      return {
+        mu: player.mu + (sigmaSq / iSigmaSq) * iOmega * factor,
+        sigma: player.sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta * factor, KAPPA)),
+      }
+    })
   })
 }
 
