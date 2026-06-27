@@ -4,6 +4,7 @@ import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
   const { KAPPA } = constants(options)
+  const { weight } = options
   const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
@@ -28,10 +29,15 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
     const iOmega = omegaSum * (iSigmaSq / c)
     const iDelta = deltaSum * (iSigmaSq / c ** 2) * iGamma
 
-    return iTeam.map(({ mu, sigma }) => ({
-      mu: mu + (sigma ** 2 / iSigmaSq) * iOmega,
-      sigma: sigma * Math.sqrt(Math.max(1 - (sigma ** 2 / iSigmaSq) * iDelta, KAPPA)),
-    }))
+    return iTeam.map((player, j) => {
+      const w = weight?.[i]?.[j] ?? 1
+      const sigmaSq = player.sigma * player.sigma
+      const factor = iOmega >= 0 ? w : 1 / w
+      return {
+        mu: player.mu + (sigmaSq / iSigmaSq) * iOmega * factor,
+        sigma: player.sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta * factor, KAPPA)),
+      }
+    })
   })
 }
 

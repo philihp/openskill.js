@@ -21,6 +21,23 @@ export const score = (q: number, i: number) => {
   return 0.5
 }
 
+/**
+ * Linearly rescale a vector into `[targetMin, targetMax]`, mapping the vector's
+ * own minimum to `targetMin` and maximum to `targetMax`. Mirrors openskill.py's
+ * `_normalize`, used to bound partial-play weights so only the *relative*
+ * differences within a team matter. A single-element vector maps to
+ * `[targetMax]`; a vector whose values are all equal collapses to all
+ * `targetMin` (since there is no relative difference to preserve).
+ */
+export const normalize = (vector: number[], targetMin: number, targetMax: number): number[] => {
+  if (vector.length === 1) return [targetMax]
+  const sourceMin = Math.min(...vector)
+  const sourceMax = Math.max(...vector)
+  const sourceRange = sourceMax - sourceMin || 0.0001
+  const targetRange = targetMax - targetMin
+  return vector.map((value) => ((value - sourceMin) / sourceRange) * targetRange + targetMin)
+}
+
 export const rankings = (teams: Team[], rank: number[] = []) => {
   const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
