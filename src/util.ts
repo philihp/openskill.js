@@ -38,6 +38,30 @@ export const normalize = (vector: number[], targetMin: number, targetMax: number
   return vector.map((value) => ((value - sourceMin) / sourceRange) * targetRange + targetMin)
 }
 
+/**
+ * Apply a model's team-level `omega`/`delta` to a single player, scaled by a
+ * partial-play `weight`. The weight amplifies the update when the team's omega
+ * is non-negative and damps it when negative (matching openskill.py's
+ * asymmetric handling); a weight of `1` is a no-op. Shared by every Weng-Lin
+ * model — they differ in how omega and delta are derived, not in how those map
+ * back onto each player.
+ */
+export const updatePlayer = (
+  { mu, sigma }: Rating,
+  iOmega: number,
+  iDelta: number,
+  iSigmaSq: number,
+  weight: number,
+  kappa: number
+): Rating => {
+  const sigmaSq = sigma * sigma
+  const w = iOmega >= 0 ? weight : 1 / weight
+  return {
+    mu: mu + (sigmaSq / iSigmaSq) * iOmega * w,
+    sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta * w, kappa)),
+  }
+}
+
 export const rankings = (teams: Team[], rank: number[] = []) => {
   const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
