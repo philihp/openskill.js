@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import constants from '../constants'
 
 describe('constants', () => {
@@ -121,6 +122,21 @@ describe('constants', () => {
       expect(env).toMatchObject({
         LIMIT_SIGMA: true,
       })
+    })
+  })
+
+  describe('weightBounds', () => {
+    it('defaults to [1, 2] to match openskill.py', () => {
+      expect.assertions(1)
+      expect(constants({}).WEIGHT_BOUNDS).toStrictEqual([1, 2])
+    })
+    it('accepts a custom range', () => {
+      expect.assertions(1)
+      expect(constants({ weightBounds: [1, 5] }).WEIGHT_BOUNDS).toStrictEqual([1, 5])
+    })
+    it('accepts null to disable weight normalization', () => {
+      expect.assertions(1)
+      expect(constants({ weightBounds: null }).WEIGHT_BOUNDS).toBe(null)
     })
   })
 })

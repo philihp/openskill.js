@@ -6,40 +6,41 @@ import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
   const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
+  const { weight } = options
   const { teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const adjacentTeams = ladderPairs(teamRatings)
 
-  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents]) => {
+  return zip(teamRatings, adjacentTeams).map(([iTeamRating, iAdjacents], i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const [iOmega, iDelta] = iAdjacents.reduce(
-      ([omega, delta], [qMu, qSigmaSq, _qTeam, qRank]) => {
+    const { omega: iOmega, delta: iDelta } = iAdjacents.reduce(
+      (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
         const ciq = 2 * Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
         const deltaMu = (iMu - qMu) / ciq
-        const sigSqToCiq = iSigmaSq / ciq
+        const qEta = iSigmaSq / ciq
         const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
         if (qRank === iRank) {
-          return [
-            omega + sigSqToCiq * vt(deltaMu, EPSILON / ciq),
-            delta + ((iGamma * sigSqToCiq) / ciq) * wt(deltaMu, EPSILON / ciq),
-          ]
+          acc.omega += qEta * vt(deltaMu, EPSILON / ciq)
+          acc.delta += ((iGamma * qEta) / ciq) * wt(deltaMu, EPSILON / ciq)
+          return acc
         }
 
         const sign = qRank > iRank ? 1 : -1
-        return [
-          omega + sign * sigSqToCiq * v(sign * deltaMu, EPSILON / ciq),
-          delta + ((iGamma * sigSqToCiq) / ciq) * w(sign * deltaMu, EPSILON / ciq),
-        ]
+        acc.omega += sign * qEta * v(sign * deltaMu, EPSILON / ciq)
+        acc.delta += ((iGamma * qEta) / ciq) * w(sign * deltaMu, EPSILON / ciq)
+        return acc
       },
-      [0, 0]
+      { omega: 0, delta: 0 }
     )
 
-    return iTeam.map(({ mu, sigma }) => {
-      const sigmaSq = sigma * sigma
+    return iTeam.map((player, j) => {
+      const w = weight?.[i]?.[j] ?? 1
+      const sigmaSq = player.sigma * player.sigma
+      const factor = iOmega >= 0 ? w : 1 / w
       return {
-        mu: mu + (sigmaSq / iSigmaSq) * iOmega,
-        sigma: sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta, KAPPA)),
+        mu: player.mu + (sigmaSq / iSigmaSq) * iOmega * factor,
+        sigma: player.sigma * Math.sqrt(Math.max(1 - (sigmaSq / iSigmaSq) * iDelta * factor, KAPPA)),
       }
     })
   })

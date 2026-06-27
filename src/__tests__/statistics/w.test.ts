@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import { w } from '../../statistics'
 
 describe('statistics#w', () => {

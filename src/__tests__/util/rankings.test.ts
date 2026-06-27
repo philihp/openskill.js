@@ -1,3 +1,4 @@
+import { describe, it, expect } from '#test-helpers'
 import rating from '../../rating'
 import { rankings } from '../../util'
 
@@ -31,6 +32,18 @@ describe('util#rankings', () => {
   it('ranks given incremental', () => {
     expect.assertions(1)
     expect(rankings([a, b, c, d], [1, 2, 3, 4])).toStrictEqual([0, 1, 2, 3])
+  })
+  it('ranks given zero-indexed incremental', () => {
+    expect.assertions(1)
+    expect(rankings([a, b, c, d], [0, 1, 2, 3])).toStrictEqual([0, 1, 2, 3])
+  })
+  it('treats equal zero ranks as a draw', () => {
+    expect.assertions(1)
+    expect(rankings([a, b], [0, 0])).toStrictEqual([0, 0])
+  })
+  it('ranks zero-indexed with ties in start', () => {
+    expect.assertions(1)
+    expect(rankings([a, b, c, d], [0, 0, 2, 3])).toStrictEqual([0, 0, 2, 3])
   })
   it('ranks with ties in start', () => {
     expect.assertions(1)

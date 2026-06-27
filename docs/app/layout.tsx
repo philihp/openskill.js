@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: 'openskill.js — documentation',
   description:
     'Weng-Lin Bayesian online skill-ranking for JavaScript, with idiomatic examples in every language port.',
+  icons: { icon: '/favicon.svg' },
 }
 
 const guides = [

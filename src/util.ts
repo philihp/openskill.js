@@ -21,8 +21,25 @@ export const score = (q: number, i: number) => {
   return 0.5
 }
 
+/**
+ * Linearly rescale a vector into `[targetMin, targetMax]`, mapping the vector's
+ * own minimum to `targetMin` and maximum to `targetMax`. Mirrors openskill.py's
+ * `_normalize`, used to bound partial-play weights so only the *relative*
+ * differences within a team matter. A single-element vector maps to
+ * `[targetMax]`; a vector whose values are all equal collapses to all
+ * `targetMin` (since there is no relative difference to preserve).
+ */
+export const normalize = (vector: number[], targetMin: number, targetMax: number): number[] => {
+  if (vector.length === 1) return [targetMax]
+  const sourceMin = Math.min(...vector)
+  const sourceMax = Math.max(...vector)
+  const sourceRange = sourceMax - sourceMin || 0.0001
+  const targetRange = targetMax - targetMin
+  return vector.map((value) => ((value - sourceMin) / sourceRange) * targetRange + targetMin)
+}
+
 export const rankings = (teams: Team[], rank: number[] = []) => {
-  const teamScores = teams.map((_, i) => rank[i] || i)
+  const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
 
   let s = 0
@@ -35,6 +52,8 @@ export const rankings = (teams: Team[], rank: number[] = []) => {
   return outRank
 }
 
+type TeamSums = { mu: number; sigSq: number }
+
 // this is basically shared code, precomputed for every model
 const teamRating =
   (options: Options) =>
@@ -43,25 +62,34 @@ const teamRating =
     const rank = rankings(game, options.rank)
     return game.map((team, i) => {
       if (!BALANCE) {
-        return [
-          team.map(({ mu }) => mu).reduce(sum, 0),
-          team.map(({ sigma }) => sigma * sigma).reduce(sum, 0),
-          team,
-          rank[i],
-        ]
+        // Single fused traversal: accumulate Σμ and Σσ² in one pass instead
+        // of `team.map(mu).reduce + team.map(σ²).reduce`.
+        const { mu: muSum, sigSq } = team.reduce<TeamSums>(
+          (a, { mu, sigma }) => {
+            a.mu += mu
+            a.sigSq += sigma * sigma
+            return a
+          },
+          { mu: 0, sigSq: 0 }
+        )
+        return [muSum, sigSq, team, rank[i]]
       }
       // When balance=true, weaker players on a team contribute more to the
       // team rating, emphasizing skill disparity within the team.
       const ordinals = team.map(({ mu, sigma }) => TARGET + ALPHA * (mu - Z * sigma))
       const maxOrdinal = Math.max(...ordinals)
-      return [
-        team.map(({ mu }, j) => mu * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))).reduce(sum, 0),
-        team
-          .map(({ sigma }, j) => (sigma * (1 + (maxOrdinal - ordinals[j]) / (maxOrdinal + KAPPA))) ** 2)
-          .reduce(sum, 0),
-        team,
-        rank[i],
-      ]
+      const denom = maxOrdinal + KAPPA
+      const { mu: muSum, sigSq } = team.reduce<TeamSums>(
+        (a, { mu, sigma }, j) => {
+          const factor = 1 + (maxOrdinal - ordinals[j]) / denom
+          a.mu += mu * factor
+          const s = sigma * factor
+          a.sigSq += s * s
+          return a
+        },
+        { mu: 0, sigSq: 0 }
+      )
+      return [muSum, sigSq, team, rank[i]]
     })
   }
 
@@ -77,12 +105,28 @@ export const ladderPairs = <T>(ranks: T[]): T[][] => {
   })
 }
 
+/**
+ * `c`: total uncertainty across all teams in the game.
+ *
+ * Defined as sqrt( Σ_q (σ²_q + β²) ) where the sum runs over every team in
+ * the game. Used as the normalizing scale in every model's update equations.
+ *
+ * Reference: Weng & Lin (2011), "A Bayesian Approximation Method for Online
+ * Ranking", JMLR 12, sec. 3 (eq. for c_q).
+ */
 const utilC = (options: Options) => {
   const { BETASQ } = constants(options)
   return (teamRatings: TeamRating[]) =>
     Math.sqrt(teamRatings.map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ).reduce(sum, 0))
 }
 
+/**
+ * `sumQ[q]`: Plackett-Luce normalizer for team `q` — the sum of exp(μ_i / c)
+ * over every team `i` whose rank is at or worse than team q's rank
+ * (i.e. teams that placed equal or below q).
+ *
+ * Reference: Weng & Lin (2011), Plackett-Luce derivation (sec. 3.2).
+ */
 export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
     teamRatings
@@ -91,16 +135,24 @@ export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
       .reduce(sum, 0)
   )
 
+/**
+ * `A[i]`: size of the rank-tie group containing team `i` — i.e. the number of
+ * teams (including `i` itself) sharing rank `i`'s placement. Used by
+ * Plackett-Luce to scale ω/Δ contributions from ties.
+ *
+ * Reference: Weng & Lin (2011), Plackett-Luce tie handling (sec. 3.2).
+ */
 export const utilA = (teamRatings: TeamRating[]) =>
   teamRatings.map(
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank).length
   )
 
-export const gamma = (options: Options): Gamma =>
-  options.gamma ??
-  // default to iSigma / c
-  ((c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) => Math.sqrt(sigmaSq) / c)
+// default to iSigma / c
+const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) =>
+  Math.sqrt(sigmaSq) / c
+
+export const gamma = (options: Options): Gamma => options.gamma ?? defaultGamma
 
 export default (options: Options) => ({
   utilC: utilC(options),

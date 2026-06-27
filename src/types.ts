@@ -5,6 +5,16 @@ export type Rating = {
 
 export type Team = Rating[]
 
+export type Teams = readonly (readonly Rating[])[]
+
+export type RateTeam<U extends readonly Rating[]> = {
+  -readonly [J in keyof U]: Rating
+}
+
+export type RateResult<T extends Teams> = {
+  -readonly [K in keyof T]: RateTeam<T[K]>
+}
+
 export type Rank = number
 
 export type Gamma = (c: number, k: number, mu: number, sigmaSq: number, team: Rating[], qRank: number) => number
@@ -22,11 +32,11 @@ export type Options = {
   rank?: Rank[]
   score?: number[]
   weight?: number[][]
+  weightBounds?: [number, number] | null
   tau?: number
   margin?: number
   alpha?: number
   target?: number
-  preventSigmaIncrease?: boolean // deprecated, use limitSigma, this will go away someday
   limitSigma?: boolean
   balance?: boolean
   kappa?: number
