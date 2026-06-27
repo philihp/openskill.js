@@ -59,7 +59,7 @@
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.13",
     "esbuild": "0.28.1",
-    "eslint": "10.5.0",
+    "eslint": "10.6.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.6",
     "husky": "9.1.7",
