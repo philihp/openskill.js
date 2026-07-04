@@ -11,9 +11,9 @@
   "dependencies": {
     "@mdx-js/loader": "3.1.1",
     "@mdx-js/react": "3.1.1",
-    "@next/mdx": "^15.5.18",
+    "@next/mdx": "^16.0.0",
     "@types/mdx": "2.0.14",
-    "next": "^15.5.18",
+    "next": "^16.0.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "rehype-autolink-headings": "7.1.0",
