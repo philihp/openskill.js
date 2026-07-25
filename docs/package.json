@@ -14,8 +14,8 @@
     "@next/mdx": "^16.0.0",
     "@types/mdx": "2.0.14",
     "next": "^16.0.0",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "rehype-autolink-headings": "7.1.0",
     "rehype-slug": "6.0.0",
     "remark-gfm": "4.0.1"
