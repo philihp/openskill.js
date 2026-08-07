@@ -8,19 +8,29 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./models": {
-      "types": "./dist/models/index.d.ts",
-      "require": "./dist/models/index.cjs",
-      "import": "./dist/models/index.js"
+      "import": {
+        "types": "./dist/models/index.d.ts",
+        "default": "./dist/models/index.js"
+      },
+      "require": {
+        "types": "./dist/models/index.d.cts",
+        "default": "./dist/models/index.cjs"
+      }
     }
   },
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint .",
+    "build": "tsdown",
+    "lint": "oxlint && prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "typecheck": "tsc -p tsconfig.typecheck.json",
     "prepare": "husky && npm run build",
     "release": "np",
@@ -55,19 +65,15 @@
   },
   "homepage": "https://github.com/philihp/openskill.js#readme",
   "devDependencies": {
-    "@eslint/js": "10.0.1",
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.13",
-    "esbuild": "0.28.1",
-    "eslint": "10.8.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.6",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
-    "tsup": "8.5.1",
+    "oxlint": "1.77.0",
+    "prettier": "3.9.6",
+    "tsdown": "0.22.14",
     "tsx": "4.23.4",
-    "typescript": "6.0.3",
-    "typescript-eslint": "8.65.0"
+    "typescript": "7.0.2"
   },
   "prettier": "@philihp/prettier-config",
   "dependencies": {

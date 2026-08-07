@@ -8,7 +8,7 @@ test/
 .coveralls.yml
 .gitattributes
 .tool-versions
-.eslintignore
+.oxlintrc.json
 README.md
 nyc.config.js
 **/__tests__/

@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "ignorePatterns": ["dist", "benchmark", "docs"],
+  "rules": {
+    "typescript/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/__tests__/**", "src/**/*.test.ts"],
+      "rules": {
+        // Tests deliberately re-declare the shared fixtures (a1, b1, ...) inside
+        // individual cases so each case reads standalone.
+        "no-shadow": "off"
+      }
+    }
+  ]
+}

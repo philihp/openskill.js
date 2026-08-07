@@ -35,4 +35,4 @@ Just open a PR. I'll see it :) While you're waiting, please make sure status che
 
 - Unit tests will run for all actively supported versions of Node
 - Test coverage will run and go red if it dips below 100%.
-- Prettier and ESLint will prevent ugly code. If those are green, I probably don't mind.
+- Prettier and oxlint will prevent ugly code. If those are green, I probably don't mind.
