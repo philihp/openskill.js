@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* oxlint-disable typescript/no-unused-vars */
 // Type-level checks for rate()'s shape-preserving signature.
 // These are compile-time only assertions; `npm run build` (tsc) fails if any
 // of them break. There is nothing to execute at runtime.

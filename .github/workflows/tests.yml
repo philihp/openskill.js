@@ -34,8 +34,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run build --if-present
+      # The suite runs against src/ via tsx, so dist is never involved. Skip the
+      # build (and the `prepare` script that triggers it) so this matrix stays a
+      # pure runtime check of the oldest supported Node -- tsdown itself needs
+      # Node >=22.18, while the library it emits still targets Node 20. The
+      # build is covered by the lint and coverage jobs.
+      - run: npm install --ignore-scripts
       - run: npm test
 
   coverage:
