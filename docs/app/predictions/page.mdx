@@ -1,7 +1,9 @@
 # Predictions
 
 `openskill` exposes three prediction helpers in addition to `rate`. They take
-the same `teams` shape as `rate` and never mutate the inputs.
+the same `teams` shape as `rate` and never mutate the inputs. Each also
+accepts the same hyperparameter options as `rate` (`mu`, `sigma`, `beta`,
+`balance`, …), so predictions stay consistent with however you rate.
 
 ## `predictWin`
 
@@ -14,7 +16,7 @@ const a1 = rating()
 const a2 = rating({ mu: 33.564, sigma: 1.123 })
 
 const probs = predictWin([[a1], [a2]])
-// [ 0.4511..., 0.5489... ]
+// [ 0.2021..., 0.7978... ]
 
 probs[0] + probs[1] // 1
 ```
@@ -29,7 +31,7 @@ absolute value depends on the rules of your game.
 import { predictDraw } from 'openskill'
 
 predictDraw([[a1], [a2]])
-// 0.0902...
+// 0.2164...
 ```
 
 This is analogous to the *quality* metric in TrueSkill — use it to optimize
@@ -37,11 +39,17 @@ matchmaking, seedings, or tournament brackets.
 
 ## `predictRank`
 
-The predicted finishing order with associated probabilities. Useful when you
-care about more than just *who wins*.
+The predicted finishing order with associated probabilities — one
+`[placement, probability]` pair per team. Useful when you care about more
+than just *who wins*.
 
 ```js
-import { predictRank } from 'openskill'
+import { rating, predictRank } from 'openskill'
+
+const a1 = rating()
+const b1 = rating({ mu: 30, sigma: 5 })
+const c1 = rating({ mu: 20, sigma: 8 })
 
 predictRank([[a1], [b1], [c1]])
+// [[2, 0.3276...], [1, 0.4867...], [3, 0.1855...]]
 ```

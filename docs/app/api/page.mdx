@@ -41,8 +41,13 @@ rate(
       | typeof thurstoneMostellerPart
     rank?: number[]
     score?: number[]
+    margin?: number
+    weight?: number[][]
+    weightBounds?: [number, number] | null
     tau?: number
-    preventSigmaIncrease?: boolean
+    limitSigma?: boolean
+    balance?: boolean
+    gamma?: Gamma
     mu?: number
     sigma?: number
     beta?: number
@@ -79,6 +84,79 @@ rate([[a1], [b1], [c1], [d1]], { score: [37, 19, 37, 42] })
 // → 🥈 🐌 🥈 🥇
 ```
 
+### With victory margins
+
+When both `score` and `margin` are given, rating updates are amplified for
+wins by more than `margin` points. A 20-point blowout moves ratings more
+than a 1-point squeaker; the amplification grows logarithmically, so extreme
+blowouts don't produce runaway swings. Score gaps within the margin update
+as ordinary wins/losses.
+
+```js
+rate(
+  [
+    [a1, a2],
+    [b1, b2],
+  ],
+  { score: [37, 12], margin: 10 }
+)
+```
+
+### With partial-play weights
+
+`weight` scales each player's rating update by their contribution to the
+match — useful when a player only played part of a game, or you have a
+per-player contribution metric (damage dealt, objectives captured, minutes
+played). It's shaped like `teams`: one number per player.
+
+```js
+rate(
+  [
+    [a1, a2],
+    [b1, b2],
+  ],
+  {
+    weight: [
+      [1, 0.5], // a2 only played half the game
+      [1, 1],
+    ],
+  }
+)
+```
+
+By default each team's weights are normalized into `[1, 2]`, so only the
+*relative* differences within a team matter — matching
+[openskill.py](https://github.com/vivekjoshy/openskill.py) bit-for-bit.
+Change the range with `weightBounds: [min, max]`, or pass
+`weightBounds: null` to apply your raw weights as-is.
+
+### With `tau` and `limitSigma`
+
+`tau` (default `25/300`) is an additive dynamics factor that keeps `sigma`
+from collapsing to zero over many games, so ratings stay responsive to skill
+changes. A side effect is that `sigma` can *increase*, which can make a
+player's [ordinal](#ordinalrating-options) drop even after a win. Set
+`limitSigma: true` to clamp `sigma` so it never rises.
+
+```js
+rate(teams, { tau: 0.3, limitSigma: true })
+```
+
+### With `balance`
+
+`balance: true` weights weaker players' contributions to their team's rating
+more heavily, emphasizing skill disparity within a team.
+
+```js
+rate(teams, { balance: true })
+```
+
+### Custom `gamma`
+
+Advanced: pass a `gamma` function to override how much each team's `sigma`
+shrinks per update. The default is `sigma / c` (where `c` is the total
+uncertainty in the match).
+
 ## `ordinal(rating, options?)`
 
 Reduce a rating to a single number for display or sorting.
@@ -91,32 +169,45 @@ ordinal(r: Rating, options?: { z?: number; alpha?: number; target?: number }): n
 ordinal({ mu: 25, sigma: 8.333 }) // ≈ 0.0
 ```
 
-## `predictWin(teams)`
+## `predictWin(teams, options?)`
 
 Returns an array of probabilities, one per team, that sums to 1.
 
 ```js
+const a1 = rating()
+const b1 = rating({ mu: 33.564, sigma: 1.123 })
+
 predictWin([[a1], [b1]])
-// [0.4511..., 0.5489...]
+// [0.2021..., 0.7978...]
 ```
 
-## `predictDraw(teams)`
+## `predictDraw(teams, options?)`
 
 Returns the relative likelihood that a match between these teams ends in a
 draw. Useful for matchmaking quality scores.
 
 ```js
 predictDraw([[a1], [b1]])
-// 0.0902...
+// 0.2164...
 ```
 
-## `predictRank(teams)`
+## `predictRank(teams, options?)`
 
-Returns the predicted finishing order with associated probabilities.
+Returns, for each team, its predicted placement and the probability of that
+placement.
 
 ```js
+const a1 = rating()
+const b1 = rating({ mu: 30, sigma: 5 })
+const c1 = rating({ mu: 20, sigma: 8 })
+
 predictRank([[a1], [b1], [c1]])
+// [[2, 0.3276...], [1, 0.4867...], [3, 0.1855...]]
 ```
+
+All three predictors accept the same hyperparameter options as `rate`
+(`mu`, `sigma`, `beta`, `balance`, …) so predictions stay consistent with
+however you rate.
 
 ## Selecting a model
 

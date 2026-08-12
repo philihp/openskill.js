@@ -84,8 +84,25 @@ bit-for-bit. To get there, a few defaults changed:
   `erf` using Python's `NormalDist` formulas. This only affects the
   Thurstone-Mosteller models.
 
+## Beyond the basics
+
+`rate` also supports:
+
+- **Ranks and scores** — `rank: [4, 1, 3, 2]` or `score: [37, 19, 37, 42]`
+  for arbitrary orderings and ties ([Ranking →](/ranking))
+- **Victory margins** — `margin` amplifies updates for lopsided scores
+  ([Ranking →](/ranking))
+- **Partial play** — `weight` scales each player's update by their
+  contribution ([Ranking →](/ranking))
+- **Alternate models** — Bradley-Terry and Thurstone-Mosteller variants
+  ([Models →](/models))
+- **Tuning** — `tau`, `limitSigma`, `balance`, and the underlying
+  hyperparameters ([API Reference →](/api))
+
 ## Next
 
 - [API Reference →](/api)
+- [Ranking & Ordinal →](/ranking)
 - [Models →](/models)
+- [Predictions →](/predictions)
 - [Examples by language →](/examples/javascript)
