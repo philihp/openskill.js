@@ -44,6 +44,45 @@ const [[a2], [b2], [c2], [d2]] = rate(
 )
 ```
 
+## Victory margins with `margin`
+
+When you pass `score`, you can also pass `margin` to make the *size* of a
+victory matter. Score gaps larger than `margin` amplify the rating update —
+logarithmically, so blowouts don't cause runaway swings — while gaps within
+the margin count as ordinary wins/losses.
+
+```js
+const [[a2], [b2]] = rate(
+  [[a1], [b1]],
+  { score: [37, 12], margin: 10 } // a 25-point win, amplified
+)
+```
+
+## Partial play with `weight`
+
+If a player only participated for part of a match — or you track a
+contribution metric like time played or objectives captured — pass `weight`,
+shaped like `teams`, to scale each player's update.
+
+```js
+const [[a2, b2], [c2, d2]] = rate(
+  [
+    [a1, b1],
+    [c1, d1],
+  ],
+  {
+    weight: [
+      [1, 0.5], // b1 only played half the match
+      [1, 1],
+    ],
+  }
+)
+```
+
+Weights are normalized per team into `[1, 2]` by default (only relative
+differences within a team matter). See the [API reference](/api) for
+`weightBounds`.
+
 ## Ties
 
 Ties are encoded as equal `rank` or equal `score`. Players sharing a position

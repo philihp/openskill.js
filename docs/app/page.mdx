@@ -11,12 +11,15 @@ skill-ranking method, described in
 [*A Bayesian Approximation Method for Online Ranking*](https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf).
 
 `openskill` is a faster, simpler, and patent-free alternative to TrueSkill that
-supports asymmetric teams, free-for-all matches, partial rankings, and ties.
+supports asymmetric teams, free-for-all matches, partial rankings, ties,
+partial play, and victory margins.
 
 ## Why openskill?
 
 - **Fast** — up to 20× faster than TrueSkill (see the [benchmarks](#speed)).
-- **Flexible** — Bradley-Terry, Thurstone-Mosteller, and Plackett-Luce models.
+- **Flexible** — Bradley-Terry, Thurstone-Mosteller, and Plackett-Luce models,
+  plus per-player [partial-play weights](/ranking) and score-based
+  [victory margins](/ranking).
 - **Portable** — bit-for-bit compatible with the reference
   [Python implementation](https://github.com/vivekjoshy/openskill.py), so you
   can train in one runtime and serve in another.
