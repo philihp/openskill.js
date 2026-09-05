@@ -68,7 +68,7 @@
     "@philihp/prettier-config": "1.0.0",
     "@tsconfig/recommended": "1.0.13",
     "husky": "9.1.7",
-    "lint-staged": "17.4.1",
+    "lint-staged": "17.5.0",
     "oxlint": "1.81.0",
     "prettier": "3.9.6",
     "tsdown": "0.23.0",
