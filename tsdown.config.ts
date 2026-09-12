@@ -3,7 +3,7 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: ['src/index.ts', 'src/models/index.ts'],
   format: ['cjs', 'esm'],
-  sourcemap: true,
+  sourcemap: 'hidden',
   clean: true,
   dts: true,
   hash: false,
