@@ -35,9 +35,9 @@ Logistic distribution over player skill — similar to Glicko.
 - `bradleyTerryFull` — full pairing. More accurate, but every team is
   compared against every other team.
 - `bradleyTerryPart` — partial pairing. Each team is compared only with its
-  ranking neighbors, at most `windowSize` places away (default `4`). Use this
-  for high-*k* matches (e.g. 100-player races) where a full pairing would be
-  expensive.
+  ranking neighbors: the adjacent teams, or the teams at most `windowSize`
+  places away when you set it. Use this for high-*k* matches (e.g. 100-player
+  races) where a full pairing would be expensive.
 
 ## Thurstone-Mosteller
 
