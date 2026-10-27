@@ -32,8 +32,6 @@ jobs:
           cache-dependency-path: docs/package-lock.json
       - run: npm ci
       - run: npm run build
-        env:
-          GITHUB_PAGES: 'true'
       - uses: actions/configure-pages@v6
         with:
           enablement: true

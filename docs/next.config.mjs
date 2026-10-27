@@ -1,26 +1,20 @@
 import createMDX from '@next/mdx'
-import rehypeSlug from 'rehype-slug'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import remarkGfm from 'remark-gfm'
 
-const isPages = process.env.GITHUB_PAGES === 'true'
-
+// The site is served from the root of its custom domain
+// (https://openskill.philihp.com), so it needs no basePath.
 const nextConfig = {
   output: 'export',
   pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
-  basePath: isPages ? '/openskill.js' : '',
-  assetPrefix: isPages ? '/openskill.js/' : '',
   trailingSlash: true,
   images: { unoptimized: true },
 }
 
+// Turbopack, the default bundler in Next.js 16, passes loader options to
+// Rust, so plugins must be named as strings, not imported as functions.
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [
-      rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-    ],
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: ['rehype-slug', ['rehype-autolink-headings', { behavior: 'wrap' }]],
   },
 })
 
