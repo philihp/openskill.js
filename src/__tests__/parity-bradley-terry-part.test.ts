@@ -10,6 +10,10 @@ import bradleyTerryPart from '../models/bradley-terry-part'
 // margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
 // upstream constants but skipped: openskill.js scales the margin post-hoc in
 // rate.ts; openskill.py folds it into the model.
+//
+// openskill.py's part models use window_size=4 by default. openskill.js keeps
+// the 5.x adjacent pairing unless windowSize is set, so the 3+-team cases pass
+// windowSize: 4. 2-team games give the same result either way.
 
 describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
   const r = { mu: 8.954715133403496, sigma: 5.848503823078021 }
@@ -28,7 +32,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L331-L340
   it('ranks', () => {
-    const result = rate([[r], [r, r], [r], [r, r]], { model: bradleyTerryPart, rank: [2, 1, 4, 3] })
+    const result = rate([[r], [r, r], [r], [r, r]], { model: bradleyTerryPart, rank: [2, 1, 4, 3], windowSize: 4 })
     expect(result).toStrictEqual([
       [{ mu: 9.870790808603847, sigma: 5.749148172476351 }],
       [
@@ -104,7 +108,12 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L356-L364
   it('limit_sigma', () => {
-    const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryPart, rank: [2, 1, 3], limitSigma: true })
+    const result = rate([[r], [r, r], [r, r, r]], {
+      model: bradleyTerryPart,
+      rank: [2, 1, 3],
+      limitSigma: true,
+      windowSize: 4,
+    })
     expect(result).toStrictEqual([
       [{ mu: 9.53168513913054, sigma: 5.788305447884618 }],
       [
@@ -121,7 +130,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L365-L372
   it('ties', () => {
-    const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryPart, rank: [1, 2, 1] })
+    const result = rate([[r], [r, r], [r, r, r]], { model: bradleyTerryPart, rank: [1, 2, 1], windowSize: 4 })
     expect(result).toStrictEqual([
       [{ mu: 10.338265059251315, sigma: 5.788305447884618 }],
       [
@@ -148,6 +157,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
       {
         model: bradleyTerryPart,
         rank: [2, 1, 4, 3],
+        windowSize: 4,
         weight: [
           [2, 0, 0],
           [1, 2],

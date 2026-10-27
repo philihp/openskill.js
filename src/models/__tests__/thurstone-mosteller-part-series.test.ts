@@ -2,10 +2,7 @@ import { describe, it, expect } from '#test-helpers'
 import { rate, rating } from '../..'
 import { thurstoneMostellerPart } from '..'
 
-// these games were first checked against rank-1.02, which paired only adjacent
-// teams and summed their updates. The numbers are now regression values for the
-// sliding window (default 4) that averages the updates, as openskill.py 6.2.0
-// does. The 3 FFA games:
+// numbers in this test suite come from rank-1.02 based on 3 FFA games:
 // 0, 1, 2, 3, 4 with a score of 9, 7, 7, 5, 5
 // 4, 2, 1 with a score of 9, 5, 5
 // 3, 1, 2, 0 with a score of 9, 9, 7, 7
@@ -26,16 +23,16 @@ describe('thurstoneMostellerPart#series', () => {
       score: [9, 7, 7, 5, 5],
     })
 
-    expect(p01.mu).toBeCloseTo(27.109107047)
-    expect(p01.sigma).toBeCloseTo(8.063755195)
-    expect(p11.mu).toBeCloseTo(25.527276762)
-    expect(p11.sigma).toBeCloseTo(8.02462753)
-    expect(p21.mu).toBeCloseTo(25.527276762)
-    expect(p21.sigma).toBeCloseTo(8.02462753)
-    expect(p31.mu).toBeCloseTo(23.418169715)
-    expect(p31.sigma).toBeCloseTo(8.02462753)
-    expect(p41.mu).toBeCloseTo(23.418169715)
-    expect(p41.sigma).toBeCloseTo(8.02462753)
+    expect(p01.mu).toBeCloseTo(27.108980741)
+    expect(p01.sigma).toBeCloseTo(8.063357519)
+    expect(p11.mu).toBeCloseTo(22.891019259)
+    expect(p11.sigma).toBeCloseTo(7.620583708)
+    expect(p21.mu).toBeCloseTo(27.108980741)
+    expect(p21.sigma).toBeCloseTo(7.620583708)
+    expect(p31.mu).toBeCloseTo(22.891019259)
+    expect(p31.sigma).toBeCloseTo(7.620583708)
+    expect(p41.mu).toBeCloseTo(25.0)
+    expect(p41.sigma).toBeCloseTo(7.905694531)
 
     // const p02 = p01
     // const p32 = p31

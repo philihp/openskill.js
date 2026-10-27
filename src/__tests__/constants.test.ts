@@ -141,9 +141,8 @@ describe('constants', () => {
   })
 
   describe('windowSize', () => {
-    // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L29
-    it('defaults to 4', () => {
-      expect(constants({}).WINDOW_SIZE).toBe(4)
+    it('defaults to undefined, which keeps the 5.x adjacent pairing', () => {
+      expect(constants({}).WINDOW_SIZE).toBe(undefined)
     })
     it('accepts windowSize override', () => {
       expect(constants({ windowSize: 2 }).WINDOW_SIZE).toBe(2)

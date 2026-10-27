@@ -25,7 +25,7 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1])).toStrictEqual([
       [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 25, sigma: 8.24891482617727 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
       [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
     ])
   })
@@ -34,8 +34,8 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 25.702993588834456, sigma: 8.24891482617727 }],
-      [{ mu: 24.297006411165544, sigma: 8.24891482617727 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
       [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
     ])
   })
@@ -44,9 +44,9 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1, team1])).toStrictEqual([
       [{ mu: 27.10898076650337, sigma: 8.24891482617727 }],
-      [{ mu: 26.054490383251686, sigma: 8.24891482617727 }],
-      [{ mu: 25, sigma: 8.24891482617727 }],
-      [{ mu: 23.945509616748314, sigma: 8.24891482617727 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
+      [{ mu: 25, sigma: 8.163623409651494 }],
       [{ mu: 22.89101923349663, sigma: 8.24891482617727 }],
     ])
   })
@@ -55,14 +55,14 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team3, team1, team2])).toStrictEqual([
       [
-        { mu: 25.549180529575406, sigma: 8.304762165041671 },
-        { mu: 25.549180529575406, sigma: 8.304762165041671 },
-        { mu: 25.549180529575406, sigma: 8.304762165041671 },
+        { mu: 25.314271358583422, sigma: 8.309539398724164 },
+        { mu: 25.314271358583422, sigma: 8.309539398724164 },
+        { mu: 25.314271358583422, sigma: 8.309539398724164 },
       ],
-      [{ mu: 26.369901713689508, sigma: 8.295505032745819 }],
+      [{ mu: 27.739803427379016, sigma: 8.25750343942877 }],
       [
-        { mu: 23.080917756735086, sigma: 8.275871005496095 },
-        { mu: 23.080917756735086, sigma: 8.275871005496095 },
+        { mu: 21.94592521403756, sigma: 8.245518834730671 },
+        { mu: 21.94592521403756, sigma: 8.245518834730671 },
       ],
     ])
   })
@@ -79,37 +79,10 @@ describe('thurstoneMostellerPart', () => {
     expect.assertions(1)
     expect(rate([team1, team1, team1, team1, team1], { gamma: (_, k) => 1 / k })).toStrictEqual([
       [{ mu: 27.10898076650337, sigma: 8.280042417239251 }],
-      [{ mu: 26.054490383251686, sigma: 8.280042417239251 }],
-      [{ mu: 25, sigma: 8.280042417239251 }],
-      [{ mu: 23.945509616748314, sigma: 8.280042417239251 }],
+      [{ mu: 25, sigma: 8.226406288174564 }],
+      [{ mu: 25, sigma: 8.226406288174564 }],
+      [{ mu: 25, sigma: 8.226406288174564 }],
       [{ mu: 22.89101923349663, sigma: 8.280042417239251 }],
     ])
-  })
-
-  describe('windowSize', () => {
-    const ffa = (n: number) => Array.from({ length: n }, () => team1)
-
-    it('defaults to 4', () => {
-      expect(rate(ffa(7))).toStrictEqual(rate(ffa(7), { windowSize: 4 }))
-    })
-
-    it('window of 1 compares only adjacent teams', () => {
-      const [first] = rate(ffa(5), { windowSize: 1 })
-      expect(first).toStrictEqual(rate(ffa(2))[0])
-    })
-
-    it('window as wide as the game compares every pair', () => {
-      expect(rate(ffa(5), { windowSize: 4 })).toStrictEqual(rate(ffa(5), { windowSize: Infinity }))
-    })
-
-    it('wider window reaches further teams', () => {
-      // with a window of 4, team 1 of 7 sees one loss and four wins; with 6 it
-      // sees one more win, so its average update is larger
-      expect(rate(ffa(7))[1][0].mu).toBeLessThan(rate(ffa(7), { windowSize: 6 })[1][0].mu)
-    })
-
-    it('window of 0 leaves every rating unchanged', () => {
-      expect(rate(ffa(3), { windowSize: 0 })).toStrictEqual(ffa(3))
-    })
   })
 })

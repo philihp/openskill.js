@@ -2,10 +2,7 @@ import { describe, it, expect } from '#test-helpers'
 import { rate, rating } from '../..'
 import { bradleyTerryPart } from '..'
 
-// these games were first checked against rank-1.02, which paired only adjacent
-// teams and summed their updates. The numbers are now regression values for the
-// sliding window (default 4) that averages the updates, as openskill.py 6.2.0
-// does. The 3 FFA games:
+// numbers in this test suite come from rank-1.02 based on 3 FFA games:
 // 0, 1, 2, 3, 4 with a score of 9, 7, 7, 5, 5
 // 4, 2, 1 with a score of 9, 5, 5
 // 3, 1, 2, 0 with a score of 9, 9, 7, 7
@@ -35,15 +32,15 @@ describe('bradleyTerryPart#series', () => {
       score: [9, 9, 7, 7],
     })
 
-    expect(p03.mu).toBeCloseTo(25.559581717)
-    expect(p03.sigma).toBeCloseTo(7.811686624)
-    expect(p13.mu).toBeCloseTo(25.944312054)
-    expect(p13.sigma).toBeCloseTo(7.580746582)
-    expect(p23.mu).toBeCloseTo(22.714284363)
-    expect(p23.sigma).toBeCloseTo(7.580746582)
-    expect(p33.mu).toBeCloseTo(24.956651627)
-    expect(p33.sigma).toBeCloseTo(7.808990544)
-    expect(p43.mu).toBeCloseTo(25.816391073)
-    expect(p43.sigma).toBeCloseTo(7.815016512)
+    expect(p03.mu).toBeCloseTo(27.303389976)
+    expect(p03.sigma).toBeCloseTo(7.786799495)
+    expect(p13.mu).toBeCloseTo(25.349369733)
+    expect(p13.sigma).toBeCloseTo(7.097135632)
+    expect(p23.mu).toBeCloseTo(22.388557102)
+    expect(p23.sigma).toBeCloseTo(6.9235932)
+    expect(p33.mu).toBeCloseTo(22.414946624)
+    expect(p33.sigma).toBeCloseTo(7.540451289)
+    expect(p43.mu).toBeCloseTo(27.834104352)
+    expect(p43.sigma).toBeCloseTo(7.80374707)
   })
 })
