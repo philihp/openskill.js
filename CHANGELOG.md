@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Drops support for Node 20, which reached end of life on 2026-04-30.
+  `engines.node` is now `>=22.0.0`. CI tests Node 22, 24 and 26, and the
+  development and publish version (`.node-version`) is now Node 26 LTS.
 - Adds the opt-in `windowSize` option to the partial-pairing models,
   `bradleyTerryPart` and `thurstoneMostellerPart`, from openskill.py 6.1.0. When
   you set it, each team is compared with the teams at most `windowSize` places
