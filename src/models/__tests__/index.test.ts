@@ -4,6 +4,9 @@ import { bradleyTerryFull, bradleyTerryPart, plackettLuce, thurstoneMostellerFul
 
 // numbers in this test suite come from rank-1.02 on a 3-way
 // these differ in that it uses an epsilon of 0.1
+//
+// the partial models average the middle team's two updates, as openskill.py
+// does, where rank-1.02 summed them. So their middle sigma is a regression value.
 
 describe('models#index', () => {
   const r = rating()
@@ -30,7 +33,7 @@ describe('models#index', () => {
     expect(b.mu).toBeCloseTo(25.0)
     expect(c.mu).toBeCloseTo(22.364768617)
     expect(a.sigma).toBeCloseTo(8.065506316)
-    expect(b.sigma).toBeCloseTo(7.788474808)
+    expect(b.sigma).toBeCloseTo(8.065901414)
     expect(c.sigma).toBeCloseTo(8.065506316)
   })
   it('runs PL', () => {
@@ -70,7 +73,7 @@ describe('models#index', () => {
     expect(b.mu).toBeCloseTo(25.0)
     expect(c.mu).toBeCloseTo(22.891019)
     expect(a.sigma).toBeCloseTo(8.0633358)
-    expect(b.sigma).toBeCloseTo(7.784024)
+    expect(b.sigma).toBeCloseTo(8.063755)
     expect(c.sigma).toBeCloseTo(8.063358)
   })
 })

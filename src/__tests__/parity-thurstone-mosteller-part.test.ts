@@ -12,10 +12,6 @@ import thurstoneMostellerPart from '../models/thurstone-mosteller-part'
 // upstream constants but skipped: openskill.js scales the margin post-hoc in
 // rate.ts; openskill.py folds it into the model.
 //
-// openskill.py's part models use window_size=4 by default. openskill.js keeps
-// the 5.x adjacent pairing unless windowSize is set, so the 3+-team cases pass
-// windowSize: 4. 2-team games give the same result either way.
-//
 // ranks and ties agree to within 1 ULP, not bit-for-bit. One v() call in each
 // case gets an input where @stdlib's erf (ranks) or V8's Math.exp (ties) rounds
 // 1 ULP away from CPython's libm. The window and averaging logic is the same as
@@ -47,11 +43,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L339-L348
   it('ranks', () => {
-    const result = rate([[r], [r, r], [r], [r, r]], {
-      model: thurstoneMostellerPart,
-      rank: [2, 1, 4, 3],
-      windowSize: 4,
-    })
+    const result = rate([[r], [r, r], [r], [r, r]], { model: thurstoneMostellerPart, rank: [2, 1, 4, 3] })
     expectRatingsCloseTo(result, [
       [{ mu: 27.91178106308775, sigma: 7.9190101914124975 }],
       [
@@ -127,12 +119,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L364-L372
   it('limit_sigma', () => {
-    const result = rate([[r], [r, r], [r, r, r]], {
-      model: thurstoneMostellerPart,
-      rank: [2, 1, 3],
-      limitSigma: true,
-      windowSize: 4,
-    })
+    const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerPart, rank: [2, 1, 3], limitSigma: true })
     expect(result).toStrictEqual([
       [{ mu: 27.975386377266542, sigma: 7.9377235327380635 }],
       [
@@ -149,7 +136,7 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_part.py#L373-L380
   it('ties', () => {
-    const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerPart, rank: [1, 2, 1], windowSize: 4 })
+    const result = rate([[r], [r, r], [r, r, r]], { model: thurstoneMostellerPart, rank: [1, 2, 1] })
     expectRatingsCloseTo(result, [
       [{ mu: 29.44309461220982, sigma: 7.919695615857688 }],
       [
@@ -176,7 +163,6 @@ describe('ThurstoneMostellerPart parity with openskill.py 6.2.0', () => {
       {
         model: thurstoneMostellerPart,
         rank: [2, 1, 4, 3],
-        windowSize: 4,
         weight: [
           [2, 0, 0],
           [1, 2],

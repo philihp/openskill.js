@@ -154,20 +154,20 @@ rate(teams, { balance: true })
 
 ### With `windowSize`
 
-By default the partial-pairing models (`bradleyTerryPart` and
-`thurstoneMostellerPart`) compare each team only with the teams directly above
-and below it in the ranking, and add those updates.
+The partial-pairing models (`bradleyTerryPart` and `thurstoneMostellerPart`)
+compare each team only with the teams at most `windowSize` places above or
+below it in the ranking, then average those comparisons. The default is `4`,
+as in [openskill.py](https://github.com/vivekjoshy/openskill.py). A larger
+window compares more teams, so its accuracy is nearer to a full-pairing model,
+but it costs more time. The other models ignore this option.
 
-Set `windowSize` to use the sliding window from
-[openskill.py](https://github.com/vivekjoshy/openskill.py) instead. Each team is
-then compared with the teams at most `windowSize` places above or below it, and
-the model averages those comparisons. openskill.py uses `4`, so set
-`windowSize: 4` to get the same results. A larger window compares more teams, so
-its accuracy is nearer to a full-pairing model, but it costs more time. The
-other models ignore this option.
+When the window reaches all teams (`windowSize` is `teams.length - 1` or more),
+tied teams with the same ratings get the same update, and the order of tied
+teams has no effect, apart from floating-point rounding. In a larger game, tied teams can still get different
+updates, because their windows cover different teams.
 
 ```js
-rate(teams, { model: bradleyTerryPart, windowSize: 4 })
+rate(teams, { model: bradleyTerryPart, windowSize: 8 })
 ```
 
 ### Custom `gamma`
