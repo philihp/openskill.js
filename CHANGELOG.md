@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## v5.1.0
 
+- Published files no longer carry `sourceMappingURL` comments, so tools do not
+  ask for the source maps, which the npm package leaves out.
 - Drops support for Node 20, which reached end of life on 2026-04-30.
   `engines.node` is now `>=22.0.0`. CI tests Node 22, 24 and 26, and the
   development and publish version (`.node-version`) is now Node 26 LTS.
