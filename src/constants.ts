@@ -1,6 +1,24 @@
 import { Options } from './types'
 
-const builder = (options: Options) => {
+export type Constants = {
+  SIGMA: number
+  MU: number
+  EPSILON: number
+  TWOBETASQ: number
+  BETA: number
+  BETASQ: number
+  Z: number
+  ALPHA: number
+  TARGET: number
+  TAU: number
+  LIMIT_SIGMA: boolean
+  BALANCE: boolean
+  KAPPA: number
+  WEIGHT_BOUNDS: [number, number] | null
+  WINDOW_SIZE: number | undefined
+}
+
+const builder = (options: Options): Constants => {
   // i'd love to know of a better way to do this
   const { z = 3, mu = 25, epsilon = 0.1, alpha = 1, target = 0 } = options
   const { tau = 25 / 300, sigma = 25 / 3, beta = 25 / 6, limitSigma = false } = options

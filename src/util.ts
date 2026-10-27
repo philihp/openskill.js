@@ -8,9 +8,9 @@ export type TeamSigmaSq = number
 
 export type TeamRating = [TeamMu, TeamSigmaSq, Team, Rank]
 
-export const sum = (a: number, b: number) => a + b
+export const sum = (a: number, b: number): number => a + b
 
-export const score = (q: number, i: number) => {
+export const score = (q: number, i: number): number => {
   if (q < i) {
     return 0.0
   }
@@ -62,7 +62,7 @@ export const updatePlayer = (
   }
 }
 
-export const rankings = (teams: Team[], rank: number[] = []) => {
+export const rankings = (teams: Team[], rank: number[] = []): Rank[] => {
   const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
 
@@ -153,7 +153,7 @@ export const windowPairs = <T>(items: T[], windowSize: number): T[][] => {
  */
 const utilC = (options: Options) => {
   const { BETASQ } = constants(options)
-  return (teamRatings: TeamRating[]) =>
+  return (teamRatings: TeamRating[]): number =>
     Math.sqrt(teamRatings.map(([_teamMu, teamSigmaSq, _team, _rank]) => teamSigmaSq + BETASQ).reduce(sum, 0))
 }
 
@@ -164,7 +164,7 @@ const utilC = (options: Options) => {
  *
  * Reference: Weng & Lin (2011), Plackett-Luce derivation (sec. 3.2).
  */
-export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
+export const utilSumQ = (teamRatings: TeamRating[], c: number): number[] =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
     teamRatings
       .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
@@ -179,7 +179,7 @@ export const utilSumQ = (teamRatings: TeamRating[], c: number) =>
  *
  * Reference: Weng & Lin (2011), Plackett-Luce tie handling (sec. 3.2).
  */
-export const utilA = (teamRatings: TeamRating[]) =>
+export const utilA = (teamRatings: TeamRating[]): number[] =>
   teamRatings.map(
     ([_iMu, _iSigmaSq, _iTeam, iRank]) =>
       teamRatings.filter(([_qMu, _qSigmaSq, _qTeam, qRank]) => iRank === qRank).length
@@ -191,7 +191,13 @@ const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number
 
 export const gamma = (options: Options): Gamma => options.gamma ?? defaultGamma
 
-export default (options: Options) => ({
+export type Util = {
+  utilC: (teamRatings: TeamRating[]) => number
+  teamRating: (game: Team[]) => TeamRating[]
+  gamma: Gamma
+}
+
+export default (options: Options): Util => ({
   utilC: utilC(options),
   teamRating: teamRating(options),
   gamma: gamma(options),
