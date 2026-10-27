@@ -139,4 +139,17 @@ describe('constants', () => {
       expect(constants({ weightBounds: null }).WEIGHT_BOUNDS).toBe(null)
     })
   })
+
+  describe('windowSize', () => {
+    it('defaults to undefined, which keeps the 5.x adjacent pairing', () => {
+      expect(constants({}).WINDOW_SIZE).toBe(undefined)
+    })
+    it('accepts windowSize override', () => {
+      expect(constants({ windowSize: 2 }).WINDOW_SIZE).toBe(2)
+    })
+    it('truncates like int() in openskill.py', () => {
+      expect(constants({ windowSize: 2.9 }).WINDOW_SIZE).toBe(2)
+      expect(constants({ windowSize: -1.5 }).WINDOW_SIZE).toBe(-1)
+    })
+  })
 })

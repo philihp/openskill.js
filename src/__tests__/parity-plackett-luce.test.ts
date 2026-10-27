@@ -7,12 +7,9 @@ import plackettLuce from '../models/plackett-luce'
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
 // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L304-L386
 //
-// margins and (for the part models) 3+-team games are KNOWN DIVERGENCES from
-// openskill.py 6.2.0, kept here with the upstream constants but skipped:
-//   - margins: openskill.js scales the margin post-hoc in rate.ts; openskill.py
-//     folds it into the model.
-//   - part models on 3+ teams: openskill.js pairs adjacent teams (ladderPairs);
-//     openskill.py rewrote them around a sliding window_size (default 4).
+// margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
+// upstream constants but skipped: openskill.js scales the margin post-hoc in
+// rate.ts; openskill.py folds it into the model.
 
 describe('PlackettLuce parity with openskill.py 6.2.0', () => {
   const r = { mu: 20.35125162611535, sigma: 8.33148112355601 }

@@ -35,8 +35,9 @@ Logistic distribution over player skill — similar to Glicko.
 - `bradleyTerryFull` — full pairing. More accurate, but every team is
   compared against every other team.
 - `bradleyTerryPart` — partial pairing. Each team is compared only with its
-  ranking neighbors. Use this for high-*k* matches (e.g. 100-player races)
-  where a full pairing would be expensive.
+  ranking neighbors: the adjacent teams, or the teams at most `windowSize`
+  places away when you set it. Use this for high-*k* matches (e.g. 100-player
+  races) where a full pairing would be expensive.
 
 ## Thurstone-Mosteller
 
@@ -44,7 +45,8 @@ Gaussian distribution over player skill — similar to TrueSkill. Accuracy is
 generally a touch worse than Bradley-Terry, but it can be tuned.
 
 - `thurstoneMostellerFull` — full pairing.
-- `thurstoneMostellerPart` — partial pairing for high-*k* matches.
+- `thurstoneMostellerPart` — partial pairing for high-*k* matches, with the
+  same `windowSize`.
 
 ## Choosing a model
 
