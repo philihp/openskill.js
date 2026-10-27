@@ -30,7 +30,7 @@ import {
   type ModelName,
   type Point,
 } from '@/lib/scenarios'
-import { bradleyTerryPart, rating, thurstoneMostellerFull } from '@/lib/openskill'
+import { bradleyTerryPart, phiMajor, rating, thurstoneMostellerFull } from '@/lib/openskill'
 import type { ReactNode } from 'react'
 
 const BETAS = [2, BETA, 8, 12]
@@ -380,6 +380,28 @@ export function ModelsFigure() {
         yLabel="change in mu"
         xDomain={[1, n]}
         xTicks={positions(n)}
+      />
+    </Figure>
+  )
+}
+
+const logistic = (x: number): number => 1 / (1 + Math.exp(-x))
+
+export function LinkFunctionsFigure() {
+  const xs = linspace(-6, 6, 121)
+  const series: Series[] = [
+    { label: 'logistic(x), Bradley-Terry', points: xs.map((x): Point => [x, logistic(x)]) },
+    { label: 'Φ(x), Thurstone-Mosteller', points: xs.map((x): Point => [x, phiMajor(x)]) },
+    { label: 'Φ(x / 1.70)', points: xs.map((x): Point => [x, phiMajor(x / 1.702)]), dashed: true },
+  ]
+  return (
+    <Figure caption="The curve that each model uses to turn a scaled rating gap into the chance that A performs better than B. The dashed line is the normal curve stretched by 1.70, which stays within 0.01 of the logistic curve.">
+      <Chart
+        title="The logistic function and the normal cumulative distribution"
+        series={series}
+        xLabel="x, the rating gap divided by the uncertainty c"
+        yLabel="chance that A performs better"
+        yDomain={[0, 1]}
       />
     </Figure>
   )
