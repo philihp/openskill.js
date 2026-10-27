@@ -1,3 +1,5 @@
+import { LinkFunctionsFigure } from '@/components/figures'
+
 # Models
 
 `openskill` ships five rating models. They all live in the `openskill/models`
@@ -42,11 +44,54 @@ Logistic distribution over player skill — similar to Glicko.
 ## Thurstone-Mosteller
 
 Gaussian distribution over player skill — similar to TrueSkill. Accuracy is
-generally a touch worse than Bradley-Terry, but it can be tuned.
+generally a touch worse than Bradley-Terry, but it can be tuned. See
+[Logistic or Gaussian](#logistic-or-gaussian) below for the difference.
 
 - `thurstoneMostellerFull` — full pairing.
 - `thurstoneMostellerPart` — partial pairing for high-*k* matches, with the
   same `windowSize`.
+
+## Logistic or Gaussian
+
+Bradley-Terry and Thurstone-Mosteller ask the same question: how likely is
+it that team A performs better than team B, given the gap between their
+ratings? They answer it with different curves.
+
+- **Bradley-Terry** uses the logistic function, `1 / (1 + exp(−x))`, where
+  `x` is the rating gap divided by the uncertainty `c`. It assumes that the
+  difference between two performances follows a logistic distribution. One
+  call to `exp` computes it.
+- **Thurstone-Mosteller** uses the normal cumulative distribution, `Φ(x)`.
+  It assumes that each performance follows a normal (Gaussian) distribution,
+  which is the assumption that TrueSkill makes. `Φ` has no closed form, so
+  the library computes it with the error function `erf`. The update also
+  uses TrueSkill's `v` and `w` functions, which are built from `Φ` and the
+  normal density, and which take the draw margin
+  [`epsilon`](/tuning/epsilon).
+
+The two curves have almost the same shape. The library gives both the same
+`x`, and `Φ(x)` is the steeper of the two, so for the same options
+Thurstone-Mosteller treats a gap as more decisive and moves the ratings
+more. The graph on the [Tuning](/tuning) overview shows the difference.
+
+<LinkFunctionsFigure />
+
+So the choice is between fidelity and cost:
+
+- Thurstone-Mosteller is the exact Gaussian model. If the performances of
+  your players are Gaussian, as TrueSkill assumes, it is the faithful model,
+  and its draw handling is TrueSkill's. Choose it when you want
+  TrueSkill-like behaviour, for example when you move a ladder from
+  TrueSkill.
+- Bradley-Terry approximates that curve with a cheaper function. `erf`
+  costs about 2.2 times one `exp` call, and the `v` and `w` pair about 7
+  times. A whole `rate` call spends most of its time elsewhere, so the
+  difference is smaller there. Measured in Node 22 on one machine,
+  Thurstone-Mosteller takes 4–7% longer for two teams, and up to 40% longer
+  for a ten-team free-for-all with full pairing, where the number of
+  comparisons grows with the square of the number of teams.
+- A faithful model is not always a better predictor. See the accuracy note
+  above.
 
 ## Choosing a model
 
