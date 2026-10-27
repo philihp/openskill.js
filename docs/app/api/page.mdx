@@ -53,6 +53,7 @@ rate(
     beta?: number
     epsilon?: number
     kappa?: number
+    windowSize?: number
   }
 ): Rating[][]
 ```
@@ -149,6 +150,21 @@ more heavily, emphasizing skill disparity within a team.
 
 ```js
 rate(teams, { balance: true })
+```
+
+### With `windowSize`
+
+The partial-pairing models (`bradleyTerryPart` and `thurstoneMostellerPart`)
+compare each team only with the teams at most `windowSize` places above or
+below it in the ranking, then average those comparisons. The default is `4`,
+as in [openskill.py](https://github.com/vivekjoshy/openskill.py). A larger
+window compares more teams, so its accuracy is nearer to a full-pairing model,
+but it costs more time. Set `windowSize: 1` to compare adjacent teams only. Set
+it to `teams.length - 1` or more to compare all teams. The other models ignore
+this option.
+
+```js
+rate(teams, { model: bradleyTerryPart, windowSize: 8 })
 ```
 
 ### Custom `gamma`

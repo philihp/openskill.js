@@ -1,4 +1,3 @@
-import { zip } from 'ramda'
 import constants from './constants'
 import { Rating, Options, Gamma, Team, Rank } from './types'
 
@@ -117,16 +116,16 @@ const teamRating =
     })
   }
 
-export const ladderPairs = <T>(ranks: T[]): T[][] => {
-  const size = ranks.length
-  const left = [undefined, ...ranks.slice(0, size - 1)]
-  const right = [...ranks.slice(1), undefined]
-  return zip(left, right).map(([l, r]) => {
-    if (l !== undefined && r !== undefined) return [l, r]
-    if (l !== undefined && r === undefined) return [l]
-    if (l === undefined && r !== undefined) return [r]
-    return [] // this should really only happen when size === 1
-  })
+/**
+ * For each item, the items at most `windowSize` places before or after it, in
+ * order, without the item itself. The partial-pairing models compare each team
+ * only with these rank neighbors, as openskill.py's sliding `window_size` does.
+ * A window of 1 pairs adjacent teams. A window of `items.length - 1` or more
+ * pairs each team with all other teams. A window of 0 or less pairs nothing.
+ */
+export const windowPairs = <T>(items: T[], windowSize: number): T[][] => {
+  const w = Math.max(0, windowSize)
+  return items.map((_, i) => [...items.slice(Math.max(0, i - w), i), ...items.slice(i + 1, i + 1 + w)])
 }
 
 /**

@@ -5,6 +5,7 @@ const builder = (options: Options) => {
   const { z = 3, mu = 25, epsilon = 0.1, alpha = 1, target = 0 } = options
   const { tau = 25 / 300, sigma = 25 / 3, beta = 25 / 6, limitSigma = false } = options
   const { balance = false, kappa = 0.0001, weightBounds = [1, 2] as [number, number] } = options
+  const { windowSize = 4 } = options
   const betaSq = beta ** 2
 
   return {
@@ -22,6 +23,8 @@ const builder = (options: Options) => {
     BALANCE: balance,
     KAPPA: kappa,
     WEIGHT_BOUNDS: weightBounds,
+    // truncated like openskill.py's int(window_size)
+    WINDOW_SIZE: Math.trunc(windowSize),
   }
 }
 

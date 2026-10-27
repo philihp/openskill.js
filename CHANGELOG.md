@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Adds the `windowSize` option (default `4`) to the partial-pairing models,
+  `bradleyTerryPart` and `thurstoneMostellerPart`, from openskill.py 6.1.0. Each
+  team is now compared with the teams at most `windowSize` places away in the
+  ranking, and the model averages those comparisons. Before, it compared only
+  adjacent teams and added their updates. **Outputs change for games with 3 or
+  more teams.** `windowSize: 1` compares adjacent teams again, but the average
+  still gives a different result for teams between two neighbors. Games with
+  2 teams do not change.
 - Adds partial-play support via the `weight` option. Weights are shaped like
   `teams` (one number per player) and scale how much each player's rating moves,
   matching openskill.py bit-for-bit. By default each team's weights are
