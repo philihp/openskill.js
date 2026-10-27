@@ -1,0 +1,54 @@
+import { WindowFigure, WindowTieFigure } from '@/components/figures'
+import { WindowExplorer } from '@/components/explorers/window'
+
+# `windowSize`
+
+`windowSize` sets how many neighbours each team is compared with in the
+partial-pairing models, `bradleyTerryPart` and `thurstoneMostellerPart`.
+Default: none. The other models ignore it.
+
+## What it does
+
+The partial-pairing models do not compare every pair of teams. Without
+`windowSize`, each team is compared only with the team just above it and the
+team just below it, and the two updates are added. With `windowSize`, each
+team is compared with the teams at most `windowSize` places above or below
+it, and the updates are averaged. This is what
+[openskill.py](https://github.com/vivekjoshy/openskill.py) does, with a
+default of 4. The next major version of openskill.js will use that default
+too.
+
+Without `windowSize`, in a free-for-all of equal players, every player in
+the middle has one win and one loss against equal neighbours, so the two
+updates cancel. Only the first and the last player move.
+
+<WindowFigure />
+
+Ties also behave differently. Tied teams are next to each other after
+sorting, so without `windowSize` one of them is compared with the team above
+and the other with the team below. They then get different updates, and the
+result depends on the order you list them in. With a window that covers the
+whole game, tied teams get the same update.
+
+<WindowTieFigure />
+
+## Try it
+
+Switch `windowSize` off to see only the ends move. Turn the tie on and
+compare the two tied players.
+
+<WindowExplorer />
+
+## When to change it
+
+- Set `windowSize: 4` to match openskill.py.
+- Set `windowSize` to the number of teams minus one to compare every pair.
+  The model then costs as much as the full-pairing model, but it still
+  averages the updates.
+- A window of 0 compares nothing, so the ratings do not change.
+
+```js
+import { bradleyTerryPart } from 'openskill/models'
+
+rate(teams, { model: bradleyTerryPart, windowSize: 4 })
+```

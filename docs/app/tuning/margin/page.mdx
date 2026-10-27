@@ -1,0 +1,41 @@
+import { MarginFigure } from '@/components/figures'
+import { MarginExplorer } from '@/components/explorers/margin'
+
+# `margin`
+
+`margin` makes the size of a win matter. Default: none. It needs `score`,
+and it applies to every model.
+
+## What it does
+
+`rate` first rates the game by the order of the scores. Then, for each team,
+it computes a factor from the score differences to the other teams. Each
+difference above `margin` adds `log1p(difference − margin)`, and each
+difference inside the margin adds 0. The factor is 1 plus the average of
+these. `rate` multiplies each player's change in `mu` by the factor. `sigma`
+is not affected.
+
+- A difference inside the margin gives a factor of 1: a plain win.
+- The factor grows with the logarithm of the excess, so a win by 40 points
+  is not twice a win by 20.
+- With two teams and a difference of `margin + 10`, the factor is
+  `1 + ln(11)`, about 3.4.
+
+<MarginFigure />
+
+## Try it
+
+Move the score difference across the margin to see the factor start.
+
+<MarginExplorer />
+
+## When to change it
+
+- Set `margin` to the score difference that separates a close game from a
+  clear one, in the points of your game.
+- `margin` must be more than 0. With 0, or without `score`, nothing is
+  amplified.
+
+```js
+rate(teams, { score: [37, 12], margin: 10 })
+```

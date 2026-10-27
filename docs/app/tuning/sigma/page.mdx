@@ -1,0 +1,44 @@
+import { SigmaConvergenceFigure } from '@/components/figures'
+import { SigmaExplorer } from '@/components/explorers/sigma'
+
+# `mu` and `sigma`
+
+`rating()` gives a new player `mu = 25` and `sigma = 25/3`, about 8.33. `mu`
+is the believed skill and `sigma` is the uncertainty. Pass `mu` or `sigma` to
+`rating` to change where a player starts.
+
+## What they do
+
+- `mu` is only a starting point. Every update is relative, so 25 is a
+  convention, not a limit. Ratings can go below 0 and above 50.
+- `sigma` sets how far one result can move `mu`. The change in `mu` grows
+  with `sigma²`. A new player with a large `sigma` moves fast, then slows
+  down as `sigma` falls.
+
+<SigmaConvergenceFigure />
+
+## Try it
+
+Change the starting `sigma` and watch how fast `mu` moves. The dashed line
+shows the same player with the default `sigma`.
+
+<SigmaExplorer />
+
+## When to change them
+
+- Lower the starting `sigma` for a player you already know something about,
+  such as a rating moved from another system.
+- Raise it when new players must find their level in a few games.
+- To use another scale, set `mu` and scale `sigma`, [`beta`](/tuning/beta)
+  and [`tau`](/tuning/tau) by the same factor. Since 5.0, `sigma`, `beta`
+  and `tau` no longer follow `mu` on their own.
+
+```js
+const newcomer = rating({ sigma: 12 })
+const transferred = rating({ mu: 31, sigma: 4 })
+
+// a scale around 1500: every default times 60
+const options = { mu: 1500, sigma: 500, beta: 250, tau: 5 }
+const player = rating({}, options)
+rate(teams, options)
+```

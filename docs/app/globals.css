@@ -35,8 +35,7 @@ body {
   padding: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica,
-    Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -52,8 +51,7 @@ a:hover {
 
 code,
 pre {
-  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
-    'Liberation Mono', monospace;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   font-size: 0.875rem;
 }
 
@@ -197,4 +195,141 @@ blockquote {
   .content {
     padding: 1.5rem 1.25rem 3rem;
   }
+}
+
+/* tuning pages: charts and explorers */
+
+.figure {
+  margin: 1.5rem 0;
+}
+.figure figcaption {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0.5rem 0;
+  font-size: 12px;
+}
+.chart text {
+  fill: currentColor;
+}
+.chart .tick {
+  font-size: 11px;
+  opacity: 0.75;
+}
+.chart .grid {
+  stroke: var(--border);
+}
+.chart .axis {
+  stroke: currentColor;
+  opacity: 0.5;
+}
+.chart .zero {
+  stroke: currentColor;
+  opacity: 0.35;
+}
+.chart .marker line {
+  stroke: currentColor;
+  stroke-dasharray: 3 3;
+  opacity: 0.6;
+}
+.chart .marker text {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.explorer {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.6rem 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+.control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 0.5rem;
+  align-items: baseline;
+}
+.control label {
+  color: var(--muted);
+}
+.control output {
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.control input[type='range'] {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0.2rem 0 0;
+  accent-color: var(--link);
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: end;
+  color: var(--muted);
+}
+.toggle input {
+  accent-color: var(--link);
+}
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: end;
+}
+.choice span {
+  color: var(--muted);
+  margin-right: 0.25rem;
+}
+.choice button {
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+}
+.choice button[aria-pressed='true'] {
+  background: var(--link);
+  border-color: var(--link);
+  color: #ffffff;
+}
+.readout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.4rem 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+}
+.readout div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.3rem;
+}
+.readout dt {
+  color: var(--muted);
+}
+.readout dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }

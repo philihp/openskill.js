@@ -1,0 +1,46 @@
+import { BetaWinFigure, BetaDeltaFigure } from '@/components/figures'
+import { BetaExplorer } from '@/components/explorers/beta'
+
+# `beta`
+
+`beta` is the spread of a player's performance from game to game. Default:
+`25/6`, about 4.17. It applies to every model.
+
+## What it does
+
+A player with mean `mu` does not perform at `mu` in every game. `beta` is the
+standard deviation of that performance. The models add `beta²` per team to
+the uncertainty of a result, next to the `sigma²` of each player.
+
+- A small `beta` makes results predictable. A rating gap then gives a large
+  win chance. An expected win moves the ratings a little, and an upset moves
+  them a lot.
+- A large `beta` makes results noisy. Even a large gap gives a modest win
+  chance, and each result moves the ratings by a smaller, more equal amount.
+
+<BetaWinFigure />
+
+<BetaDeltaFigure />
+
+In the second graph, `beta` and `sigma` both set the slope. With the default
+`sigma` of 8.33, `sigma` is the larger of the two, so `beta` changes the
+curve less than in the first graph, where `sigma` is 2.
+
+## Try it
+
+Move the `beta` slider and watch the slope of both curves. Move the gap to
+see the result of one match. Lower `sigma` to see `beta` take over.
+
+<BetaExplorer />
+
+## When to change it
+
+- Lower `beta` when the better player wins almost every time, as in a
+  sprint.
+- Raise `beta` when luck plays a large part, as in a card game.
+- Keep `beta` in proportion to `sigma`. If you change the scale of `mu` and
+  `sigma`, scale `beta` by the same factor.
+
+```js
+rate(teams, { beta: 2 })
+```

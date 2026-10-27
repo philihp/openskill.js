@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'src/**'
+      - 'package.json'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
@@ -30,6 +32,10 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: docs/package-lock.json
+      # The tuning pages import the library from src/, so its dependencies
+      # must be installed at the repository root too.
+      - run: npm install --ignore-scripts
+        working-directory: ${{ github.workspace }}
       - run: npm ci
       - run: npm run build
       - uses: actions/configure-pages@v6

@@ -1,0 +1,50 @@
+import { WeightFigure } from '@/components/figures'
+import { WeightExplorer } from '@/components/explorers/weight'
+
+# `weight` and `weightBounds`
+
+`weight` scales each player's update by how much of the game they played.
+Default: no weights. `weightBounds` is the range that the weights of a team
+are normalized into. Default: `[1, 2]`. Both apply to every model.
+
+## What they do
+
+`weight` has the same shape as `teams`: one number per player. After `rate`
+computes a team's update, it multiplies each player's change in `mu`, and
+the shrink of `sigma`, by that player's weight. On a losing team, it divides
+by the weight instead. So on a winning team, a larger weight means a larger
+gain, and on a losing team, a larger weight means a smaller loss.
+
+Before that, with `weightBounds`, `rate` rescales the weights of each team.
+The smallest weight becomes the lower bound and the largest becomes the
+upper bound. Only the order and the spacing within a team matter, not the
+raw numbers. With two players, the weights always become `[1, 2]` or
+`[2, 1]`, whatever you pass. Equal weights all become the lower bound. With
+`weightBounds: null`, `rate` uses the raw weights.
+
+<WeightFigure />
+
+## Try it
+
+Move the weight of A across 1 to see the step. Then switch normalization off
+to see the raw weights.
+
+<WeightExplorer />
+
+## When to change them
+
+- Use `weight` for time played, or for a measure of contribution.
+- Keep the default bounds when your weights are on an arbitrary scale.
+- Set `weightBounds: null` when the weights have a meaning of their own, such
+  as the fraction of the game played. Then keep them near 1. A weight of 2
+  doubles a gain.
+
+```js
+rate(teams, {
+  weight: [
+    [1, 0.5], // the second player played half the game
+    [1, 1],
+  ],
+  weightBounds: null,
+})
+```

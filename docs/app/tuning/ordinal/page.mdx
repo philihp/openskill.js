@@ -1,0 +1,42 @@
+import { OrdinalFigure } from '@/components/figures'
+import { OrdinalExplorer } from '@/components/explorers/ordinal'
+
+# `z`, `alpha` and `target`
+
+`ordinal` turns a rating into one number:
+`target + alpha × (mu − z × sigma)`. Defaults: `z = 3`, `alpha = 1`,
+`target = 0`.
+
+## What they do
+
+- `z` sets how careful the estimate is. With `z = 3`, the ordinal is the low
+  end of a 99.7% interval around `mu`. A new player starts at an ordinal of
+  0, and rises as `sigma` falls, even with mixed results. With `z = 0`, the
+  ordinal is `mu`.
+- `alpha` scales the result and `target` shifts it. Use them to show ratings
+  on a familiar scale. With `alpha = 20` and `target = 1500`, a new player
+  shows 1500, and a settled player with `mu = 25` shows close to 2000.
+
+[`balance`](/tuning/balance) also uses these three values, because it compares
+teammates by their ordinal.
+
+<OrdinalFigure />
+
+## Try it
+
+Move `z` to see how far the ordinal sits below `mu`. Choose "all wins" to see
+a new player climb.
+
+<OrdinalExplorer />
+
+## When to change them
+
+- Lower `z` when the ranking must follow `mu` sooner. Raise it when a new
+  player must play more games before they rank high.
+- Use `alpha` and `target` only for display. Pass the same values every time,
+  or the numbers will not compare.
+
+```js
+ordinal(player, { z: 2 })
+ordinal(player, { alpha: 20, target: 1500 })
+```
