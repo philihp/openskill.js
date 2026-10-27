@@ -1,0 +1,45 @@
+import { BalanceFigure } from '@/components/figures'
+import { BalanceExplorer } from '@/components/explorers/balance'
+
+# `balance`
+
+`balance` changes how a team's rating combines its players. Default:
+`false`. It applies to every model.
+
+## What it does
+
+Without `balance`, a team's `mu` is the sum of its players' `mu`, and its
+variance is the sum of their variances. With `balance: true`, each player
+counts more the further their [ordinal](/tuning/ordinal) is below the best
+ordinal on the team. The factor is `1 + (best − own) / best`. The best
+player counts once.
+
+The result: an uneven team looks stronger, and less certain, than the sum of
+its parts. So it gains less from a win and loses more from a loss. The
+players on the team still move by the same amount, because each update
+scales by the player's own `sigma²` over the team's.
+
+The factor divides by the best ordinal. When that ordinal is near zero, the
+factor is huge, and when it is negative, the factor can be negative too.
+New players with the default rating have an ordinal of exactly 0. So use
+`balance` only when the best player on every team has a clearly positive
+ordinal.
+
+<BalanceFigure />
+
+## Try it
+
+Move the gap inside the team. The readout shows the ordinal of the strong
+player, which the factor divides by.
+
+<BalanceExplorer />
+
+## When to change it
+
+- Turn `balance` on when strong players win too much rating with weak
+  teammates.
+- Keep it off for new players, or when ordinals can be near zero.
+
+```js
+rate(teams, { balance: true })
+```

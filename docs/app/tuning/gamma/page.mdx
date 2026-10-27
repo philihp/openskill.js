@@ -1,0 +1,42 @@
+import { GammaFigure } from '@/components/figures'
+import { GammaExplorer } from '@/components/explorers/gamma'
+
+# `gamma`
+
+`gamma` sets how fast `sigma` shrinks after a game. Default: `sigma / c`,
+where `c` is the total uncertainty of the game. It applies to every model.
+
+## What it does
+
+A result changes a team's `mu` by `omega` and shrinks its `sigma` by
+`delta`. `gamma` multiplies `delta` only. So `gamma` does not change the
+first update to `mu`. But a larger `gamma` lowers `sigma` faster, and later
+results then move `mu` less.
+
+The default, `sigma / c`, shrinks `sigma` less when the rest of the game is
+uncertain.
+
+You pass a function: `(c, k, mu, sigmaSq, team, rank) => number`. `c` is the
+total uncertainty of the game, `k` is the number of teams, `mu` and `sigmaSq`
+are the team's rating, `team` is its players and `rank` is its rank.
+
+<GammaFigure />
+
+## Try it
+
+Move the multiplier. The first change in `mu` is the same for every value.
+The dashed line is the default.
+
+<GammaExplorer />
+
+## When to change it
+
+- Use a multiplier below 1 to keep players uncertain for longer, and above 1
+  to settle them faster.
+- Try [`tau`](/tuning/tau) first. It sets a floor for `sigma`, which is often
+  what you want.
+- A very large `gamma` reaches the [`kappa`](/tuning/epsilon) floor.
+
+```js
+rate(teams, { gamma: (c, k, mu, sigmaSq) => (2 * Math.sqrt(sigmaSq)) / c })
+```

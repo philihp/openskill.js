@@ -1,0 +1,46 @@
+import { ModelsFigure } from '@/components/figures'
+
+# Tuning
+
+`rate` and `ordinal` accept options that change how a result moves the
+ratings. Every option has a default that matches
+[openskill.py](https://github.com/vivekjoshy/openskill.py), so you can start
+with none. These pages show what each option does. The library itself
+computes every graph, and each page has sliders, so you can try a value
+before you use it.
+
+## The options
+
+| Option                                                                          | Default        | Applies to             | Effect                                                                 |
+| ------------------------------------------------------------------------------- | -------------- | ---------------------- | ---------------------------------------------------------------------- |
+| [`beta`](/tuning/beta)                                                          | `25/6`         | every model            | How much one result moves the ratings, and what a rating gap predicts. |
+| [`tau`](/tuning/tau)                                                            | `25/300`       | every model            | A floor for `sigma`, so ratings keep following results.                |
+| [`limitSigma`](/tuning/tau)                                                     | `false`        | every model            | Stops `sigma` from rising.                                             |
+| [`mu`](/tuning/sigma), [`sigma`](/tuning/sigma)                                 | `25`, `25/3`   | `rating`               | The start of a new player.                                             |
+| [`epsilon`](/tuning/epsilon)                                                    | `0.1`          | Thurstone-Mosteller    | The draw margin.                                                       |
+| [`kappa`](/tuning/epsilon)                                                      | `0.0001`       | every model            | A floor for the shrink of `sigma`.                                     |
+| [`z`](/tuning/ordinal), [`alpha`](/tuning/ordinal), [`target`](/tuning/ordinal) | `3`, `1`, `0`  | `ordinal`, `balance`   | How careful the ordinal is, and its scale and offset.                  |
+| [`balance`](/tuning/balance)                                                    | `false`        | every model            | Counts weaker teammates more in the team rating.                       |
+| [`weight`](/tuning/weight), [`weightBounds`](/tuning/weight)                    | none, `[1, 2]` | every model            | Partial play.                                                          |
+| [`margin`](/tuning/margin)                                                      | none           | every model            | Makes the size of a win matter.                                        |
+| [`windowSize`](/tuning/window-size)                                             | none           | partial-pairing models | How many neighbours each team is compared with.                        |
+| [`gamma`](/tuning/gamma)                                                        | `sigma / c`    | every model            | How fast `sigma` shrinks.                                              |
+| [`model`](/models)                                                              | `plackettLuce` | —                      | The rating model.                                                      |
+
+## How the models differ
+
+The `model` option is the largest choice. Each model turns the same result
+into different rating changes. The full-pairing models compare every pair of
+teams, so they move the ratings most. The partial-pairing models compare
+only neighbours. See [Models](/models) for when to use each one.
+
+<ModelsFigure />
+
+## How to read the pages
+
+- The graphs use the default values, unless the caption says otherwise.
+- A dashed line is a reference, such as the default value or the result
+  without the option.
+- A vertical line marks the value that a slider selects.
+- The explorers call `rate` for every point on every change. The numbers are
+  exactly what the library returns.

@@ -19,6 +19,20 @@ const guides = [
   { title: 'Ranking & Ordinal', href: '/ranking' },
 ]
 
+const tuning = [
+  { title: 'Overview', href: '/tuning' },
+  { title: 'beta', href: '/tuning/beta' },
+  { title: 'tau & limitSigma', href: '/tuning/tau' },
+  { title: 'mu & sigma', href: '/tuning/sigma' },
+  { title: 'epsilon & kappa', href: '/tuning/epsilon' },
+  { title: 'z, alpha & target', href: '/tuning/ordinal' },
+  { title: 'balance', href: '/tuning/balance' },
+  { title: 'weight & weightBounds', href: '/tuning/weight' },
+  { title: 'margin', href: '/tuning/margin' },
+  { title: 'windowSize', href: '/tuning/window-size' },
+  { title: 'gamma', href: '/tuning/gamma' },
+]
+
 const examples = [
   { title: 'JavaScript / TypeScript', href: '/examples/javascript' },
   { title: 'Python', href: '/examples/python' },
@@ -42,6 +56,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <h3>Guides</h3>
             <ul>
               {guides.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.title}</Link>
+                </li>
+              ))}
+            </ul>
+
+            <h3>Tuning</h3>
+            <ul>
+              {tuning.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href}>{item.title}</Link>
                 </li>

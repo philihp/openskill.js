@@ -1,0 +1,56 @@
+import { EpsilonDrawFigure, EpsilonWinFigure, KappaFigure } from '@/components/figures'
+import { EpsilonExplorer } from '@/components/explorers/epsilon'
+
+# `epsilon` and `kappa`
+
+`epsilon` is the draw margin of the Thurstone-Mosteller models. Default:
+`0.1`. `kappa` is a floor for the shrink of `sigma` in every model. Default:
+`0.0001`.
+
+## What `epsilon` does
+
+In `thurstoneMostellerFull` and `thurstoneMostellerPart`, two performances
+within `epsilon` of each other count as a draw. The other models ignore
+`epsilon`.
+
+- With a small `epsilon`, a draw is almost impossible, so a draw is a
+  surprise. It pulls the two ratings strongly towards each other.
+- With a large `epsilon`, a draw is expected between close players, so a draw
+  moves them less. A win then means that the winner performed better by more
+  than `epsilon`, so a win moves the ratings more.
+
+`epsilon` is in rating units, so compare it with `sigma` and `beta`.
+
+<EpsilonDrawFigure />
+
+<EpsilonWinFigure />
+
+## Try it
+
+Choose a result, then move `epsilon`. The dashed line is the default.
+
+<EpsilonExplorer />
+
+## What `kappa` does
+
+Each game multiplies `sigma` by `sqrt(1 − d)`, where `d` grows with
+[`gamma`](/tuning/gamma) and with the player's [`weight`](/tuning/weight).
+If `d` reached 1, `sigma` would become zero and the player could never move
+again. `kappa` is the floor: the factor is never less than `sqrt(kappa)`.
+With the default, `sigma` can fall to 1% of its value in one game, but not
+to zero. You only reach this floor with a very large custom `gamma` or
+weight.
+
+<KappaFigure />
+
+## When to change them
+
+- Raise `epsilon` in games where draws are common, and keep it in proportion
+  to `sigma`.
+- Leave `kappa` alone, unless you use a custom `gamma`.
+
+```js
+import { thurstoneMostellerFull } from 'openskill/models'
+
+rate(teams, { model: thurstoneMostellerFull, epsilon: 5 })
+```

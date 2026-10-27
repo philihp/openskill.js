@@ -1,0 +1,56 @@
+import { TauFloorFigure, TauResponseFigure, LimitSigmaFigure } from '@/components/figures'
+import { TauExplorer } from '@/components/explorers/tau'
+
+# `tau` and `limitSigma`
+
+`tau` is the uncertainty that every game adds back to a player. Default:
+`25/300`, about 0.083. `limitSigma` stops `sigma` from rising. Default:
+`false`. Both apply to every model.
+
+## What `tau` does
+
+Before each game, `rate` replaces `sigma` with `sqrt(sigma² + tau²)`. The
+result then shrinks `sigma` again. When the two effects are equal, `sigma`
+stops falling. So `tau` sets a floor for `sigma`.
+
+- With `tau = 0`, `sigma` falls towards zero. A settled player then almost
+  stops moving, even when their skill changes.
+- With a larger `tau`, `sigma` stays higher, and the ratings keep following
+  the results.
+
+<TauFloorFigure />
+
+<TauResponseFigure />
+
+## What `limitSigma` does
+
+For a settled player, `tau` can raise `sigma` by more than one result lowers
+it. A higher `sigma` lowers the [ordinal](/tuning/ordinal), so a player can
+win a game and still drop in the ranking. With `limitSigma: true`, `rate`
+keeps the lower of the old `sigma` and the new one, so `sigma` never rises.
+
+The change to `mu` still uses the raised `sigma`. But the next game starts
+from the lower one, so the ratings follow a change in skill more slowly.
+
+<LimitSigmaFigure />
+
+## Try it
+
+Set the starting `sigma` to 1.5 and `tau` to 1 to see `sigma` rise, then
+switch `limitSigma` on. Choose "skill rises half way" and compare how fast
+`mu` follows for different values of `tau`.
+
+<TauExplorer />
+
+## When to change it
+
+- Raise `tau` when skill changes often, so ratings follow the change.
+- Lower `tau`, or set it to 0, when skill is stable and you want ratings to
+  settle.
+- Set `limitSigma: true` when a drop after a win would confuse your players.
+- `tau` is in rating units. If you change the scale of `mu` and `sigma`,
+  scale `tau` by the same factor.
+
+```js
+rate(teams, { tau: 0.3, limitSigma: true })
+```
