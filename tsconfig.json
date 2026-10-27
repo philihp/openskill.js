@@ -1,5 +1,10 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    // lets tsdown emit .d.ts with Oxc, because TS 7 has no compiler API for it to use
+    "declaration": true,
+    "isolatedDeclarations": true
+  },
   "include": ["./src/**/*"],
   "exclude": ["./src/**/__tests__/**", "./src/**/*.test.*"]
 }

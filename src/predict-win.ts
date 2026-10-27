@@ -15,7 +15,7 @@ function* upperTrianglePairs(n: number): Generator<[number, number]> {
   }
 }
 
-const predictWin = (teams: Team[], options: Options = {}) => {
+const predictWin = (teams: Team[], options: Options = {}): number[] => {
   const { teamRating } = util(options)
   const { BETASQ } = constants(options)
 
