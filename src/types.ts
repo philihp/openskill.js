@@ -40,4 +40,5 @@ export type Options = {
   limitSigma?: boolean
   balance?: boolean
   kappa?: number
+  windowSize?: number
 }

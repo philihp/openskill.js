@@ -7,12 +7,9 @@ import thurstoneMostellerFull from '../models/thurstone-mosteller-full'
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
 // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L315-L396
 //
-// margins and (for the part models) 3+-team games are KNOWN DIVERGENCES from
-// openskill.py 6.2.0, kept here with the upstream constants but skipped:
-//   - margins: openskill.js scales the margin post-hoc in rate.ts; openskill.py
-//     folds it into the model.
-//   - part models on 3+ teams: openskill.js pairs adjacent teams (ladderPairs);
-//     openskill.py rewrote them around a sliding window_size (default 4).
+// margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
+// upstream constants but skipped: openskill.js scales the margin post-hoc in
+// rate.ts; openskill.py folds it into the model.
 
 describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
   const r = { mu: 17.369819397619647, sigma: 5.379790119094205 }

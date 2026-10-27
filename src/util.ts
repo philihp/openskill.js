@@ -130,6 +130,19 @@ export const ladderPairs = <T>(ranks: T[]): T[][] => {
 }
 
 /**
+ * For each item, the items at most `windowSize` places before or after it, in
+ * order, without the item itself. When `windowSize` is set, the partial-pairing
+ * models compare each team only with these rank neighbors, as openskill.py's
+ * sliding `window_size` does. A window of 1 pairs adjacent teams. A window of
+ * `items.length - 1` or more pairs each team with all other teams. A window of
+ * 0 or less pairs nothing.
+ */
+export const windowPairs = <T>(items: T[], windowSize: number): T[][] => {
+  const w = Math.max(0, windowSize)
+  return items.map((_, i) => [...items.slice(Math.max(0, i - w), i), ...items.slice(i + 1, i + 1 + w)])
+}
+
+/**
  * `c`: total uncertainty across all teams in the game.
  *
  * Defined as sqrt( Σ_q (σ²_q + β²) ) where the sum runs over every team in
