@@ -2,6 +2,10 @@
 
 ## v5.1.0
 
+- The documentation is now at https://openskill.philihp.com/. New pages show
+  what each option does, with graphs and sliders. Another page compares the
+  logistic curve of the Bradley-Terry models with the Gaussian curve of the
+  Thurstone-Mosteller models.
 - Published files no longer carry `sourceMappingURL` comments, so tools do not
   ask for the source maps, which the npm package leaves out.
 - Drops support for Node 20, which reached end of life on 2026-04-30.
