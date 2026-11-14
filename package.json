@@ -69,7 +69,7 @@
     "@tsconfig/recommended": "1.0.14",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
-    "oxlint": "1.92.0",
+    "oxlint": "1.93.0",
     "prettier": "3.9.10",
     "tsdown": "0.23.7",
     "tsx": "4.23.15",
