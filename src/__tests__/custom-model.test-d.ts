@@ -61,6 +61,25 @@ const builtIn: Model = plackettLuce
 // @ts-expect-error gamma returns a string
 const badGamma: Gamma = () => 'fast'
 
+// A Model must not change the ratings that it gets.
+const mutatesRating: Model = (teams) =>
+  teams.map((team) =>
+    team.map((player) => {
+      // @ts-expect-error the ratings that a model gets are read-only
+      player.mu += 1
+      return player
+    })
+  )
+
+// A Model must not change the arrays that it gets.
+const mutatesTeams: Model = (teams) => {
+  // @ts-expect-error the teams array that a model gets is read-only
+  teams.reverse()
+  // @ts-expect-error each team that a model gets is read-only
+  teams[0].push({ mu: 0, sigma: 1 })
+  return teams.map((team) => [...team])
+}
+
 // A Model must return teams of ratings.
 // @ts-expect-error model returns numbers, not teams
 const badModel: Model = (teams) => teams.map(() => 0)

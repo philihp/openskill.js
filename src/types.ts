@@ -17,9 +17,22 @@ export type RateResult<T extends Teams> = {
 
 export type Rank = number
 
-export type Gamma = (c: number, k: number, mu: number, sigmaSq: number, team: Rating[], qRank: number) => number
+export type Gamma = (
+  c: number,
+  k: number,
+  mu: number,
+  sigmaSq: number,
+  team: readonly Rating[],
+  qRank: number
+) => number
 
-export type Model = (teams: Team[], options?: Options) => Team[]
+/**
+ * The teams that `rate` gives to a model. They are read-only: a model must
+ * not change them. It must return new teams with new ratings.
+ */
+export type ModelTeams = readonly (readonly Readonly<Rating>[])[]
+
+export type Model = (teams: ModelTeams, options?: Options) => Team[]
 
 export type Options = {
   z?: number

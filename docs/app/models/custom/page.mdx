@@ -11,13 +11,14 @@ import { plackettLuce } from 'openskill/models'
 
 The package exports these types from its root:
 
-| Type      | What it is                                                     |
-| --------- | -------------------------------------------------------------- |
-| `Rating`  | `{ mu: number; sigma: number }`                                |
-| `Team`    | `Rating[]`                                                     |
-| `Options` | The options object that `rate` takes                           |
-| `Model`   | `(teams: Team[], options?: Options) => Team[]`                 |
-| `Gamma`   | `(c, k, mu, sigmaSq, team, rank) => number`                    |
+| Type         | What it is                                          |
+| ------------ | --------------------------------------------------- |
+| `Rating`     | `{ mu: number; sigma: number }`                     |
+| `Team`       | `Rating[]`                                          |
+| `ModelTeams` | The teams that a model gets. They are read-only.    |
+| `Options`    | The options object that `rate` takes                |
+| `Model`      | `(teams: ModelTeams, options?: Options) => Team[]`  |
+| `Gamma`      | `(c, k, mu, sigmaSq, team, rank) => number`         |
 
 ## What `rate` gives to a model
 
@@ -45,6 +46,11 @@ team of three. The model must return one team for each team that it gets, in
 the same order. Each returned team must have the same players as the team
 that it replaces, in the same order. Thus, the output has the same shape as
 the input.
+
+**Do not change the teams or the ratings that the model gets.** Return new
+arrays and new rating objects. The caller can use the old ratings after
+`rate` returns. The `ModelTeams` type is read-only. Thus, TypeScript shows an
+error if your model changes a rating or an array that it gets.
 
 ## Change `gamma`
 
@@ -120,7 +126,6 @@ rate([[a], [b], [c]], { model: elo, rank: [2, 1, 3] })
 
 - Give a default for each option that you read. A model can get an empty
   `options` object.
-- Do not change the ratings that you get. Return new objects.
 - Use `options.weight[i][j]` if your model must support partial play.
 - The [`predictWin`](/predictions), `predictDraw` and `predictRank` functions
   do not use the model. They always use the built-in prediction.

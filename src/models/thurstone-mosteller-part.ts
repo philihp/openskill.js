@@ -4,7 +4,7 @@ import { w, v, vt, wt } from '../statistics'
 import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
-const model: Model = (game: Rating[][], options: Options = {}) => {
+const model: Model = (game, options: Options = {}) => {
   const { TWOBETASQ, EPSILON, KAPPA, WINDOW_SIZE } = constants(options)
   const { weight } = options
   const { teamRating, gamma } = util(options)

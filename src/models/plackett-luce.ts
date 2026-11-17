@@ -2,7 +2,7 @@ import util, { utilSumQ, utilA, updatePlayer } from '../util'
 import constants from '../constants'
 import { Rating, Options, Model } from '../types'
 
-const model: Model = (game: Rating[][], options: Options = {}) => {
+const model: Model = (game, options: Options = {}) => {
   const { KAPPA } = constants(options)
   const { weight } = options
   const { utilC, teamRating, gamma } = util(options)
