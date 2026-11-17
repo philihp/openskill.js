@@ -1,7 +1,8 @@
-import { zip } from 'ramda'
+import { range, zip } from 'ramda'
 import util, { ladderPairs, windowPairs, updatePlayer } from '../util'
 import { w, v, vt, wt } from '../statistics'
 import constants from '../constants'
+import { marginDivisors } from '../margin'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
@@ -11,26 +12,30 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
   const teamRatings = teamRating(game)
   // without windowSize, compare adjacent teams only, as in 5.x. With it, use
   // openskill.py's sliding window.
-  const windowTeams = WINDOW_SIZE === undefined ? ladderPairs(teamRatings) : windowPairs(teamRatings, WINDOW_SIZE)
+  // the windows hold team indexes, so that the margin can find the scores
+  const indexes = range(0, teamRatings.length)
+  const windows = WINDOW_SIZE === undefined ? ladderPairs(indexes) : windowPairs(indexes, WINDOW_SIZE)
+  const divisor = marginDivisors(options, teamRatings.length)
 
-  return zip(teamRatings, windowTeams).map(([iTeamRating, iWindow], i) => {
+  return zip(teamRatings, windows).map(([iTeamRating, iWindow], i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const { omega: omegaSum, delta: deltaSum } = iWindow.reduce(
-      (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
+      (acc, q) => {
+        const [qMu, qSigmaSq, _qTeam, qRank] = teamRatings[q]
         const ciq = 2 * Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
         const deltaMu = (iMu - qMu) / ciq
         const qEta = iSigmaSq / ciq
         const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 
         if (qRank === iRank) {
-          acc.omega += qEta * vt(deltaMu, EPSILON / ciq)
-          acc.delta += ((iGamma * qEta) / ciq) * wt(deltaMu, EPSILON / ciq)
+          acc.omega += qEta * vt(deltaMu / divisor(i, q), EPSILON / ciq)
+          acc.delta += ((iGamma * qEta) / ciq) * wt(deltaMu / divisor(i, q), EPSILON / ciq)
           return acc
         }
 
         const sign = qRank > iRank ? 1 : -1
-        acc.omega += sign * qEta * v(sign * deltaMu, EPSILON / ciq)
-        acc.delta += ((iGamma * qEta) / ciq) * w(sign * deltaMu, EPSILON / ciq)
+        acc.omega += sign * qEta * v((sign * deltaMu) / divisor(i, q), EPSILON / ciq)
+        acc.delta += ((iGamma * qEta) / ciq) * w((sign * deltaMu) / divisor(i, q), EPSILON / ciq)
         return acc
       },
       { omega: 0, delta: 0 }

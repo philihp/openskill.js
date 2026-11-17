@@ -5,7 +5,7 @@ import {
   rating,
   ordinal,
   predictWin,
-  marginFactor,
+  marginDivisor,
   plackettLuce,
   bradleyTerryFull,
   bradleyTerryPart,
@@ -151,11 +151,15 @@ export const weightedTeamDeltas = (weights: [number, number], options: Options =
 
 // --- scores ----------------------------------------------------------------
 
-/** A default player beats another by `scoreGap` points. */
-export const marginDelta = (scoreGap: number, margin: number): number =>
-  duel(rating(), rating(), 'win', { score: [scoreGap, 0], margin }).deltaA
+/** The rating gap of the margin graphs. The margin has no effect on equal players. */
+export const MARGIN_GAP = 10
 
-export const marginAmplification = (scoreGap: number, margin: number): number => marginFactor([scoreGap, 0], 0, margin)
+/** A player rated `gap` above a default opponent wins by `scoreGap` points. */
+export const marginDelta = (scoreGap: number, margin: number, gap: number = MARGIN_GAP): number =>
+  duelDelta(gap, SIGMA, 'win', { score: [scoreGap, 0], margin })
+
+/** The number that the models divide the difference in mu by. */
+export const marginDivisorFor = (scoreGap: number, margin: number): number => marginDivisor(margin)(scoreGap, 0)
 
 // --- free-for-all ----------------------------------------------------------
 

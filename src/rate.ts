@@ -4,7 +4,6 @@ import { unwind } from 'sort-unwind'
 import { Rating, Options, Teams, RateResult } from './types'
 import constants from './constants'
 import { normalize } from './util'
-import { marginFactor } from './margin'
 import { plackettLuce } from './models'
 
 const rate = <const T extends Teams>(teams: T, options: Options = {}): RateResult<T> => {
@@ -38,28 +37,16 @@ const rate = <const T extends Teams>(teams: T, options: Options = {}): RateResul
   // reorder weights with the same rank permutation so they stay aligned with the
   // teams the model receives in rank-sorted order
   const orderedWeight = normalizedWeight ? unwind(rank, normalizedWeight)[0] : undefined
+  // reorder scores the same way. Each model uses them with margin, as
+  // openskill.py does, to scale the difference in mu between two teams.
+  const orderedScore = options.score ? unwind(rank, options.score)[0] : undefined
   const newRatings = model(orderedTeams, {
     ...options,
     rank: sortBy(identity, rank),
+    score: orderedScore,
     weight: orderedWeight,
   })
   let [reorderedTeams] = unwind(tenet, newRatings)
-
-  // margin amplifies rating updates when scores are provided and a team's score differs
-  // from opponents by more than the margin threshold. Larger victory margins yield
-  // proportionally larger mu changes via log1p, while differences within the margin
-  // are treated as ordinary wins/losses.
-  if (options.score && options.margin) {
-    const scores = options.score
-    const margin = options.margin
-    reorderedTeams = reorderedTeams.map((team: Rating[], i: number) => {
-      const factor = marginFactor(scores, i, margin)
-      return team.map((p: Rating, k: number) => {
-        const priorMu = processedTeams[i][k].mu
-        return { mu: priorMu + factor * (p.mu - priorMu), sigma: p.sigma }
-      })
-    })
-  }
 
   // limitSigma prevents sigma from ever going up which can happen when using a tau value.
   // this helps prevent ordinal from ever dropping after winning a game which can feel unfair

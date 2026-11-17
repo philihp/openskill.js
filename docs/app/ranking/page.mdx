@@ -47,14 +47,15 @@ const [[a2], [b2], [c2], [d2]] = rate(
 ## Victory margins with `margin`
 
 When you pass `score`, you can also pass `margin` to make the *size* of a
-victory matter. Score gaps larger than `margin` amplify the rating update —
-logarithmically, so blowouts don't cause runaway swings — while gaps within
-the margin count as ordinary wins/losses.
+victory matter. When two teams have a score difference larger than `margin`,
+the model scales the difference in `mu` between them by
+`log1p(difference / margin)`. Score differences within the margin count as
+ordinary wins and losses. See [`margin`](/tuning/margin).
 
 ```js
 const [[a2], [b2]] = rate(
   [[a1], [b1]],
-  { score: [37, 12], margin: 10 } // a 25-point win, amplified
+  { score: [37, 12], margin: 10 } // a 25-point win
 )
 ```
 

@@ -6,10 +6,6 @@ import plackettLuce from '../models/plackett-luce'
 // the exact constants from its fixture (tests/models/data/plackettluce.json).
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
 // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L304-L386
-//
-// margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
-// upstream constants but skipped: openskill.js scales the margin post-hoc in
-// rate.ts; openskill.py folds it into the model.
 
 describe('PlackettLuce parity with openskill.py 6.2.0', () => {
   const r = { mu: 20.35125162611535, sigma: 8.33148112355601 }
@@ -56,7 +52,7 @@ describe('PlackettLuce parity with openskill.py 6.2.0', () => {
   })
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_plackett_luce.py#L340-L348
-  it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
+  it('margins', () => {
     const result = rate(
       [
         [r, r],
