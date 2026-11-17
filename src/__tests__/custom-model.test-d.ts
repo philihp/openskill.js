@@ -1,0 +1,69 @@
+/* oxlint-disable typescript/no-unused-vars */
+// Type-level checks for the examples on the "Custom models" docs page
+// (docs/app/models/custom/page.mdx). If you change an example there, change
+// it here too. `npm run typecheck` fails if the public types stop accepting it.
+import { map, mergeRight, pluck, sum } from 'ramda'
+import { rate, rating } from '../index'
+import type { Gamma, Model, Options, Rating, Team } from '../index'
+import { plackettLuce } from '../models'
+
+type Expect<T extends true> = T
+type Equal<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false
+
+// --- Example 1: a custom gamma ---------------------------------------------
+
+// Shrink sigma at half the default speed.
+const slowGamma: Gamma = (c, _k, _mu, sigmaSq) => Math.sqrt(sigmaSq) / c / 2
+
+// --- Example 2: a built-in model with fixed options ------------------------
+
+const slowPlackettLuce: Model = (teams, options = {}) => plackettLuce(teams, mergeRight(options, { gamma: slowGamma }))
+
+// --- Example 3: a model from the start -------------------------------------
+
+const K = 2
+
+const teamMu = (team: Team): number => sum(pluck('mu', team))
+
+const actual = (iRank: number, qRank: number): number => (iRank < qRank ? 1 : iRank > qRank ? 0 : 0.5)
+
+const expected = (beta: number) => (iMu: number, qMu: number) => 1 / (1 + Math.exp((qMu - iMu) / beta))
+
+const shiftMu =
+  (change: number) =>
+  ({ mu, sigma }: Rating): Rating => ({ mu: mu + change, sigma })
+
+const simpleElo: Model = (teams, { beta = 25 / 6, rank = teams.map((_, i) => i) }: Options = {}) => {
+  const mus = map(teamMu, teams)
+  const winChance = expected(beta)
+  return teams.map((team, i) => {
+    const change = sum(mus.map((qMu, q) => (q === i ? 0 : K * (actual(rank[i], rank[q]) - winChance(mus[i], qMu)))))
+    return map(shiftMu(change), team)
+  })
+}
+
+// --- Usage -----------------------------------------------------------------
+
+const a = rating()
+const b = rating()
+const c = rating()
+
+const withGamma = rate([[a], [b]], { gamma: slowGamma })
+type _withGamma = Expect<Equal<typeof withGamma, [[Rating], [Rating]]>>
+
+const withWrapped = rate([[a, b], [c]], { model: slowPlackettLuce })
+type _withWrapped = Expect<Equal<typeof withWrapped, [[Rating, Rating], [Rating]]>>
+
+const withElo = rate([[a], [b], [c]], { model: simpleElo, rank: [2, 1, 3] })
+type _withElo = Expect<Equal<typeof withElo, [[Rating], [Rating], [Rating]]>>
+
+// Every built-in model is a Model, so the type in the docs is the correct type.
+const builtIn: Model = plackettLuce
+
+// A Gamma must return a number.
+// @ts-expect-error gamma returns a string
+const badGamma: Gamma = () => 'fast'
+
+// A Model must return teams of ratings.
+// @ts-expect-error model returns numbers, not teams
+const badModel: Model = (teams) => teams.map(() => 0)

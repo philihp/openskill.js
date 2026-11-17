@@ -34,11 +34,7 @@ array is one team. By default the team listed first won; use `rank` or
 rate(
   teams: Rating[][],
   options?: {
-    model?: typeof plackettLuce
-      | typeof bradleyTerryFull
-      | typeof bradleyTerryPart
-      | typeof thurstoneMostellerFull
-      | typeof thurstoneMostellerPart
+    model?: Model
     rank?: number[]
     score?: number[]
     margin?: number
@@ -60,6 +56,16 @@ rate(
 
 The [Tuning](/tuning) pages show what each option does, with graphs and
 sliders.
+
+`Model`, `Gamma`, `Options` and `Rating` are types. Import them from
+`openskill`:
+
+```ts
+import type { Gamma, Model, Options, Rating } from 'openskill'
+```
+
+`model` accepts each of the five [built-in models](/models), and also your
+own function of the `Model` type. Refer to [Custom models](/models/custom).
 
 ### Default usage — first team wins
 
@@ -185,7 +191,8 @@ rate(teams, { model: bradleyTerryPart, windowSize: 4 })
 
 Advanced: pass a `gamma` function to override how much each team's `sigma`
 shrinks per update. The default is `sigma / c` (where `c` is the total
-uncertainty in the match).
+uncertainty in the match). Refer to [`gamma`](/tuning/gamma) and
+[Custom models](/models/custom#change-gamma).
 
 ## `ordinal(rating, options?)`
 

@@ -1,0 +1,137 @@
+# Custom models
+
+You can give `rate` your own model. A model is a function. TypeScript users
+can import its type, `Model`, from `openskill`.
+
+```ts
+import { rate, rating } from 'openskill'
+import type { Gamma, Model, Options, Rating, Team } from 'openskill'
+import { plackettLuce } from 'openskill/models'
+```
+
+The package exports these types from its root:
+
+| Type      | What it is                                                     |
+| --------- | -------------------------------------------------------------- |
+| `Rating`  | `{ mu: number; sigma: number }`                                |
+| `Team`    | `Rating[]`                                                     |
+| `Options` | The options object that `rate` takes                           |
+| `Model`   | `(teams: Team[], options?: Options) => Team[]`                 |
+| `Gamma`   | `(c, k, mu, sigmaSq, team, rank) => number`                    |
+
+## What `rate` gives to a model
+
+`rate` does some work before and after it calls the model. Thus, a model
+must only change the ratings for one game.
+
+Before `rate` calls the model, it does these steps:
+
+1. It adds [`tau`](/tuning/tau) to the `sigma` of each player.
+2. It sorts the teams by rank. The first team has the best rank.
+3. It sorts `options.rank` in the same order. Equal values are ties.
+4. It normalizes `options.weight` and sorts it in the same order.
+
+All other options go to the model without a change. Thus, your model can
+read `beta`, `gamma`, `epsilon` and your own values from `options`.
+
+After the model returns, `rate` does these steps:
+
+1. It puts the teams back in the order that you gave them.
+2. It applies [`margin`](/tuning/margin), if you set `score` and `margin`.
+3. It applies `limitSigma`, if you set it.
+
+The model must return one team for each team that it gets. Each team must
+have the same number of players, in the same order.
+
+## Change `gamma`
+
+`gamma` sets how fast `sigma` shrinks after a game. Write a function with the
+`Gamma` type to change it. This function shrinks `sigma` at half the default
+speed:
+
+```ts
+const slowGamma: Gamma = (c, _k, _mu, sigmaSq) => Math.sqrt(sigmaSq) / c / 2
+
+rate([[a], [b]], { gamma: slowGamma })
+```
+
+The [`gamma`](/tuning/gamma) page shows what the arguments are.
+
+## Wrap a built-in model
+
+Do you want to use the same options each time? Then wrap a built-in model.
+This model is `plackettLuce`, but it always uses `slowGamma`:
+
+```ts
+import { mergeRight } from 'ramda'
+
+const slowPlackettLuce: Model = (teams, options = {}) =>
+  plackettLuce(teams, mergeRight(options, { gamma: slowGamma }))
+
+rate([[a, b], [c]], { model: slowPlackettLuce })
+```
+
+## Write a model
+
+This example is a simple model like Elo. It compares each team with each
+other team. A win adds to `mu`, and a loss subtracts from `mu`. An
+unexpected result changes `mu` more. The model does not change `sigma`.
+
+```ts
+import { map, pluck, sum } from 'ramda'
+
+const K = 2
+
+const teamMu = (team: Team): number => sum(pluck('mu', team))
+
+// 1 for a win, 0 for a loss, 0.5 for a tie. A lower rank is better.
+const actual = (iRank: number, qRank: number): number =>
+  iRank < qRank ? 1 : iRank > qRank ? 0 : 0.5
+
+// The chance that team i wins against team q.
+const expected = (beta: number) => (iMu: number, qMu: number) =>
+  1 / (1 + Math.exp((qMu - iMu) / beta))
+
+const shiftMu =
+  (change: number) =>
+  ({ mu, sigma }: Rating): Rating => ({ mu: mu + change, sigma })
+
+const simpleElo: Model = (
+  teams,
+  { beta = 25 / 6, rank = teams.map((_, i) => i) }: Options = {}
+) => {
+  const mus = map(teamMu, teams)
+  const winChance = expected(beta)
+  return teams.map((team, i) => {
+    const change = sum(
+      mus.map((qMu, q) =>
+        q === i ? 0 : K * (actual(rank[i], rank[q]) - winChance(mus[i], qMu))
+      )
+    )
+    return map(shiftMu(change), team)
+  })
+}
+```
+
+Use it as you use a built-in model:
+
+```ts
+const a = rating()
+const b = rating()
+const c = rating()
+
+rate([[a], [b], [c]], { model: simpleElo, rank: [2, 1, 3] })
+// b gets mu 27, a stays at 25, c gets mu 23.
+```
+
+`sigma` increases a small quantity, because `rate` adds `tau`. Set
+`tau: 0` to keep `sigma` the same.
+
+## Notes
+
+- Give a default for each option that you read. A model can get an empty
+  `options` object.
+- Do not change the ratings that you get. Return new objects.
+- Use `options.weight[i][j]` if your model must support partial play.
+- The [`predictWin`](/predictions), `predictDraw` and `predictRank` functions
+  do not use the model. They always use the built-in prediction.
