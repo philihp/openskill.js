@@ -4,7 +4,7 @@ import { marginDivisors } from '../margin'
 import { w, v, vt, wt } from '../statistics'
 import { Rating, Options, Model } from '../types'
 
-const model: Model = (game: Rating[][], options: Options = {}) => {
+const model: Model = (game, options: Options = {}) => {
   const { TWOBETASQ, EPSILON, KAPPA } = constants(options)
   const { weight } = options
   const { teamRating, gamma } = util(options)

@@ -1,12 +1,12 @@
 import { zip } from 'ramda'
 import constants from './constants'
-import { Rating, Options, Gamma, Team, Rank } from './types'
+import { Rating, Options, Gamma, Rank, ModelTeams } from './types'
 
 export type TeamMu = number
 
 export type TeamSigmaSq = number
 
-export type TeamRating = [TeamMu, TeamSigmaSq, Team, Rank]
+export type TeamRating = [TeamMu, TeamSigmaSq, readonly Rating[], Rank]
 
 export const sum = (a: number, b: number): number => a + b
 
@@ -62,7 +62,7 @@ export const updatePlayer = (
   }
 }
 
-export const rankings = (teams: Team[], rank: number[] = []): Rank[] => {
+export const rankings = (teams: readonly unknown[], rank: number[] = []): Rank[] => {
   const teamScores = teams.map((_, i) => rank[i] ?? i)
   const outRank = new Array(teams.length)
 
@@ -81,7 +81,7 @@ type TeamSums = { mu: number; sigSq: number }
 // this is basically shared code, precomputed for every model
 const teamRating =
   (options: Options) =>
-  (game: Team[]): TeamRating[] => {
+  (game: ModelTeams): TeamRating[] => {
     const { Z, ALPHA, TARGET, BALANCE, KAPPA } = constants(options)
     const rank = rankings(game, options.rank)
     return game.map((team, i) => {
@@ -191,14 +191,20 @@ export const utilA = (teamRatings: TeamRating[]): number[] =>
   )
 
 // default to iSigma / c
-const defaultGamma: Gamma = (c: number, _k: number, _mu: number, sigmaSq: number, _team: Rating[], _qRank: number) =>
-  Math.sqrt(sigmaSq) / c
+const defaultGamma: Gamma = (
+  c: number,
+  _k: number,
+  _mu: number,
+  sigmaSq: number,
+  _team: readonly Rating[],
+  _qRank: number
+) => Math.sqrt(sigmaSq) / c
 
 export const gamma = (options: Options): Gamma => options.gamma ?? defaultGamma
 
 export type Util = {
   utilC: (teamRatings: TeamRating[]) => number
-  teamRating: (game: Team[]) => TeamRating[]
+  teamRating: (game: ModelTeams) => TeamRating[]
   gamma: Gamma
 }
 

@@ -3,7 +3,7 @@ import constants from '../constants'
 import { marginDivisors } from '../margin'
 import { Rating, Options, Model } from '../types'
 
-const model: Model = (game: Rating[][], options: Options = {}) => {
+const model: Model = (game, options: Options = {}) => {
   const { TWOBETASQ, KAPPA } = constants(options)
   const { weight } = options
   const { teamRating, gamma } = util(options)

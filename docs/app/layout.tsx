@@ -15,6 +15,7 @@ const guides = [
   { title: 'Getting Started', href: '/getting-started' },
   { title: 'API Reference', href: '/api' },
   { title: 'Models', href: '/models' },
+  { title: 'Custom models', href: '/models/custom' },
   { title: 'Predictions', href: '/predictions' },
   { title: 'Ranking & Ordinal', href: '/ranking' },
 ]
