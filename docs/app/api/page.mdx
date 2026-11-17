@@ -90,11 +90,11 @@ rate([[a1], [b1], [c1], [d1]], { score: [37, 19, 37, 42] })
 
 ### With victory margins
 
-When both `score` and `margin` are given, rating updates are amplified for
-wins by more than `margin` points. A 20-point blowout moves ratings more
-than a 1-point squeaker; the amplification grows logarithmically, so extreme
-blowouts don't produce runaway swings. Score gaps within the margin update
-as ordinary wins/losses.
+When you give `score` and `margin`, each model divides the difference in
+`mu` between two teams by `log1p(difference / margin)` when their score
+difference is more than `margin`. Score differences within the margin give
+ordinary wins and losses. The margin has no effect on teams with the same
+`mu`. This is the same as openskill.py. See [`margin`](/tuning/margin).
 
 ```js
 rate(

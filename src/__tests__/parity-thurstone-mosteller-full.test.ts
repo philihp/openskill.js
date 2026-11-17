@@ -6,10 +6,6 @@ import thurstoneMostellerFull from '../models/thurstone-mosteller-full'
 // the exact constants from its fixture (tests/models/data/thurstonemostellerfull.json).
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
 // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L315-L396
-//
-// margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
-// upstream constants but skipped: openskill.js scales the margin post-hoc in
-// rate.ts; openskill.py folds it into the model.
 
 describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
   const r = { mu: 17.369819397619647, sigma: 5.379790119094205 }
@@ -56,7 +52,7 @@ describe('ThurstoneMostellerFull parity with openskill.py 6.2.0', () => {
   })
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_thurstone_mosteller_full.py#L350-L358
-  it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
+  it('margins', () => {
     const result = rate(
       [
         [r, r],

@@ -4,28 +4,42 @@ import { MarginExplorer } from '@/components/explorers/margin'
 # `margin`
 
 `margin` makes the size of a win matter. Default: none. It needs `score`,
-and it applies to every model.
+and it applies to every model. It gives the same results as `margin` in
+openskill.py.
 
 ## What it does
 
-`rate` first rates the game by the order of the scores. Then, for each team,
-it computes a factor from the score differences to the other teams. Each
-difference above `margin` adds `log1p(difference − margin)`, and each
-difference inside the margin adds 0. The factor is 1 plus the average of
-these. `rate` multiplies each player's change in `mu` by the factor. `sigma`
-is not affected.
+For each pair of teams, the model finds the score difference. If the
+difference is more than `margin`, the model computes a divisor:
+`log1p(difference / margin)`. If the difference is not more than `margin`,
+the divisor is 1.
 
-- A difference inside the margin gives a factor of 1: a plain win.
-- The factor grows with the logarithm of the excess, so a win by 40 points
-  is not twice a win by 20.
-- With two teams and a difference of `margin + 10`, the factor is
-  `1 + ln(11)`, about 3.4.
+- The Bradley-Terry and Thurstone-Mosteller models divide the difference in
+  `mu` between the two teams by the divisor. Then they compute the expected
+  result from this smaller or larger difference.
+- Plackett-Luce moves the `mu` of each team toward or away from the `mu` of
+  each opponent with a different score, by `divisor − 1` times the gap. It
+  uses the mean of these moves.
+
+Thus `margin` has an effect only when the teams have different `mu`:
+
+- Two teams with the same `mu` get the same update with or without
+  `margin`.
+- When the score difference is more than about 1.72 × `margin`, the divisor
+  is more than 1. The gap in `mu` looks smaller, so a favorite that wins
+  gets more `mu`, and an underdog that wins gets less.
+- When the score difference is between `margin` and about 1.72 × `margin`,
+  the divisor is less than 1. The gap in `mu` looks larger, and the effect
+  is the opposite.
+- The divisor grows with the logarithm of the difference, so a win by 40
+  points does not count as twice a win by 20.
 
 <MarginFigure />
 
 ## Try it
 
-Move the score difference across the margin to see the factor start.
+Move the score difference across the margin to see the divisor change. Set
+the rating gap to 0 to see that the margin then has no effect.
 
 <MarginExplorer />
 
@@ -33,8 +47,9 @@ Move the score difference across the margin to see the factor start.
 
 - Set `margin` to the score difference that separates a close game from a
   clear one, in the points of your game.
-- `margin` must be more than 0. With 0, or without `score`, nothing is
-  amplified.
+- `margin` must be more than 0. With 0, or without `score`, nothing changes.
+- Give one score for each team. If the number of scores is not the same as
+  the number of teams, the models ignore the margin.
 
 ```js
 rate(teams, { score: [37, 12], margin: 10 })

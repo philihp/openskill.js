@@ -7,10 +7,6 @@ import bradleyTerryPart from '../models/bradley-terry-part'
 // Every player starts at the model's (mu, sigma), so a team is just a count of r.
 // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L309-L409
 //
-// margins are a KNOWN DIVERGENCE from openskill.py 6.2.0, kept here with the
-// upstream constants but skipped: openskill.js scales the margin post-hoc in
-// rate.ts; openskill.py folds it into the model.
-//
 // openskill.py's part models use window_size=4 by default. openskill.js keeps
 // the 5.x adjacent pairing unless windowSize is set, so the 3+-team cases pass
 // windowSize: 4. 2-team games give the same result either way.
@@ -60,7 +56,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
   })
 
   // https://github.com/vivekjoshy/openskill.py/blob/v6.2.0/tests/models/weng_lin/test_bradley_terry_part.py#L347-L355
-  it.skip('margins [KNOWN DIVERGENCE: margin applied post-hoc in rate.ts vs in-model divisor]', () => {
+  it('margins', () => {
     const result = rate(
       [
         [r, r],
@@ -73,6 +69,7 @@ describe('BradleyTerryPart parity with openskill.py 6.2.0', () => {
         model: bradleyTerryPart,
         score: [10, 5, 5, 2, 1],
         margin: 2,
+        windowSize: 4,
         weight: [
           [1, 2],
           [2, 1],

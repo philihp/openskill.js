@@ -1,6 +1,7 @@
-import { zip } from 'ramda'
+import { range, zip } from 'ramda'
 import util, { score, ladderPairs, windowPairs, updatePlayer } from '../util'
 import constants from '../constants'
+import { marginDivisors } from '../margin'
 import { Model, Rating } from '../types'
 
 const model: Model = (game: Rating[][], options = {}) => {
@@ -11,14 +12,18 @@ const model: Model = (game: Rating[][], options = {}) => {
   const teamRatings = teamRating(game)
   // without windowSize, compare adjacent teams only, as in 5.x. With it, use
   // openskill.py's sliding window.
-  const windowTeams = WINDOW_SIZE === undefined ? ladderPairs(teamRatings) : windowPairs(teamRatings, WINDOW_SIZE)
+  // the windows hold team indexes, so that the margin can find the scores
+  const indexes = range(0, teamRatings.length)
+  const windows = WINDOW_SIZE === undefined ? ladderPairs(indexes) : windowPairs(indexes, WINDOW_SIZE)
+  const divisor = marginDivisors(options, teamRatings.length)
 
-  return zip(teamRatings, windowTeams).map(([iTeamRating, iWindow], i) => {
+  return zip(teamRatings, windows).map(([iTeamRating, iWindow], i) => {
     const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
     const { omega: omegaSum, delta: deltaSum } = iWindow.reduce(
-      (acc, [qMu, qSigmaSq, _qTeam, qRank]) => {
+      (acc, q) => {
+        const [qMu, qSigmaSq, _qTeam, qRank] = teamRatings[q]
         const ciq = Math.sqrt(iSigmaSq + qSigmaSq + TWOBETASQ)
-        const piq = 1 / (1 + Math.exp((qMu - iMu) / ciq))
+        const piq = 1 / (1 + Math.exp((qMu - iMu) / divisor(i, q) / ciq))
         const qEta = iSigmaSq / ciq
         const iGamma = gamma(ciq, teamRatings.length, ...iTeamRating)
 

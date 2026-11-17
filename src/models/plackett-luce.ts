@@ -1,5 +1,6 @@
 import util, { utilSumQ, utilA, updatePlayer } from '../util'
 import constants from '../constants'
+import { marginAdjustedMus } from '../margin'
 import { Rating, Options, Model } from '../types'
 
 const model: Model = (game: Rating[][], options: Options = {}) => {
@@ -8,12 +9,18 @@ const model: Model = (game: Rating[][], options: Options = {}) => {
   const { utilC, teamRating, gamma } = util(options)
   const teamRatings = teamRating(game)
   const c = utilC(teamRatings)
-  const sumQ = utilSumQ(teamRatings, c)
+  // the margin moves each team's mu by a part of the gap to the opponents
+  // with different scores, as openskill.py does. gamma keeps the real mu.
+  const adjustedMus = marginAdjustedMus(
+    options,
+    teamRatings.map(([mu]) => mu)
+  )
+  const sumQ = utilSumQ(teamRatings, c, adjustedMus)
   const a = utilA(teamRatings)
 
   return teamRatings.map((iTeamRating, i) => {
-    const [iMu, iSigmaSq, iTeam, iRank] = iTeamRating
-    const iMuOverCe = Math.exp(iMu / c)
+    const [_iMu, iSigmaSq, iTeam, iRank] = iTeamRating
+    const iMuOverCe = Math.exp(adjustedMus[i] / c)
     const { omega: omegaSum, delta: deltaSum } = teamRatings.reduce(
       (acc, [_qMu, _qSigmaSq, _qTeam, qRank], q) => {
         if (qRank > iRank) return acc

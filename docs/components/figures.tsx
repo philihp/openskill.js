@@ -13,6 +13,7 @@ import {
   ffaDeltas,
   gapCurve,
   improvement,
+  MARGIN_GAP,
   linspace,
   marginDelta,
   models,
@@ -278,10 +279,14 @@ export function MarginFigure() {
       label: named('margin', margin),
       points: gaps.map((gap): Point => [gap, marginDelta(gap, margin)]),
     })),
-    { label: 'no margin', points: gaps.map((gap): Point => [gap, duelDelta(0, SIGMA, 'win')]), dashed: true },
+    {
+      label: 'no margin',
+      points: gaps.map((gap): Point => [gap, duelDelta(MARGIN_GAP, SIGMA, 'win')]),
+      dashed: true,
+    },
   ]
   return (
-    <Figure caption="The change in mu of the winner against the score difference, for three values of margin. Inside the margin, the change is the same as for a plain win.">
+    <Figure caption="A player rated 10 above the opponent wins. The graph shows the change in mu of the winner against the score difference, for three values of margin. Inside the margin, the change is the same as for a plain win.">
       <Chart
         title="Rating change of the winner against score difference, for three values of margin"
         series={series}

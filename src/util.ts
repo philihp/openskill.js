@@ -160,16 +160,21 @@ const utilC = (options: Options) => {
 /**
  * `sumQ[q]`: Plackett-Luce normalizer for team `q` — the sum of exp(μ_i / c)
  * over every team `i` whose rank is at or worse than team q's rank
- * (i.e. teams that placed equal or below q).
+ * (i.e. teams that placed equal or below q). Pass `mus` to use other team
+ * mu values, such as the margin-adjusted values of Plackett-Luce.
  *
  * Reference: Weng & Lin (2011), Plackett-Luce derivation (sec. 3.2).
  */
-export const utilSumQ = (teamRatings: TeamRating[], c: number): number[] =>
+export const utilSumQ = (
+  teamRatings: TeamRating[],
+  c: number,
+  mus: number[] = teamRatings.map(([mu]) => mu)
+): number[] =>
   teamRatings.map(([_qMu, _qSigmaSq, _qTeam, qRank]) =>
-    teamRatings
-      .filter(([_iMu, _iSigmaSq, _iTeam, iRank]) => iRank >= qRank)
-      .map(([iMu, _iSigmaSq, _iTeam, _iRank]) => Math.exp(iMu / c))
-      .reduce(sum, 0)
+    teamRatings.reduce(
+      (acc, [_iMu, _iSigmaSq, _iTeam, iRank], i) => (iRank >= qRank ? acc + Math.exp(mus[i] / c) : acc),
+      0
+    )
   )
 
 /**
