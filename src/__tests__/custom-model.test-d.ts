@@ -2,9 +2,9 @@
 // Type-level checks for the examples on the "Custom models" docs page
 // (docs/app/models/custom/page.mdx). If you change an example there, change
 // it here too. `npm run typecheck` fails if the public types stop accepting it.
-import { map, mergeRight, pluck, sum } from 'ramda'
+import { mergeRight, sum } from 'ramda'
 import { rate, rating } from '../index'
-import type { Gamma, Model, Options, Rating, Team } from '../index'
+import type { Gamma, Model, Options, Rating } from '../index'
 import { plackettLuce } from '../models'
 
 type Expect<T extends true> = T
@@ -21,24 +21,21 @@ const slowPlackettLuce: Model = (teams, options = {}) => plackettLuce(teams, mer
 
 // --- Example 3: a model from the start -------------------------------------
 
-const K = 2
-
-const teamMu = (team: Team): number => sum(pluck('mu', team))
-
-const actual = (iRank: number, qRank: number): number => (iRank < qRank ? 1 : iRank > qRank ? 0 : 0.5)
-
-const expected = (beta: number) => (iMu: number, qMu: number) => 1 / (1 + Math.exp((qMu - iMu) / beta))
-
-const shiftMu =
-  (change: number) =>
-  ({ mu, sigma }: Rating): Rating => ({ mu: mu + change, sigma })
-
-const simpleElo: Model = (teams, { beta = 25 / 6, rank = teams.map((_, i) => i) }: Options = {}) => {
-  const mus = map(teamMu, teams)
-  const winChance = expected(beta)
+const elo: Model = (teams, { beta = 25 / 6, rank = teams.map((_, i) => i) }: Options = {}) => {
+  const K = 2
+  const mus = teams.map((team) => sum(team.map(({ mu }) => mu)))
   return teams.map((team, i) => {
-    const change = sum(mus.map((qMu, q) => (q === i ? 0 : K * (actual(rank[i], rank[q]) - winChance(mus[i], qMu)))))
-    return map(shiftMu(change), team)
+    const change = sum(
+      mus.map((qMu, q) => {
+        if (q === i) return 0
+        // 1 for a win, 0 for a loss, 0.5 for a tie. A lower rank is better.
+        const actual = rank[i] < rank[q] ? 1 : rank[i] > rank[q] ? 0 : 0.5
+        // The chance that team i wins against team q.
+        const expected = 1 / (1 + Math.exp((qMu - mus[i]) / beta))
+        return K * (actual - expected)
+      })
+    )
+    return team.map(({ mu, sigma }) => ({ mu: mu + change, sigma }))
   })
 }
 
@@ -54,7 +51,7 @@ type _withGamma = Expect<Equal<typeof withGamma, [[Rating], [Rating]]>>
 const withWrapped = rate([[a, b], [c]], { model: slowPlackettLuce })
 type _withWrapped = Expect<Equal<typeof withWrapped, [[Rating, Rating], [Rating]]>>
 
-const withElo = rate([[a], [b], [c]], { model: simpleElo, rank: [2, 1, 3] })
+const withElo = rate([[a], [b], [c]], { model: elo, rank: [2, 1, 3] })
 type _withElo = Expect<Equal<typeof withElo, [[Rating], [Rating], [Rating]]>>
 
 // Every built-in model is a Model, so the type in the docs is the correct type.
