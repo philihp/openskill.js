@@ -40,8 +40,11 @@ After the model returns, `rate` does these steps:
 2. It applies [`margin`](/tuning/margin), if you set `score` and `margin`.
 3. It applies `limitSigma`, if you set it.
 
-The model must return one team for each team that it gets. Each team must
-have the same number of players, in the same order.
+Teams can have different sizes. For example, one player can play against a
+team of three. The model must return one team for each team that it gets, in
+the same order. Each returned team must have the same players as the team
+that it replaces, in the same order. Thus, the output has the same shape as
+the input.
 
 ## Change `gamma`
 
