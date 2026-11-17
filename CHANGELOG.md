@@ -1,15 +1,15 @@
 # Changelog
 
-## Unreleased
+## v5.2.0
 
-- **Breaking for users of `margin`:** `margin` now gives the same results as
-  openskill.py 6.2.0, bit for bit. Before, `rate` multiplied each change in
-  `mu` by a factor after the model ran. Now each model uses the margin
-  itself. When two teams have a score difference more than `margin`, the
-  Bradley-Terry and Thurstone-Mosteller models divide the difference in `mu`
-  between the teams by `log1p(difference / margin)`. Plackett-Luce moves each
-  team's `mu` by a part of the gap to its opponents. These changes have an
-  effect:
+- Re-adds `margin`, with the openskill.py 6.2.0 implementation as a
+  reference. The results are now the same as openskill.py, bit for bit. Each
+  model now uses the margin itself. Before, `rate` multiplied each change in
+  `mu` by a factor after the model ran. When two teams have a score
+  difference more than `margin`, the Bradley-Terry and Thurstone-Mosteller
+  models divide the difference in `mu` between the teams by
+  `log1p(difference / margin)`. Plackett-Luce moves each team's `mu` by a part
+  of the gap to its opponents. If you use `margin`, your results change:
   - The margin has no effect on teams with the same `mu`.
   - A favorite that wins by much more than `margin` gets more `mu`. An
     underdog that wins by much more than `margin` gets less.
